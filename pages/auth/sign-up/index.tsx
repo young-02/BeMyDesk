@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 type Props = {};
 
@@ -141,147 +142,265 @@ export default function SignUp({}: Props) {
   }, [emailValid, pwValid, nicknameValid, pwVerfyValid, ageCheck, useCheck]);
 
   return (
-    <div className="page">
-      <div className="titleWrap">회원가입</div>
-      <div className="contentWrap">
-        <div style={{ marginTop: '26px' }} className="inputTitle">
-          닉네임
-        </div>
-        <div className="inputWrap">
-          <input
-            type="text"
-            className="input"
-            placeholder="잠은죽어서잔다
-"
-            value={nickname}
-            onChange={handleNickname}
-          />
-        </div>
-        <div>
-          {!nicknameValid && nickname.length > 0 && (
-            <div className="errorMessageWrap">
-              닉네임은 특수문자를 포함할수 없고 2글자 이상 8자 이하이어야합니다.
-            </div>
-          )}
-        </div>
-        <div className="inputTitle">이메일</div>
-        <div style={{ border: '1px solid black' }}>
+    <StyledBackground>
+      <StyledDiv>
+        <div className="titleWrap">회원가입</div>
+        <div className="contentWrap">
+          <div style={{ marginTop: '26px' }} className="inputTitleWrap">
+            <p>닉네임</p>
+            <p>닉네임 8글자 이내</p>
+          </div>
+
           <div className="inputWrap">
             <input
               type="text"
               className="input"
-              placeholder="이메일"
-              value={email}
-              onChange={handleEmail}
+              placeholder="잠은죽어서잔다
+"
+              value={nickname}
+              onChange={handleNickname}
             />
           </div>
           <div>
-            {!emailValid && email.length > 0 && (
+            {!nicknameValid && nickname.length > 0 && (
               <div className="errorMessageWrap">
-                올바른 이메일을 입력해주세요.
+                닉네임은 특수문자를 포함할수 없고 2글자 이상 8자
+                이하이어야합니다.
               </div>
             )}
           </div>
-          @
-          <div className="inputWrap">
-            <input type="text" className="input" placeholder="이메일뒤(임시)" />
-          </div>
-        </div>
-
-        <div style={{ marginTop: '26px' }} className="inputTitle">
-          비밀번호
-        </div>
-        <div className="inputWrap">
-          <input
-            type="password"
-            className="input"
-            placeholder="비밀번호를 입력해주세요"
-            value={pw}
-            onChange={handlePw}
-          />
-        </div>
-        <div>
-          {!pwValid && pw.length > 0 && (
-            <div className="errorMessageWrap">
-              영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
+          <div className="inputTitle">이메일</div>
+          <div style={{ border: '1px solid black' }}>
+            <div className="inputWrap">
+              <input
+                type="text"
+                className="input"
+                placeholder="이메일"
+                value={email}
+                onChange={handleEmail}
+              />
             </div>
-          )}
-        </div>
+            <div>
+              {!emailValid && email.length > 0 && (
+                <div className="errorMessageWrap">
+                  올바른 이메일을 입력해주세요.
+                </div>
+              )}
+            </div>
+            @
+            <div className="inputWrap">
+              <input
+                type="text"
+                className="input"
+                placeholder="이메일뒤(임시)"
+              />
+            </div>
+          </div>
 
-        <div style={{ marginTop: '26px' }} className="inputTitle">
-          비밀번호 확인
-        </div>
-        <div className="inputWrap">
-          <input
-            type="password"
-            className="input"
-            placeholder="비밀번호를 입력해주세요"
-            onChange={handleVerfyPw}
-          />
-        </div>
-        <div>
-          {!pwVerfyValid && pwVerfy.length > 0 && (
-            <div className="errorMessageWrap">비밀번호가 다릅니다.</div>
-          )}
-        </div>
-      </div>
+          <div style={{ marginTop: '26px' }} className="inputTitle">
+            비밀번호
+          </div>
+          <div className="inputWrap">
+            <input
+              type="password"
+              className="input"
+              placeholder="비밀번호를 입력해주세요"
+              value={pw}
+              onChange={handlePw}
+            />
+          </div>
+          <div>
+            {!pwValid && pw.length > 0 && (
+              <div className="errorMessageWrap">
+                영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
+              </div>
+            )}
+          </div>
 
-      <div>
-        <div>
-          <div>
+          <div style={{ marginTop: '26px' }} className="inputTitle">
+            비밀번호 확인
+          </div>
+          <div className="inputWrap">
             <input
-              type="checkbox"
-              id="all-check"
-              checked={allCheck}
-              onChange={allBtnEvent}
+              type="password"
+              className="input"
+              placeholder="비밀번호를 입력해주세요"
+              onChange={handleVerfyPw}
             />
-            <label htmlFor="all-check">전체동의</label>
           </div>
           <div>
-            <input
-              type="checkbox"
-              id="check1"
-              checked={ageCheck}
-              onChange={ageBtnEvent}
-            />
-            <label htmlFor="check1">
-              만 14세 이상입니다 <span>(필수)</span>
-            </label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              id="check2"
-              checked={useCheck}
-              onChange={useBtnEvent}
-            />
-            <label htmlFor="check2">
-              개인정보 수집/이용에 동의합니다. <span>(필수)</span>
-            </label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              id="check3"
-              checked={marketingCheck}
-              onChange={marketingBtnEvent}
-            />
-            <label htmlFor="check3">
-              마케팅동의 <span>(선택)</span>
-            </label>
+            {!pwVerfyValid && pwVerfy.length > 0 && (
+              <div className="errorMessageWrap">비밀번호가 다릅니다.</div>
+            )}
           </div>
         </div>
 
         <div>
-          <button
-            onClick={onClickConfirmButton}
-            disabled={notAllow}
-            className="bottomButton"
-          >
-            회원가입
-          </button>
+          <div>
+            <div>
+              <input
+                type="checkbox"
+                id="all-check"
+                checked={allCheck}
+                onChange={allBtnEvent}
+              />
+              <label htmlFor="all-check">전체동의</label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="check1"
+                checked={ageCheck}
+                onChange={ageBtnEvent}
+              />
+              <label htmlFor="check1">
+                만 14세 이상입니다 <span>(필수)</span>
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="check2"
+                checked={useCheck}
+                onChange={useBtnEvent}
+              />
+              <label htmlFor="check2">
+                개인정보 수집/이용에 동의합니다. <span>(필수)</span>
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="check3"
+                checked={marketingCheck}
+                onChange={marketingBtnEvent}
+              />
+              <label htmlFor="check3">
+                마케팅동의 <span>(선택)</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <button
+              onClick={onClickConfirmButton}
+              disabled={notAllow}
+              className="bottomButton"
+            >
+              회원가입
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
+      </StyledDiv>
+    </StyledBackground>
   );
 }
+
+const StyledBackground = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100vh;
+  background: url(https://images.pexels.com/photos/251225/pexels-photo-251225.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)
+    no-repeat center;
+  background-size: cover;
+
+  div {
+    border: 1px solid black;
+  }
+`;
+
+const StyledDiv = styled.div`
+  width: 588px;
+  height: 716px;
+  left: 666px;
+  top: 182px;
+  background: #ffffff;
+  box-shadow: 0rem 0.25rem 1rem rgba(0, 0, 0, 0.29);
+  border-radius: 1.25rem;
+
+  .titleWrap {
+    padding-top: 40px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 2.125rem;
+    line-height: 3rem;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .inputWrap {
+    margin: 1.875rem 3.375rem;
+  }
+
+  /* .inputTitle {
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+
+
+    color: #17171c;
+  } */
+
+  /* .inputWrap:hover {
+    border-bottom: 0.125rem solid #206efb;
+  } */
+
+  .inputWrap:focus-within {
+    border-bottom: 0.125rem solid #206efb;
+  }
+
+  input {
+    width: 100%;
+    outline: none;
+    border: none;
+    height: 3rem;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .errorMessageWrap {
+    margin: 1.875rem 3.375rem;
+    color: #ef0000;
+    font-size: 0.75rem;
+  }
+  .LoginButtonWrap {
+    justify-content: center;
+  }
+  .LoginButton {
+    width: 30rem;
+    height: 3rem;
+    border: none;
+    font-weight: 700;
+    background: #206efb;
+    border-radius: 0.625rem;
+    color: white;
+    margin-bottom: 1rem;
+    cursor: pointer;
+  }
+
+  .buttonBottomWrap {
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.875rem 3.375rem;
+  }
+
+  .buttonBottomWrap label {
+  }
+
+  .buttonBottomWrap input {
+    height: 1rem;
+  }
+
+  .buttonBottomWrap p {
+    font-size: 1rem;
+  }
+
+  .buttonBottomWrap .SNSWrap {
+    justify-content: center;
+    align-items: center;
+  }
+`;
