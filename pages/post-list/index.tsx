@@ -1,29 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import {
-  collection,
-  setDoc,
-  doc,
-  onSnapshot,
-  addDoc,
-} from 'firebase/firestore';
+import { collection, onSnapshot, addDoc } from 'firebase/firestore';
 import { dbService } from '../../shared/firebase';
 import styled from 'styled-components';
-import CommentsList from '../../components/CommentsList';
-import ProductsList from '../../components/ProductsList';
+import PostListCard from '@/components/PostListCard';
 
 type Props = {};
 
 export default function PostList({}: Props) {
-  // 유저 id
-  const [userId, setUserId] = useState();
-  // 전체 포스트 리스트
   const [data, setData] = useState();
-  // 포스트 제목
+  const [userId, setUserId] = useState();
   const [postTitle, setPostTitle] = useState();
-  // 댓글
-  const [comment, setComment] = useState();
-  // 제품명
-  const [product, setProduct] = useState();
+  const [jobCategory, setJobCategory] = useState();
+  const [likes, setLikes] = useState();
+
+  const oneLikes = ['userId-1'];
+  const twoLikes = ['userId-1', 'userId-2'];
+  const threeLikes = ['userId-1', 'userId-2', 'userId-3'];
 
   const newPost = {
     createdAt: Date(),
@@ -34,43 +26,20 @@ export default function PostList({}: Props) {
     postImage1: '메인이미지',
     postImage2: '서브이미지',
     colors: ['yellow', 'black'],
-    likes: ['userId-1', 'userId-2'],
+    likes,
   };
 
-  const newPostComments = {
-    createdAt: Date(),
-    userId: userId,
-    commentText: comment,
-  };
+  console.log('보낼 포스트는 :', newPost);
 
-  const newPostProducts = {
-    image: '키보드이미지',
-    title: product,
-    url: 'https://www.logitech.com/ko-kr/products/keyboards/k380-multi-device.920-011144.html',
-    hashTag: '키보드/마우스',
-  };
-
-  // 컬렉션 참조위치 / "postData" / "comments" / "products"
+  // 컬렉션 참조위치 / "postData"
   const postRef = collection(dbService, 'postData');
 
   // 상위 컬렉션 "postData" 에 포스트 추가
   const postData = async () => {
+    const postRef = collection(dbService, 'postData');
     await addDoc(postRef, newPost);
+    setUserId('');
     setPostTitle('');
-  };
-
-  //하위 컬렉션 - "postData" 의 "comments" 에 코멘트 추가
-  const postCommentsData = async (postId) => {
-    const commentsRef = collection(dbService, `postData/${postId}/comments`);
-    setComment('');
-    return await addDoc(commentsRef, newPostComments);
-  };
-
-  //하위 컬렉션 - "postData" 의 "products" 에 제품 추가
-  const postProductsData = async (postId) => {
-    const productsRef = collection(dbService, `postData/${postId}/products`);
-    setProduct('');
-    return await addDoc(productsRef, newPostProducts);
   };
 
   // 상위 컬렉션 "postData" 의 포스트 읽어오기
@@ -87,50 +56,38 @@ export default function PostList({}: Props) {
 
   return (
     <PostListLayout>
-      <div>
-        <input
-          placeholder="유저 id"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-        />
-        <input
-          placeholder="포스트 제목"
-          value={postTitle}
-          onChange={(e) => setPostTitle(e.target.value)}
-        />
-        <button onClick={postData}>새 포스트 추가</button>
-      </div>
-      <h1>포스트</h1>
+      <Header>
+        <h1>포스트</h1>
+        <p>designer / developer / student / gamer</p>
+        <div className="add-post" onSubmit={postData}>
+          <input
+            placeholder="유저 id"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+          />
+          <input
+            placeholder="포스트 제목"
+            value={postTitle}
+            onChange={(e) => setPostTitle(e.target.value)}
+          />
+          <input
+            placeholder="직업 카테고리"
+            value={jobCategory}
+            onChange={(e) => setJobCategory(e.target.value)}
+          />
+          <button onClick={() => setLikes(oneLikes)}>좋아요 1개</button>
+          <button onClick={() => setLikes(twoLikes)}>좋아요 2개</button>
+          <button onClick={() => setLikes(threeLikes)}>좋아요 3개</button>
+          <button onClick={postData}>새 포스트 추가</button>
+        </div>
+      </Header>
+
       {/* {loading && 'Loading...'} */}
-      <ul>
+      <PostListBox>
         {data?.map((post) => (
-          <ListItem key={post.id}>
-            <li>{post.id}</li>
-            <li>작성자 : {post.userId}</li>
-            <li>{post.createdAt}</li>
-            <li>타이틀 : {post.postTitle}</li>
-            <li>텍스트 : {post.postText}</li>
-            <div>
-              <input
-                placeholder="댓글추가"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-              <button onClick={() => postCommentsData(post.id)}>확인</button>
-            </div>
-            <div>
-              <input
-                value={product}
-                placeholder="제품추가"
-                onChange={(e) => setProduct(e.target.value)}
-              />
-              <button onClick={() => postProductsData(post.id)}>확인</button>
-            </div>
-            <ProductsList postId={post.id} />
-            <CommentsList postId={post.id} />
-          </ListItem>
+          <PostListCard key={post.id} post={post} />
         ))}
-      </ul>
+      </PostListBox>
     </PostListLayout>
   );
 }
@@ -138,22 +95,45 @@ export default function PostList({}: Props) {
 const PostListLayout = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  /* background-color: tomato; */
+`;
+
+const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: sticky;
+  top: 0px;
+  padding: 1.875rem 0rem;
   gap: 1rem;
-  > div {
-    display: flex;
-    flex-direction: row;
-    margin-top: 0.5rem;
-    gap: 0.5rem;
-  }
+  background-color: white;
+  z-index: 1;
+
   > h1 {
     font-size: 3rem;
   }
+  .add-post {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
 `;
 
-const ListItem = styled.div`
+const PostListBox = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
-  background-color: #e8edef;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 75rem;
+  padding-bottom: 2rem;
+  /* overflow-y: scroll; */
+  gap: 1rem;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  /* background-color: yellow; */
 `;
