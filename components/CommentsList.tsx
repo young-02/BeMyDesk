@@ -5,39 +5,41 @@ import styled from 'styled-components';
 
 type Props = {};
 
-const ProductsList = ({ postId }: { postId: string }) => {
+const CommentsList = ({ postId }: { postId: string }) => {
   const [data, setData] = useState();
-  const productsRef = collection(dbService, `postData/${postId}/products`);
+  const commentsRef = collection(dbService, `postData/${postId}/comments`);
 
   useEffect(() => {
-    onSnapshot(productsRef, (snapshot) => {
-      const productData = snapshot.docs.map((doc) => ({
+    onSnapshot(commentsRef, (snapshot) => {
+      const commentData = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-      setData(productData);
+      setData(commentData);
     });
   }, []);
 
   return (
-    <ProductsListLayout>
+    <CommentsListLayout>
       {/* {loading && 'Loading...'} */}
       <ul>
-        {data?.map((product) => (
-          <ListItem key={product.id}>
-            <li>{product.id}</li>
-            <li>제품명 : {product.title}</li>
-            <li>카테고리 : {product.hashTag}</li>
+        {data?.map((comment) => (
+          <ListItem key={comment.id}>
+            <li>{comment.id}</li>
+            <li>유저Id: {comment.userId}</li>
+            <li>{comment.commentText}</li>
           </ListItem>
         ))}
       </ul>
-    </ProductsListLayout>
+    </CommentsListLayout>
   );
 };
 
-export default ProductsList;
+export default CommentsList;
 
-const ProductsListLayout = styled.div``;
+const CommentsListLayout = styled.div`
+  margin-left: 2rem;
+`;
 
 const ListItem = styled.div`
   display: flex;

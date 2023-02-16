@@ -1,39 +1,36 @@
-import { async } from '@firebase/util';
-import { useQuery } from '@tanstack/react-query';
+import React, { useEffect, useState } from 'react';
 import {
   collection,
-  getDocs,
   setDoc,
-  addDoc,
   doc,
-  getDoc,
+  onSnapshot,
+  addDoc,
 } from 'firebase/firestore';
-import React, { useState } from 'react';
 import { dbService } from '../../shared/firebase';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import styled from 'styled-components';
-import CommentList from '../../components/CommentList';
+import CommentsList from '../../components/CommentsList';
 import ProductsList from '../../components/ProductsList';
 
 type Props = {};
 
 export default function PostList({}: Props) {
-  // 포스트 id
-  const [postId, setPostId] = useState();
-  // 제품 id
-  const [productId, setProductId] = useState();
-  // 댓글 id
-  const [commentId, setCommentId] = useState();
   // 유저 id
   const [userId, setUserId] = useState();
+  // 전체 포스트 리스트
+  const [data, setData] = useState();
+  // 포스트 제목
+  const [postTitle, setPostTitle] = useState();
+  // 댓글
+  const [comment, setComment] = useState();
+  // 제품명
+  const [product, setProduct] = useState();
 
   const newPost = {
-    id: postId,
     createdAt: Date(),
-    userId: userId,
+    userId,
     jobCategory: 'developer',
-    postTitle: '타이틀: 나의 드림데스크',
-    postText: '텍스트: 정말 가지고 싶다.',
+    postTitle,
+    postText: '정말 가지고 싶다.',
     postImage1: '메인이미지',
     postImage2: '서브이미지',
     colors: ['yellow', 'black'],
@@ -41,80 +38,96 @@ export default function PostList({}: Props) {
   };
 
   const newPostComments = {
-    id: commentId,
     createdAt: Date(),
     userId: userId,
-    commentText: '코멘트입니다.',
+    commentText: comment,
   };
 
   const newPostProducts = {
-    id: productId,
     image: '키보드이미지',
-    title: 'K380 멀티 블루투스 키보드',
+    title: product,
     url: 'https://www.logitech.com/ko-kr/products/keyboards/k380-multi-device.920-011144.html',
     hashTag: '키보드/마우스',
   };
 
-  // 상위 컬렉션에 추가
-  const postData = () => {
-    return setDoc(doc(dbService, `postData/${postId}`), newPost);
+  // 컬렉션 참조위치 / "postData" / "comments" / "products"
+  const postRef = collection(dbService, 'postData');
+
+  // 상위 컬렉션 "postData" 에 포스트 추가
+  const postData = async () => {
+    await addDoc(postRef, newPost);
+    setPostTitle('');
   };
 
-  //하위 컬렉션 - comments 에 추가
-  const postCommentsData = () => {
-    const postRef = doc(dbService, `postData/${postId}/comments/${commentId}`);
-    return setDoc(postRef, newPostComments);
+  //하위 컬렉션 - "postData" 의 "comments" 에 코멘트 추가
+  const postCommentsData = async (postId) => {
+    const commentsRef = collection(dbService, `postData/${postId}/comments`);
+    setComment('');
+    return await addDoc(commentsRef, newPostComments);
   };
 
-  //하위 컬렉션 - comments 에 추가
-  const postProductsData = () => {
-    const postRef = doc(dbService, `postData/${postId}/products/${productId}`);
-    return setDoc(postRef, newPostProducts);
+  //하위 컬렉션 - "postData" 의 "products" 에 제품 추가
+  const postProductsData = async (postId) => {
+    const productsRef = collection(dbService, `postData/${postId}/products`);
+    setProduct('');
+    return await addDoc(productsRef, newPostProducts);
   };
 
-  // 상위 컬렉션에서 가져오기
-  const query = collection(dbService, 'postData');
-  const [data, loading, error] = useCollectionData(query);
-  console.log('readData', data);
+  // 상위 컬렉션 "postData" 의 포스트 읽어오기
+  useEffect(() => {
+    onSnapshot(postRef, (snapshot) => {
+      const postData = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      console.log('파이어베이스 스냅샷 도착 :', postData);
+      setData(postData);
+    });
+  }, []);
 
   return (
     <PostListLayout>
       <div>
-        포스트 id
-        <input value={postId} onChange={(e) => setPostId(e.target.value)} />
-        제품 id
         <input
-          value={productId}
-          onChange={(e) => setProductId(e.target.value)}
+          placeholder="유저 id"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
         />
-        댓글 id
         <input
-          value={commentId}
-          onChange={(e) => setCommentId(e.target.value)}
+          placeholder="포스트 제목"
+          value={postTitle}
+          onChange={(e) => setPostTitle(e.target.value)}
         />
-        유저 id
-        <input value={userId} onChange={(e) => setUserId(e.target.value)} />
-      </div>
-      <div>
-        <button onClick={postData}>포스트 상위 데이터 추가</button>
-        <button onClick={postCommentsData}>
-          포스트 하위 데이터 추가 - comments
-        </button>
-        <button onClick={postProductsData}>
-          포스트 하위 데이터 추가 - products
-        </button>
+        <button onClick={postData}>새 포스트 추가</button>
       </div>
       <h1>포스트</h1>
-      {loading && 'Loading...'}
+      {/* {loading && 'Loading...'} */}
       <ul>
         {data?.map((post) => (
           <ListItem key={post.id}>
             <li>{post.id}</li>
+            <li>작성자 : {post.userId}</li>
             <li>{post.createdAt}</li>
-            <li>{post.postTitle}</li>
-            <li>{post.postText}</li>
+            <li>타이틀 : {post.postTitle}</li>
+            <li>텍스트 : {post.postText}</li>
+            <div>
+              <input
+                placeholder="댓글추가"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <button onClick={() => postCommentsData(post.id)}>확인</button>
+            </div>
+            <div>
+              <input
+                value={product}
+                placeholder="제품추가"
+                onChange={(e) => setProduct(e.target.value)}
+              />
+              <button onClick={() => postProductsData(post.id)}>확인</button>
+            </div>
             <ProductsList postId={post.id} />
-            <CommentList postId={post.id} />
+            <CommentsList postId={post.id} />
           </ListItem>
         ))}
       </ul>
