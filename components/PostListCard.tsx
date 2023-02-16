@@ -32,7 +32,7 @@ const PostListCard = ({ post }) => {
           <p>{post.postText}</p>
         </div>
         <div className="bottom">
-          <p>학생의 책상</p>
+          <p>{post.jobCategory}의 책상</p>
           <div>
             <Image src={likesIcon} alt="likes-icon" width={10} />
             <p>{likes.length}</p>
@@ -49,8 +49,6 @@ const PostListCardLayout = styled.div`
   display: flex;
   flex-direction: column;
   width: 18rem;
-  height: 24.6rem;
-  gap: 0.5rem;
   border-radius: 0.625rem;
   background-color: white;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -70,14 +68,15 @@ const CardContentArea = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: fit-content;
-  padding: 1.25rem;
+  padding: 1.25rem 1.25rem 1.25rem;
   font-family: 'Pretendard Variable';
 
   .profile-image {
     position: absolute;
-    top: -20%;
-    left: 10%;
+    top: 0%;
+    left: 1.25rem;
     width: 2.125rem;
+    transform: translate(0%, -60%);
     height: 2.125rem;
     border-radius: 100%;
     background-size: 2.125rem;
