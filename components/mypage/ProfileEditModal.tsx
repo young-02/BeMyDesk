@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
   const [toggleEditMenu, setToggleEditMenu] = useState(true);
+  const [profileChangeDone, setProfileChangeDone] = useState(false);
   const [nickNameEditEnable, setNickNameEditEnable] = useState(true);
   const [nickNameEdit, setNickNameEdit] = useState('');
   const [countCharacters, setCountCharacters] = useState(0);
@@ -45,6 +46,7 @@ function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
       updateProfile(auth.currentUser as any, {
         displayName: nickNameEdit,
       });
+      setProfileChangeDone(true);
     } else {
       alert(
         '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자이하이어야합니다.',
@@ -121,8 +123,11 @@ function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
               />
               <p>{countCharacters}/50</p>
               <div>
-                {' '}
-                <p> 프로필 정보를 성공적으로 변경하였습니다.</p>
+                <p>
+                  {profileChangeDone
+                    ? '프로필 정보를 성공적으로 변경하였습니다.'
+                    : null}
+                </p>
                 <button onClick={confirmButtonHandler}>적용하기</button>
               </div>
             </div>
@@ -130,18 +135,31 @@ function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
             <div className="PasswordEdit">
               <div>
                 <p>현재 비밀번호</p>
-                <input type="text" />
+                <input
+                  type="text"
+                  placeholder="기존 비밀번호를 입력해주세요."
+                />
               </div>
               <div>
                 <p>변경할 비밀번호</p>
-                <input type="text" />
+                <input
+                  type="text"
+                  placeholder="변경할 비밀번호를 입력해주세요."
+                />
               </div>
               <div>
                 <p>한번 더 입력해주세요 </p>
-                <input type="text" />
+                <input
+                  type="text"
+                  placeholder="변경할 비밀번호를 한 번 더 입력해주세요."
+                />
               </div>
               <div>
-                <p> 프로필 정보를 성공적으로 변경하였습니다.</p>
+                <p>
+                  {profileChangeDone
+                    ? '비밀번호를 성공적으로 변경하였습니다.'
+                    : null}
+                </p>
                 <button onClick={confirmButtonHandler}>적용하기</button>
               </div>
             </div>
