@@ -14,18 +14,22 @@ import PostListCard from '@/components/PostListCard';
 type Props = {};
 
 export default function PostList({}: Props) {
+  // 🔖 로그인 기능과 합쳐지면, userId 초기값을 UID 로 변경합니다.
   const [data, setData] = useState();
-  const [userId, setUserId] = useState();
+  const [userId, setUserId] = useState('좋아요봇');
+
+  // 🔖 임시 post 추가를 위한 상태관리, 로직 구현 시 삭제합니다.
   const [postTitle, setPostTitle] = useState();
   const [jobCategory, setJobCategory] = useState();
-  const [likes, setLikes] = useState();
+  const [likes, setLikes] = useState([]);
 
+  // 임시 좋아요 array 선택지
   const oneLikes = ['userId-1'];
   const twoLikes = ['userId-1', 'userId-2'];
   const threeLikes = ['userId-1', 'userId-2', 'userId-3'];
 
+  // 임시 포스트
   const newPost = {
-    // createdAt: Date(),
     createdAt: serverTimestamp(),
     userId,
     jobCategory,
@@ -37,17 +41,16 @@ export default function PostList({}: Props) {
     likes,
   };
 
-  console.log('보낼 포스트는 :', newPost);
-
-  // 상위 컬렉션 "postData" 에 포스트 추가
+  // "postData" 에 포스트 추가
   const postData = async () => {
     const postRef = collection(dbService, 'postData');
     await addDoc(postRef, newPost);
     setUserId('');
     setPostTitle('');
   };
+  // 🔖 임시 post 추가를 위한 상태관리, 로직 구현 시 삭제합니다.
 
-  // 상위 컬렉션 "postData" 의 포스트 읽어오기 (최신순)
+  // READ post-list / 전체 (최신순 정렬) (기본값)
   useEffect(() => {
     const postRef = collection(dbService, 'postData');
     const q = query(postRef, orderBy('createdAt', 'desc'));
@@ -56,26 +59,14 @@ export default function PostList({}: Props) {
         ...doc.data(),
         id: doc.id,
       }));
-      console.log('파이어베이스 스냅샷 도착 :', postData);
+      // console.log('파이어베이스 스냅샷 도착 :', postData);
       setData(postData);
     });
-  }, []);
-
-  // // 상위 컬렉션 "postData" 의 포스트 읽어오기
-  // useEffect(() => {
-  //   const postRef = collection(dbService, 'postData');
-  //   onSnapshot(postRef, (snapshot) => {
-  //     const postData = snapshot.docs.map((doc) => ({
-  //       ...doc.data(),
-  //       id: doc.id,
-  //     }));
-  //     console.log('파이어베이스 스냅샷 도착 :', postData);
-  //     setData(postData);
-  //   });
-  // }, []);
+  });
 
   return (
     <PostListLayout>
+      {/* 🔖 임시 post 추가를 위한 헤더, 로직 구현 시 삭제합니다. */}
       <Header>
         <h1>포스트</h1>
         <p>디자이너 / 개발자 / 학생 / 게이머</p>
@@ -101,11 +92,10 @@ export default function PostList({}: Props) {
           <button onClick={postData}>새 포스트 추가</button>
         </div>
       </Header>
-
-      {/* {loading && 'Loading...'} */}
+      {/* 🔖 임시 post 추가를 위한 헤더, 로직 구현 시 삭제합니다. */}
       <PostListBox>
         {data?.map((post) => (
-          <PostListCard key={post.id} post={post} />
+          <PostListCard key={post.id} post={post} currentUserId={userId} />
         ))}
       </PostListBox>
     </PostListLayout>

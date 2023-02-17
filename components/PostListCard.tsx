@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
-import likesIcon from '../public/images/likesIcon.png';
+import activeLikes from '../public/images/activeLikes.png';
+import inactiveLikes from '../public/images/inactiveLikes.png';
+import { doc, updateDoc } from 'firebase/firestore';
+import { dbService } from '../shared/firebase';
 
 type Props = {};
 
-const PostListCard = ({ post }) => {
-  const likes = post.likes;
+const PostListCard = ({ post, currentUserId }) => {
+  // currentUser 가 해당 포스트가 좋아요 눌렀는지 여부
+  const initialState = post.likes.includes(currentUserId) ? true : false;
+  const [isLikesClicked, setIsLikesClicked] = useState(initialState);
+
+  // 좋아요 버튼을 클릭했을 때, likes & likesCount 수정 로직
+  const updateLikes = async () => {
+    const postRef = doc(dbService, 'postData', post.id);
+    if (isLikesClicked === false) {
+      await updateDoc(postRef, {
+        likes: [...post.likes, currentUserId],
+        likesCount: post.likes.length + 1,
+      });
+      setIsLikesClicked(true);
+    } else {
+      await updateDoc(postRef, {
+        likes: post.likes.filter((id) => id !== currentUserId),
+        likesCount: post.likes.length - 1,
+      });
+      setIsLikesClicked(false);
+    }
+  };
+
   return (
     <PostListCardLayout key={post.id}>
       <div
@@ -33,9 +57,13 @@ const PostListCard = ({ post }) => {
         </div>
         <div className="bottom">
           <p>{post.jobCategory}의 책상</p>
-          <div>
-            <Image src={likesIcon} alt="likes-icon" width={10} />
-            <p>{likes.length}</p>
+          <div onClick={updateLikes}>
+            <p>{post.likesCount}</p>
+            <Image
+              src={isLikesClicked ? activeLikes : inactiveLikes}
+              alt="likes-icon"
+              width={10}
+            />
           </div>
         </div>
       </CardContentArea>
@@ -52,6 +80,7 @@ const PostListCardLayout = styled.div`
   border-radius: 0.625rem;
   background-color: white;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  cursor: pointer;
 
   .post-image {
     width: 100%;
@@ -59,6 +88,10 @@ const PostListCardLayout = styled.div`
     background-size: 18rem;
     background-position: center center;
     border-radius: 0.625rem 0.625rem 0rem 0rem;
+    :hover {
+      background-size: 19rem;
+      transition: all 0.2s;
+    }
   }
 `;
 
