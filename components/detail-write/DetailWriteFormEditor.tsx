@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import styled from 'styled-components';
 
 type Props = {};
 
@@ -49,21 +50,36 @@ const editor = (props: Props) => {
     'bullet',
     'indent',
     'link',
-    'image',
     'align',
     'color',
     'background',
   ];
   return (
-    <div>
-      <ReactQuill
-        theme="snow"
-        modules={modules}
-        formats={formats}
-        placeholder="내용을 입력해주세요"
-      />
-    </div>
+    <EditorStyle
+      theme="snow"
+      modules={modules}
+      formats={formats}
+      placeholder="내용을 입력해주세요"
+    />
   );
 };
+
+const EditorStyle = styled(ReactQuill)`
+  width: 77rem;
+  height: 37.5rem;
+  box-sizing: border-box;
+  padding: 1rem;
+  margin-bottom: 1.875rem;
+
+  .ql-toolbar.ql-snow + .ql-container.ql-snow {
+    border: 0.125rem solid #868e96;
+    border-radius: 0.625rem;
+  }
+
+  .ql-toolbar.ql-snow {
+    border-radius: 0.625rem;
+    border: 0.125rem solid #868e96;
+  }
+`;
 
 export default editor;
