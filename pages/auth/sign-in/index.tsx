@@ -1,10 +1,20 @@
 import { app, auth } from '@/shared/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  getAuth,
+  signInWithCustomToken,
+} from 'firebase/auth';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { AiFillLock, AiOutlineMail, IconName } from 'react-icons/ai';
+import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
+import { FcGoogle } from 'react-icons/fc';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 type Props = {};
 
@@ -22,6 +32,13 @@ export default function SignIn({}: Props) {
 
   const [emailEmptyError, setEmailEmptyError] = useState(false);
   const [pwEmptyError, setPwEmptyError] = useState(false);
+  const [user, setUser] = useAuthState(auth);
+  const [stayLoginisChecked, setStayLoginIsChecked] = useState(false);
+
+  const handleRadioChange = (e: any) => {
+    console.log(e.target.checked);
+    setStayLoginIsChecked(e.target.checked);
+  };
 
   const handleEmail = function (event: any) {
     setEmail(event.target.value);
@@ -90,23 +107,54 @@ export default function SignIn({}: Props) {
     }
   };
 
+  //카카오 로그인
   const kakaoLogin = function () {
     window.Kakao?.Auth.login({
-      scope: 'profile_nickname, account_email, gender',
+      scope: 'profile_nickname, account_email, profile_image',
       success: function (authObj: any) {
+        //authObj 토큰
         console.log('authObj', authObj);
         window.Kakao.API.request({
-          // 현재 로그인한 사용자 정보
           url: '/v2/user/me',
           success: (res: any) => {
+            // kakao_account 유저정보
             const kakao_account = res.kakao_account;
             console.log('kakao.account', kakao_account);
           },
         });
       },
     });
+    // const auth = getAuth();
+    // signInWithCustomToken(auth, authObj)
+    //   .then((userCredential) => {
+    //     // Signed in
+    //     const user = userCredential.user;
+    //     // ...
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     // ...
+    //   });
   };
 
+  //구글로그인
+
+  const googleAuth = new GoogleAuthProvider();
+  const googleLogin = async () => {
+    const result_google = await signInWithPopup(auth, googleAuth);
+  };
+
+  //페이스북 로그인
+
+  const facebookAuth = new FacebookAuthProvider();
+  const facebookLogin = async () => {
+    const result_facebook = await signInWithPopup(auth, facebookAuth);
+  };
+
+  useEffect(() => {
+    console.log('userInfo', user);
+  }, [user]);
   return (
     <StyledBackground>
       <StyledDiv>
@@ -131,16 +179,13 @@ export default function SignIn({}: Props) {
               onChange={handleEmail}
             />
           </div>
-
-          <div>
-            {emailEmptyError && (
-              <div className="errorMessageWrap">필수 입력 항목입니다.</div>
-            )}
-            {emailRegexError && (
-              <div className="errorMessageWrap">
-                이메일 형식이 잘못됐습니다.
-              </div>
-            )}
+          <div className="errorMessageWrapContainer">
+            <div className="errorMessageWrap">
+              {emailEmptyError && '필수 입력 항목입니다.'}
+            </div>
+            <div className="errorMessageWrap">
+              {emailRegexError && '이메일 형식이 잘못됐습니다.'}{' '}
+            </div>
           </div>
         </div>
 
@@ -163,17 +208,14 @@ export default function SignIn({}: Props) {
               onChange={handlePw}
             />
           </div>
-
-          <div>
-            {pwEmptyError && (
-              <div className="errorMessageWrap">필수 입력 항목입니다.</div>
-            )}
-            {pwRegexError && (
-              <div className="errorMessageWrap">
-                비밀번호는 8~16자리 / 영문 대소문자, 숫자, 특수문자 포함이어야
-                합니다.
-              </div>
-            )}
+          <div className="errorMessageWrapContainer">
+            <div className="errorMessageWrap">
+              {pwEmptyError && '필수 입력 항목입니다.'}
+            </div>
+            <div className="errorMessageWrap">
+              {pwRegexError &&
+                '비밀번호는 8~16자리 / 영문 대소문자, 숫자, 특수문자 포함이어야합니다.'}
+            </div>
           </div>
         </div>
         <div className="LoginButtonWrap">
@@ -184,7 +226,12 @@ export default function SignIn({}: Props) {
 
         <div className="buttonBottomWrap">
           <label className="stayLogin">
-            <input type="radio" />
+            <input
+              className="stayLoginButton"
+              type="checkbox"
+              onChange={handleRadioChange}
+              // checked={stayLoginisChecked}
+            />
             <p>로그인 유지</p>
           </label>
           <Link href="./find-password" className="findPassword">
@@ -194,14 +241,64 @@ export default function SignIn({}: Props) {
         <div className="SNSWrap">
           <p> SNS로 시작하기</p>
           <div className="SNSLoginContainer">
-            <div onClick={kakaoLogin}>🟡카카오</div>
-            <div>⚪️구글</div>
-            <div>🟢네이버</div>
-            <div>🔵페북</div>
+            <div onClick={kakaoLogin}>
+              {' '}
+              <Image
+                src="/images/kakaoLogo.png"
+                alt="KakaoLogin"
+                width={48}
+                height={48}
+              />
+            </div>
+            <div onClick={googleLogin}>
+              <Image
+                src="/images/googleLogo.png"
+                alt="GoogleLogin"
+                width={48}
+                height={48}
+              />
+            </div>
+            <div>
+              <Image
+                src="/images/naverLogo.png"
+                alt="NaverLogin"
+                width={48}
+                height={48}
+              />
+            </div>
+            <div onClick={facebookLogin}>
+              {' '}
+              <Image
+                src="/images/facebookLogo.png"
+                alt="FacebookLogin"
+                width={48}
+                height={48}
+              />
+            </div>
           </div>
         </div>
-        <div>
-          <Link href="./sign-up">아이디가 없으신가요?</Link>
+        <StyledDivTest>
+          {user ? '환영합니다,' + user.displayName + '님' : ''}
+          <button
+            onClick={() => {
+              console.log(user);
+              auth.signOut();
+            }}
+          >
+            로그아웃하기
+          </button>
+          <button
+            onClick={() => {
+              console.log(user);
+            }}
+          >
+            로그인 유저 정보
+          </button>
+        </StyledDivTest>
+        <div className="LinkSignUp">
+          <Link href="./sign-up" className="LinkSignUpMessage">
+            아이디가 없으신가요?
+          </Link>
         </div>
       </StyledDiv>
     </StyledBackground>
@@ -224,14 +321,22 @@ const StyledBackground = styled.div`
 `;
 
 const StyledDiv = styled.div`
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
   width: 36.75rem;
   height: 44.75rem;
-  left: 41.625rem;
-  top: 11.375rem;
   background: #ffffff;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
-
+  input {
+    width: 100%;
+    outline: none;
+    border: none;
+    height: 48px;
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
   .titleWrap {
     padding-top: 2.5rem;
     font-style: normal;
@@ -241,11 +346,13 @@ const StyledDiv = styled.div`
     text-align: center;
     justify-content: center;
   }
-
+  .inputDiv {
+    padding: 0px 60px 0 60px;
+  }
+  #loginInput {
+    margin: 30px 0 0 0;
+  }
   .inputWrap {
-    width: 480px;
-    height: 48px;
-    margin: 30px 54px;
     display: flex;
     align-items: center;
     padding: 2.4px 8px 2.4px 8px;
@@ -264,11 +371,18 @@ const StyledDiv = styled.div`
   }
 
   .inputTitle {
+    /* Pretendard Medium 18 */
+
     font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
-    line-height: 24px;
+    line-height: 20px;
+    /* identical to box height, or 111% */
+
+    /* Gray 09 */
+
+    color: #17171c;
   }
 
   .inputWrap:focus-within {
@@ -278,11 +392,18 @@ const StyledDiv = styled.div`
     }
   }
 
-  input {
-    width: 100%;
+  .stayLogin {
+    display: flex;
+    align-items: center;
+  }
+
+  .stayLoginButton {
+    margin: 0;
+    margin-right: 10px;
+    width: 12px;
     outline: none;
     border: none;
-    height: 48px;
+    height: 12px;
     font-size: 0.875rem;
     font-weight: 400;
   }
@@ -290,13 +411,14 @@ const StyledDiv = styled.div`
   .inputWrap-error {
     border: 0.0625rem solid red;
   }
-
+  .errorMessageWrapContainer {
+    padding-top: 7px;
+    padding-left: 5px;
+    height: 14.5px;
+  }
   .errorMessageWrap {
-    margin: 30px 54px;
     color: #ef0000;
     font-size: 12px;
-    height: 1.25rem;
-    overflow: hidden;
   }
 
   /* .inputWrap:focus-within .input-error {
@@ -311,7 +433,7 @@ const StyledDiv = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 3.75rem;
+    padding-top: 1.875rem;
   }
   .LoginButton {
     width: 480px;
@@ -328,28 +450,101 @@ const StyledDiv = styled.div`
   }
 
   .buttonBottomWrap {
+    display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0px 54px;
-
-    input {
-      height: 16px;
-    }
-
     p {
-      font-size: 16px;
+      /* Pretendard Medium 14 */
+
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+      /* or 143% */
+
+      display: flex;
+      align-items: center;
+
+      /* Gray 06 */
+
+      color: #495057;
     }
   }
+
+  .findPassword {
+    /* Pretendard Medium 14 */
+
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    /* or 143% */
+
+    display: flex;
+    align-items: center;
+    text-align: right;
+
+    /* Gray 06 */
+
+    color: #495057;
+    text-decoration: none;
+  }
+
   .SNSWrap {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 85px;
+    p {
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      /* or 125% */
+
+      color: #000000;
+    }
     .SNSLoginContainer {
       display: flex;
       div {
         font-size: 30px;
         padding: 10px;
+        cursor: pointer;
       }
     }
   }
+
+  .LinkSignUp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 85px;
+  }
+  .LinkSignUpMessage {
+    /* Pretendard Medium 12 */
+
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    /* or 133% */
+
+    display: flex;
+    align-items: center;
+
+    /* Gray 05 */
+
+    color: #868e96;
+    text-decoration: none;
+  }
+`;
+
+const StyledDivTest = styled.div`
+  position: fixed;
 `;

@@ -1,3 +1,4 @@
+// 홍구 카카오 API키
 export const kakaoInit = () => {
   const kakao = (window as any).Kakao;
 
