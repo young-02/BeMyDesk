@@ -8,10 +8,11 @@ type Props = {
     HTMLInputElement
   >;
 };
-
+// 모달 백드랍
 const Backdrop = (props: any) => {
   return <ModalBackDrop onClick={props.onClose}></ModalBackDrop>;
 };
+//모달 오버레이
 const ModalOverlay = (props: any) => {
   return (
     <div>
@@ -24,6 +25,7 @@ const portalElement =
   typeof window !== 'undefined' &&
   (document.getElementById('modal-root') as HTMLElement);
 
+//모달 함수
 const DetailWriteSearchModal = (props: any) => {
   return (
     <>
@@ -51,12 +53,14 @@ const ModalBackDrop = styled.div`
 
 const ModalOverlays = styled.div`
   position: fixed;
-  top: 20vh;
-  left: 5%;
-  width: 90%;
+  top: 15vh;
+  left: 25%;
+  width: 50rem;
+  height: 40rem;
   background-color: white;
   padding: 1rem;
   border-radius: 10px;
   z-index: 20;
+  overflow: scroll;
 `;
 export default DetailWriteSearchModal;
