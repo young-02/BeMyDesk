@@ -1,7 +1,7 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import Head from 'next/head';
-
 import Script from 'next/script';
 
 declare global {
@@ -9,6 +9,8 @@ declare global {
     Kakao: any;
   }
 }
+
+const client = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   const kakaoInit = () => {
@@ -26,8 +28,14 @@ export default function App({ Component, pageProps }: AppProps) {
         src="https://developers.kakao.com/sdk/js/kakao.js"
         onLoad={kakaoInit}
       ></Script>
-
+  <QueryClientProvider client={client}>
       <Component {...pageProps} />
+       </QueryClientProvider>
     </>
   );
 }
+
+
+
+
+
