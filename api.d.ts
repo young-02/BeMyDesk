@@ -2,7 +2,7 @@
 export const kakaoInit = () => {
   const kakao = (window as any).Kakao;
 
-  kakao.init('2e25b083ca47e600eb159f496a652513');
+  kakao.init(process.env.NEXT_PUBLIC_KAKAO_API);
 
   return kakao;
 };
