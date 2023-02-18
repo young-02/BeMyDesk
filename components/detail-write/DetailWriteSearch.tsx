@@ -34,7 +34,7 @@ const DetailWriteSearch = (props: any) => {
   );
 
   /**
-   * pages/api/datas vpd로 우회해서 네이버 오픈 api 데이터 get해오는 함수
+   * pages/api/datas api로 우회해서 네이버 오픈API 데이터 get해오는 함수
    */
   const getNaverData = async () => {
     const response = await axios
@@ -52,21 +52,12 @@ const DetailWriteSearch = (props: any) => {
   const selectProduct = (item: any) => {
     const newList = [...list, item];
     setList(newList);
-
-    const changeJson = JSON.stringify(newList);
-    const saveLocalStorage = localStorage.setItem('products', changeJson);
   };
 
   // 선택한 제품 삭제하기
   const deleteProduct = (item: any) => {
     const deletedList = list;
     setList(deletedList.filter((i) => i.productId !== item.productId));
-
-    // 로컬스토리지에서 선택한 제품 삭제하기(아직 작업중)
-    let index = 0;
-    let product = JSON.parse(localStorage.getItem('products') || '[]');
-    product.splice(index, 1);
-    localStorage.setItem('products', JSON.stringify(product));
   };
 
   const submitProduct = () => {
