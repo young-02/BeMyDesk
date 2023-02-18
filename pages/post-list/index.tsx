@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import {
   collection,
@@ -13,8 +14,8 @@ import PostListCard from '@/components/PostListCard';
 import GlobalNavigationBar from '../../components/GlobalNavigationBar';
 import PostListFilterBar from '../../components/PostListFilterBar';
 import ProductsList from '../../components/ProductsList';
+import PostListItem from '@/components/post-list/PostListItem';
 
-type Props = {};
 
 export default function PostList() {
   // 🔖 로그인 기능과 합쳐지면, userId 초기값을 UID 로 변경합니다.
