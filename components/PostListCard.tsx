@@ -6,14 +6,15 @@ import inactiveLikes from '../public/images/inactiveLikes.png';
 import { doc, updateDoc } from 'firebase/firestore';
 import { dbService } from '../shared/firebase';
 
-type Props = {};
+type PostListCardProps = { post: PostType; currentUserId: string };
 
-const PostListCard = ({ post, currentUserId }) => {
-  // currentUser 가 해당 포스트가 좋아요 눌렀는지 여부
+const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
+  // currentUser 가 해당 포스트가 좋아요 눌렀는지 여부 확인
   const initialState = post.likes.includes(currentUserId) ? true : false;
   const [isLikesClicked, setIsLikesClicked] = useState(initialState);
 
-  // 좋아요 버튼을 클릭했을 때, likes & likesCount 수정 로직
+  // 좋아요 버튼을 클릭했을 때, firebase 의 likes & likesCount 수정 로직
+  // 🔖 로그인 안된 undefined 상태일 때 로그인 페이지로 이동하는 기능 추가 예정입니다.
   const updateLikes = async () => {
     const postRef = doc(dbService, 'postData', post.id);
     if (isLikesClicked === false) {
@@ -39,7 +40,7 @@ const PostListCard = ({ post, currentUserId }) => {
           backgroundImage: `url(https://i.pinimg.com/564x/39/43/6c/39436c3a2f88447e3f87bb702368cf7a.jpg)`,
         }}
       />
-      <CardContentArea>
+      <CardContentBox>
         <div
           className="profile-image"
           style={{
@@ -49,6 +50,7 @@ const PostListCard = ({ post, currentUserId }) => {
         <div className="top">
           <h4>{post.userId}</h4>
           <p>1분전</p>
+          {/* 🔖 타임스탬프 ~분전 변환 적용 예정입니다. */}
           {/* <p>{post.createdAt}</p> */}
         </div>
         <div className="middle">
@@ -66,7 +68,7 @@ const PostListCard = ({ post, currentUserId }) => {
             />
           </div>
         </div>
-      </CardContentArea>
+      </CardContentBox>
     </PostListCardLayout>
   );
 };
@@ -95,7 +97,7 @@ const PostListCardLayout = styled.div`
   }
 `;
 
-const CardContentArea = styled.div`
+const CardContentBox = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -115,25 +117,30 @@ const CardContentArea = styled.div`
     background-size: 2.125rem;
     background-position: center center;
   }
+
   .top {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     font-size: 0.625rem;
     margin-bottom: 0.625rem;
+
     > h4 {
       font-size: 0.75rem;
       font-weight: 700;
     }
   }
+
   .middle {
     display: flex;
     flex-direction: column;
+
     > h3 {
       font-size: 1rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
+
     > p {
       font-size: 0.75rem;
       font-weight: 500;
@@ -141,6 +148,7 @@ const CardContentArea = styled.div`
       margin-bottom: 1.25rem;
     }
   }
+
   .bottom {
     display: flex;
     flex-direction: row;
@@ -148,6 +156,7 @@ const CardContentArea = styled.div`
     font-size: 0.625rem;
     font-weight: 500;
     color: #4880e5;
+
     > div {
       display: flex;
       flex-direction: row;
