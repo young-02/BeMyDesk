@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Head from 'next/head';
 import Script from 'next/script';
+import Top from '@/components/layout/Top';
 
 declare global {
   interface Window {
@@ -23,14 +24,16 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Top />
       <Script
         defer
         src="https://developers.kakao.com/sdk/js/kakao.js"
         onLoad={kakaoInit}
       ></Script>
-  <QueryClientProvider client={client}>
+    <QueryClientProvider client={client}>
       <Component {...pageProps} />
        </QueryClientProvider>
+
     </>
   );
 }
