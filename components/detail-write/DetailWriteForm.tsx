@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import DetailWriteSearch from './DetailWriteSearch';
 import DetailWriteProductCard from './DetailWriteProductCard';
+import DetaillWriteImageInput from './DetaillWriteImageInput';
 
 type Props = {};
 
@@ -48,6 +49,7 @@ const DetailWriteForm = () => {
         <DetailWriteBox>
           <span className="title_span">
             테스크테리어 분위기 색상을 선택해주세요
+            <DetaillWriteImageInput />
           </span>
         </DetailWriteBox>
         <DetailWriteBox>
@@ -74,7 +76,7 @@ const DetailWriteLayout = styled.form`
   align-items: center;
   margin: 0 auto;
   width: 80%;
-  height: 100vh;
+  height: 125vh;
   padding: 0.5rem;
 `;
 
@@ -142,7 +144,7 @@ const DetailWriteBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 75rem;
-  height: 3.25rem;
+  height: 12.5rem;
   margin: 2rem;
 
   .title_span {
