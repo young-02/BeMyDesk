@@ -63,7 +63,7 @@ export function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
               onChange={handleImageUpload}
               style={{ display: 'none' }}
             />
-            <button onClick={removeProfileImage}>프로필사진 삭제</button>
+            <button onClick={removeProfileImage}>기본 이미지 변경하기</button>
           </div>
 
           <div>

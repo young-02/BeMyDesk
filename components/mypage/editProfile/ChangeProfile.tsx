@@ -1,6 +1,7 @@
 import { updateProfile } from 'firebase/auth';
 import React, { useState } from 'react';
-import { app, auth } from '@/shared/firebase';
+import { app, auth, dbService } from '@/shared/firebase';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 
 function ChangeProfile({ user }: any) {
   const [profileChangeDone, setProfileChangeDone] = useState(false);
@@ -42,6 +43,22 @@ function ChangeProfile({ user }: any) {
         displayName: nickNameEdit,
       });
       setProfileChangeDone(true);
+
+      const collectionRef = doc(dbService, `userInfo/${user.uid}`);
+      const payload = {
+        userId: user.uid,
+        // 스크랩한 글번호
+        // 팔로잉한 사람 UID
+        introduction: Characters,
+      };
+
+      setDoc(collectionRef, payload)
+        .then(() => {
+          setCharacters('');
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } else {
       alert(
         '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자이하이어야합니다.',
