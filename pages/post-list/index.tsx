@@ -8,6 +8,7 @@ import {
   orderBy,
   getDocs,
   doc,
+  where,
 } from 'firebase/firestore';
 import { dbService } from '../../shared/firebase';
 import styled from 'styled-components';
@@ -39,7 +40,13 @@ export default function PostList() {
       orderBy('likesCount', 'desc'),
       orderBy('createdAt', 'desc'),
     );
-    onSnapshot(trendFilter, (snapshot) => {
+    // 직업별 필터 - 직업별 + 최신순
+    const jobFilter = query(
+      collection(dbService, 'postData'),
+      where('jobCategory', '==', '디자이너'),
+      orderBy('createdAt', 'desc'),
+    );
+    onSnapshot(jobFilter, (snapshot) => {
       const postData: any = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
