@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import {
   collection,
@@ -15,7 +14,6 @@ import GlobalNavigationBar from '../../components/GlobalNavigationBar';
 import PostListFilterBar from '../../components/PostListFilterBar';
 import ProductsList from '../../components/ProductsList';
 import PostListItem from '@/components/post-list/PostListItem';
-
 
 export default function PostList() {
   // 🔖 로그인 기능과 합쳐지면, userId 초기값을 UID 로 변경합니다.
@@ -87,10 +85,7 @@ export default function PostList() {
 
   return (
     <PostListLayout>
-      <Header>
-        <GlobalNavigationBar theme="light" />
-        <PostListFilterBar theme="light" />
-      </Header>
+      <Header>{/* <PostListFilterBar theme="light" /> */}</Header>
       {/* 🔖 임시 post 추가를 위한 헤더, 로직 구현 시 삭제합니다. */}
       {/* <DummyHeader>
         <h1>포스트</h1>

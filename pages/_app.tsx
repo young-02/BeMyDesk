@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import Head from 'next/head';
 import Script from 'next/script';
 import Top from '@/components/layout/Top';
+import GlobalNavigationBar from '../components/GlobalNavigationBar';
 
 declare global {
   interface Window {
@@ -24,21 +25,16 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <Top />
+      {/* <Top /> */}
+      <GlobalNavigationBar />
       <Script
         defer
         src="https://developers.kakao.com/sdk/js/kakao.js"
         onLoad={kakaoInit}
       ></Script>
-    <QueryClientProvider client={client}>
-      <Component {...pageProps} />
-       </QueryClientProvider>
-
+      <QueryClientProvider client={client}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
     </>
   );
 }
-
-
-
-
-
