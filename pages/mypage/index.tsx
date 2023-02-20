@@ -5,9 +5,9 @@ import { Router, useRouter } from 'next/router';
 import Image from 'next/image';
 import styled from 'styled-components';
 
-import MyPost from '@/components/mypage/myPost';
-import MyScrap from '@/components/mypage/myScrap';
-import MyFollow from '@/components/mypage/myFollow';
+import MyPost from '@/components/mypage/contents/MyPost';
+import MyScrap from '@/components/mypage/contents/MyScrap';
+import MyFollow from '@/components/mypage/contents/MyFollow';
 import CategoryButton from '@/components/mypage/CategoryButton';
 import ProfileEditModal from '@/components/mypage/ProfileEditModal';
 
@@ -21,6 +21,8 @@ export default function MyPage({}: Props) {
   const [myScrap, setMyScrap] = useState([]);
   const [myFollow, setMyFollow] = useState([]);
   const [profileEditModalOpen, setProfileEditModalOpen] = useState(false);
+  const postCount = myPost.length;
+  const scrapCount = myScrap.length;
   const followCount = myFollow.length;
 
   if (loading) {

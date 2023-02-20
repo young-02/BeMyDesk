@@ -108,8 +108,7 @@ export default function SignUp({}: Props) {
       const remainInfo = {
         email: email,
         displayName: nickname,
-        photoURL:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/680px-Default_pfp.svg.png?20220226140232',
+        photoURL: '/images/defaultProfile.png',
       };
 
       updateProfile(data.user, remainInfo);

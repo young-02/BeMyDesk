@@ -6,6 +6,7 @@ import {
   FacebookAuthProvider,
   getAuth,
   signInWithCustomToken,
+  updateProfile,
 } from 'firebase/auth';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -143,13 +144,18 @@ export default function SignIn({}: Props) {
   const googleAuth = new GoogleAuthProvider();
   const googleLogin = async () => {
     const result_google = await signInWithPopup(auth, googleAuth);
+    updateProfile(result_google.user, {
+      photoURL: '/images/defaultProfile.png',
+    });
   };
-
   //페이스북 로그인
 
   const facebookAuth = new FacebookAuthProvider();
   const facebookLogin = async () => {
     const result_facebook = await signInWithPopup(auth, facebookAuth);
+    updateProfile(result_facebook.user, {
+      photoURL: '/images/defaultProfile.png',
+    });
   };
 
   useEffect(() => {
@@ -277,7 +283,7 @@ export default function SignIn({}: Props) {
             </div>
           </div>
         </div>
-        {/* <StyledDivTest>
+        <StyledDivTest>
           {user ? '환영합니다,' + user.displayName + '님' : ''}
           <button
             onClick={() => {
@@ -294,7 +300,7 @@ export default function SignIn({}: Props) {
           >
             로그인 유저 정보
           </button>
-        </StyledDivTest> */}
+        </StyledDivTest>
         <div className="LinkSignUp">
           <Link href="./sign-up" className="LinkSignUpMessage">
             아이디가 없으신가요?
