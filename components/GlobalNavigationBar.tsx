@@ -47,6 +47,8 @@ export default React.memo(GlobalNavigationBar);
 const GNBLayout = styled.div`
   width: 100vw;
   display: flex;
+  position: sticky;
+  top: 0rem;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
