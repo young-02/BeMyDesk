@@ -3,7 +3,7 @@ import { doc, setDoc, updateDoc, addDoc } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useCheckLogin from '../Hooks/useCheckLogin';
-import useGetFollow from '../Hooks/useGetFollow';
+import useGetReaction from '../Hooks/useGetReaction';
 import CustomButton from '../ui/CustomButton';
 import { useRouter } from 'next/router';
 
@@ -13,7 +13,7 @@ export default function DetailViewUserInfor({ detail }) {
     detail;
   const { isLogin, isUserObj, logOut } = useCheckLogin();
   const like = likes.includes(isUserObj) ? true : false;
-  const { userInfor } = useGetFollow();
+  const { userInfor } = useGetReaction();
   const [followings, setFollowings] = useState();
   const [scraps, setScraps] = useState();
   const follow = !!followings?.includes(userId) ? true : false;
@@ -25,23 +25,22 @@ export default function DetailViewUserInfor({ detail }) {
         (auth.currentUser?.uid === item.id && setFollowings(item.followings)) ||
         (auth.currentUser?.uid === item.id && setScraps(item.scraps)),
     );
-  }, []);
-
-  console.log(scraps);
+  }, [userInfor]);
 
   const onclickScrap = async (num) => {
-    if (isLogin && isUserObj) {
+    if (isLogin) {
       if (!!scraps.includes(id)) {
         scraps.pop(id);
       } else {
         scraps.push(id);
       }
+
+      const docRef = doc(dbService, 'userInfo', num);
+      const payload = { scraps };
+      await updateDoc(docRef, payload);
     } else {
       router.push('/auth/sign-in');
     }
-    const docRef = doc(dbService, 'userInfo', num);
-    const payload = { scraps };
-    await updateDoc(docRef, payload);
   };
 
   const onclickLove = async (num: any) => {
@@ -63,18 +62,19 @@ export default function DetailViewUserInfor({ detail }) {
   };
 
   const onclickFollow = async (num: any) => {
-    if (isLogin && isUserObj) {
+    if (isLogin) {
       if (!!followings.includes(userId)) {
         followings.pop(userId);
       } else {
         followings.push(userId);
       }
+
+      const docRef = doc(dbService, 'userInfo', num);
+      const payload = { followings };
+      await updateDoc(docRef, payload);
     } else {
       router.push('/auth/sign-in');
     }
-    const docRef = doc(dbService, 'userInfo', num);
-    const payload = { followings };
-    await updateDoc(docRef, payload);
   };
 
   return (
