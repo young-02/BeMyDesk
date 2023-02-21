@@ -1,71 +1,43 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, memo } from 'react';
 import DetailWriteSearchModal from './DetailWriteSearchModal';
 import styled from 'styled-components';
 import axios from 'axios';
 import close from 'public/images/close.png';
+
 axios.defaults.withCredentials = true;
 
 interface DetailWriteSearchProductBox {
   productClick?: boolean;
   display?: string;
   overflow?: string;
+  isActive?: boolean;
 }
 
-type Props = {};
+export interface listProps {
+  title: string;
+  category: string;
+  image: string;
+  productId?: string;
+}
 
-const DetailWriteSearch = (props: any) => {
-  // 검색어 state
-  const [searchWord, setSearchWord] = useState('');
+type Props = { item: listProps[] };
 
-  // 네이버 데이터 state
-  const [data, setData] = useState<any[]>([]);
-
-  // 검색해서 선택한 제품 state
-  const [list, setList] = useState<any[]>([]);
-
-  /**
-   * 인풋창에 작성할 때 딜레이가 안 되게끔 하는 함수
-   */
-  const inputSearchWord = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchWord(e.target.value);
-    },
-    [searchWord],
-  );
-
-  /**
-   * pages/api/datas api로 우회해서 네이버 오픈API 데이터 get해오는 함수
-   */
-  const getNaverData = async () => {
-    const response = await axios
-      .get('http://localhost:3000/api/naverData', {
-        params: {
-          query: searchWord,
-        },
-      })
-      .then((response) => setData(response.data))
-      .catch((Error) => console.log(Error));
-  };
-
-  // console.log(data);
-
-  const selectProduct = (item: any) => {
-    const newList = [...list, item];
-    setList(newList);
-  };
-
-  // 선택한 제품 삭제하기
-  const deleteProduct = (item: any) => {
-    const deletedList = list;
-    setList(deletedList.filter((i) => i.productId !== item.productId));
-  };
-
-  const submitProduct = () => {
-    console.log('gg');
-  };
-
+const DetailWriteSearch = ({
+  searchWord,
+  setSearchWord,
+  data,
+  setData,
+  list,
+  setList,
+  inputSearchWord,
+  getNaverData,
+  selectProduct,
+  deleteProduct,
+  onClose,
+  onClick,
+}: any) => {
   return (
-    <DetailWriteSearchModal onClose={props.onClose}>
+    <DetailWriteSearchModal onClose={onClose}>
       <DetailWriteSearchLayout>
         <DetailWriteSearchBoxTop>
           <DetailWriteSearchBox>
@@ -73,13 +45,14 @@ const DetailWriteSearch = (props: any) => {
               <span className="search">검색하기</span>
               <span className="search">직접 등록하기</span>
             </div>
-            <button className="closeBtn" onClick={props.onClose}>
+            <button className="closeBtn" onClick={onClose}>
               <img className="closeBtnImage" src={close.src} />
             </button>
           </DetailWriteSearchBox>
           <span>제품을 검색해주세요</span>
           <div>
             <input
+              id="products"
               type="text"
               placeholder="검색어를 입력해주세요"
               value={searchWord}
@@ -106,14 +79,14 @@ const DetailWriteSearch = (props: any) => {
           ))}
         </div>
         <DetailWriteSearchBoxBottom>
-          {list.map((item) => (
-            <div>
+          {list?.map((item: any) => (
+            <div key={item.productId}>
               {item.title.split('<b>').join('').split('</b>').join('')}
               <button onClick={() => deleteProduct(item)}>삭제</button>
             </div>
           ))}
-          <button onClick={props.onClose}>닫기</button>
-          <button onClick={submitProduct}>등록하기</button>
+          <button onClick={onClose}>닫기</button>
+          <button onClick={onClick}>등록하기</button>
         </DetailWriteSearchBoxBottom>
       </DetailWriteSearchLayout>
     </DetailWriteSearchModal>
@@ -187,4 +160,4 @@ const DetailWriteSearchBoxBottom = styled.div`
   background-color: #fff;
 `;
 
-export default DetailWriteSearch;
+export default memo(DetailWriteSearch);
