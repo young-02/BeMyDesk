@@ -1,21 +1,13 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-type Props = {};
 
 const DetaillWriteImageInput = () => {
-  // interface uploadImageProps {
-  //   file?: File;
-  //   thumbnail?: string;
-  //   type?: string;
-  //   setImageFile?: [];
-  // }
-
-  const imageUploadRef = useRef<HTMLInputElement>(null);
+  // 데스크테리어 이미지 관리 state
   const [imageFile, setImageFile] = useState([]);
 
   const fileUpload = (event: any) => {
     const imageUpload = event.target.files;
-    let imageUrlList: string[] | any = [...imageFile];
+    const imageUrlList: string[] | any = [...imageFile];
 
     for (let i = 0; i < imageUpload.length; i++) {
       const currentImageUrl = URL.createObjectURL(imageUpload[i]);
@@ -23,15 +15,13 @@ const DetaillWriteImageInput = () => {
     }
 
     if (imageUrlList.length > 2) {
-      return (imageUrlList = imageUrlList.splice(0, 2));
+      return alert('이미지 갯수 초과');
     }
 
     setImageFile(imageUrlList);
-    console.log('왔나?', imageUrlList);
   };
 
   const deleteImage = (image: any) => {
-    console.log(image, '과연');
     const imageUrlList = [...imageFile];
     setImageFile(imageUrlList.filter((i) => i !== image));
   };
@@ -51,12 +41,12 @@ const DetaillWriteImageInput = () => {
       {imageFile.map((image) => (
         <div
           key={image}
-          style={{ width: '100', height: '100', objectFit: 'cover' }}
+          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
         >
           <img
             src={image}
             alt={`${image}`}
-            // style={{ width: '100', height: '100', objectFit: 'cover' }}
+            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
           />
           <div onClick={() => deleteImage(image)} style={{ cursor: 'pointer' }}>
             x
