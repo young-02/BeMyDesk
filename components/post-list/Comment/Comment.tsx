@@ -34,6 +34,9 @@ export default function Comment({ path }: any) {
 }
 
 const CommentLayout = styled.div`
+  max-width: 894px;
+  width: 100%;
+
   .title {
     font-size: 1.25rem;
   }

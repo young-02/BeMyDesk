@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import Head from 'next/head';
 import Script from 'next/script';
 import Top from '@/components/layout/Top';
+import styled from 'styled-components';
 
 declare global {
   interface Window {
@@ -30,15 +31,16 @@ export default function App({ Component, pageProps }: AppProps) {
         src="https://developers.kakao.com/sdk/js/kakao.js"
         onLoad={kakaoInit}
       ></Script>
-    <QueryClientProvider client={client}>
-      <Component {...pageProps} />
-       </QueryClientProvider>
-
+      <QueryClientProvider client={client}>
+        <LayoutStyle>
+          <Component {...pageProps} />
+        </LayoutStyle>
+      </QueryClientProvider>
     </>
   );
 }
 
-
-
-
-
+const LayoutStyle = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;

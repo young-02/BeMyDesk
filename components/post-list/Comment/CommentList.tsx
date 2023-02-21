@@ -77,14 +77,14 @@ export default function CommentList({ comment, path }) {
         <div className="commentModify">
           <CustomButton
             backgoundColor="none"
-            fonstColor="#868E96"
+            fontColor="#868E96"
             onClick={() => editComment(id)}
           >
             수정
           </CustomButton>
           <CustomButton
             backgoundColor="none"
-            fonstColor="#868E96"
+            fontColor="#868E96"
             onClick={() => deleteComment(id)}
           >
             삭제

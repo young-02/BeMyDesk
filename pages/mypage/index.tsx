@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
-import { app, auth } from '@/shared/firebase';
+import React, { useEffect, useState } from 'react';
+import { app, auth, dbService } from '@/shared/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Router, useRouter } from 'next/router';
 import Image from 'next/image';
 import styled from 'styled-components';
 
-import MyPost from '@/components/mypage/MyPost';
-import MyScrap from '@/components/mypage/MyScrap';
-import MyFollow from '@/components/mypage/MyFollow';
+import MyPost from '@/components/mypage/contents/MyPost';
+import MyScrap from '@/components/mypage/contents/MyScrap';
+import MyFollow from '@/components/mypage/contents/MyFollow';
 import CategoryButton from '@/components/mypage/CategoryButton';
 import ProfileEditModal from '@/components/mypage/ProfileEditModal';
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  where,
+} from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 type Props = {};
 
@@ -21,7 +30,28 @@ export default function MyPage({}: Props) {
   const [myScrap, setMyScrap] = useState([]);
   const [myFollow, setMyFollow] = useState([]);
   const [profileEditModalOpen, setProfileEditModalOpen] = useState(false);
+  const postCount = myPost.length;
+  const scrapCount = myScrap.length;
   const followCount = myFollow.length;
+
+  const [profileData, setProfileData] = useState({});
+  console.log(user);
+  useEffect(() => {
+    const fetch = async () => {
+      const docRef = doc(dbService, 'userInfo', `${auth.currentUser?.uid}`);
+      const docSnap = await getDoc(docRef);
+      console.log('docSnap', docSnap);
+      if (docSnap.exists()) {
+        console.log('Document data:', docSnap.data());
+        setProfileData(docSnap.data());
+        console.log('aa', profileData);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log('No such document!');
+      }
+    };
+    fetch();
+  }, [auth.currentUser]);
 
   if (loading) {
     return <div>로딩중입니다...</div>;
@@ -44,13 +74,10 @@ export default function MyPage({}: Props) {
             />
           </div>
           <p>닉네임 {user.displayName} 님</p>
-          <p>
-            별들을 프랑시스 이제 가을로 거외다. 노루, 가득 것은 다 많은 슬퍼하는
-            듯합니다
-          </p>
+
+          <p>{profileData.introduction}</p>
           <p>이메일: {user.email}</p>
           <p>팔로워 100명</p>
-          <p>디자이너</p>
           <button onClick={() => auth.signOut()}>로그아웃</button>
           <button onClick={() => console.log('유저정보', user)}>
             유저정보 보기
