@@ -45,9 +45,9 @@ function GlobalNavigationBar() {
 export default React.memo(GlobalNavigationBar);
 
 const GNBLayout = styled.div`
-  width: 100vw;
+  width: 100%;
   display: flex;
-  position: sticky;
+  position: fixed;
   top: 0rem;
   flex-direction: row;
   justify-content: space-between;
@@ -56,6 +56,7 @@ const GNBLayout = styled.div`
   background-color: ${(props) => (props.theme === 'light' ? 'white' : 'black')};
   font-family: 'Pretendard Variable';
   color: ${(props) => (props.theme === 'light' ? 'black' : 'white')};
+  z-index: 999;
 
   > div {
     height: 6.75rem;
