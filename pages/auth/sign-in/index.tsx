@@ -1,4 +1,4 @@
-import { app, auth } from '@/shared/firebase';
+import { app, auth, dbService } from '@/shared/firebase';
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -6,6 +6,7 @@ import {
   FacebookAuthProvider,
   getAuth,
   signInWithCustomToken,
+  updateProfile,
 } from 'firebase/auth';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,6 +16,7 @@ import styled from 'styled-components';
 import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 type Props = {};
 
@@ -139,22 +141,58 @@ export default function SignIn({}: Props) {
   };
 
   //구글로그인
-
   const googleAuth = new GoogleAuthProvider();
   const googleLogin = async () => {
-    const result_google = await signInWithPopup(auth, googleAuth);
+    try {
+      const result_google = await signInWithPopup(auth, googleAuth);
+
+      await updateProfile(result_google.user, {
+        photoURL: '/images/defaultProfile.png',
+      });
+
+      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
+      const payload = {
+        userId: auth.currentUser?.uid,
+        scraps: [],
+        following: [],
+        introduction: '안녕하세요!',
+      };
+
+      await setDoc(collectionRef, payload);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   //페이스북 로그인
 
   const facebookAuth = new FacebookAuthProvider();
   const facebookLogin = async () => {
-    const result_facebook = await signInWithPopup(auth, facebookAuth);
+    try {
+      const result_facebook = await signInWithPopup(auth, facebookAuth);
+
+      await updateProfile(result_facebook.user, {
+        photoURL: '/images/defaultProfile.png',
+      });
+
+      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
+      const payload = {
+        userId: auth.currentUser?.uid,
+        scraps: [],
+        following: [],
+        introduction: '안녕하세요!',
+      };
+
+      await setDoc(collectionRef, payload);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
-    console.log('userInfo', user);
-  }, [user]);
+    console.log('userInfo', auth.currentUser);
+  }, [auth.currentUser]);
+
   return (
     <StyledBackground>
       <StyledDiv>
@@ -277,7 +315,7 @@ export default function SignIn({}: Props) {
             </div>
           </div>
         </div>
-        {/* <StyledDivTest>
+        <StyledDivTest>
           {user ? '환영합니다,' + user.displayName + '님' : ''}
           <button
             onClick={() => {
@@ -294,7 +332,7 @@ export default function SignIn({}: Props) {
           >
             로그인 유저 정보
           </button>
-        </StyledDivTest> */}
+        </StyledDivTest>
         <div className="LinkSignUp">
           <Link href="./sign-up" className="LinkSignUpMessage">
             아이디가 없으신가요?
