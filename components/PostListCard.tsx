@@ -5,11 +5,13 @@ import activeLikes from '../public/images/activeLikes.png';
 import inactiveLikes from '../public/images/inactiveLikes.png';
 import { doc, updateDoc } from 'firebase/firestore';
 import { dbService } from '../shared/firebase';
+import Link from 'next/link';
 
 type PostListCardProps = { post: PostType; currentUserId: string };
 
 const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
   // currentUser 가 해당 포스트가 좋아요 눌렀는지 여부 확인
+
   const initialState = post.likes.includes(currentUserId) ? true : false;
   const [isLikesClicked, setIsLikesClicked] = useState(initialState);
 
@@ -33,43 +35,45 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
   };
 
   return (
-    <PostListCardLayout key={post.id}>
-      <div
-        className="post-image"
-        style={{
-          backgroundImage: `url(https://i.pinimg.com/564x/39/43/6c/39436c3a2f88447e3f87bb702368cf7a.jpg)`,
-        }}
-      />
-      <CardContentBox>
+    <Link href={`/post-list/${post.id}`}>
+      <PostListCardLayout key={post.id}>
         <div
-          className="profile-image"
+          className="post-image"
           style={{
-            backgroundImage: `url(https://i.pinimg.com/564x/78/c5/4d/78c54def60d50449183cb8161ff78983.jpg)`,
+            backgroundImage: `url(https://i.pinimg.com/564x/39/43/6c/39436c3a2f88447e3f87bb702368cf7a.jpg)`,
           }}
         />
-        <div className="top">
-          <h4>{post.userId}</h4>
-          <p>1분전</p>
-          {/* 🔖 타임스탬프 ~분전 변환 적용 예정입니다. */}
-          {/* <p>{post.createdAt}</p> */}
-        </div>
-        <div className="middle">
-          <h3>{post.postTitle}</h3>
-          <p>{post.postText}</p>
-        </div>
-        <div className="bottom">
-          <p>{post.jobCategory}의 책상</p>
-          <div onClick={updateLikes}>
-            <p>{post.likesCount}</p>
-            <Image
-              src={isLikesClicked ? activeLikes : inactiveLikes}
-              alt="likes-icon"
-              width={10}
-            />
+        <CardContentBox>
+          <div
+            className="profile-image"
+            style={{
+              backgroundImage: `url(https://i.pinimg.com/564x/78/c5/4d/78c54def60d50449183cb8161ff78983.jpg)`,
+            }}
+          />
+          <div className="top">
+            <h4>{post.userId}</h4>
+            <p>1분전</p>
+            {/* 🔖 타임스탬프 ~분전 변환 적용 예정입니다. */}
+            {/* <p>{post.createdAt}</p> */}
           </div>
-        </div>
-      </CardContentBox>
-    </PostListCardLayout>
+          <div className="middle">
+            <h3>{post.postTitle}</h3>
+            <p>{post.postText}</p>
+          </div>
+          <div className="bottom">
+            <p>{post.jobCategory}의 책상</p>
+            <div onClick={updateLikes}>
+              <p>{post.likesCount}</p>
+              <Image
+                src={isLikesClicked ? activeLikes : inactiveLikes}
+                alt="likes-icon"
+                width={10}
+              />
+            </div>
+          </div>
+        </CardContentBox>
+      </PostListCardLayout>
+    </Link>
   );
 };
 

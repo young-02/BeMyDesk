@@ -5,9 +5,9 @@ import { Router, useRouter } from 'next/router';
 import Image from 'next/image';
 import styled from 'styled-components';
 
-import MyPost from '@/components/mypage/myPost';
-import MyScrap from '@/components/mypage/myScrap';
-import MyFollow from '@/components/mypage/myFollow';
+import MyPost from '@/components/mypage/MyPost';
+import MyScrap from '@/components/mypage/MyScrap';
+import MyFollow from '@/components/mypage/MyFollow';
 import CategoryButton from '@/components/mypage/CategoryButton';
 import ProfileEditModal from '@/components/mypage/ProfileEditModal';
 
