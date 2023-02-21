@@ -38,7 +38,7 @@ export default function MyPage({}: Props) {
   console.log(user);
   useEffect(() => {
     const fetch = async () => {
-      const docRef = doc(dbService, 'userInfo', `${user?.uid}`);
+      const docRef = doc(dbService, 'userInfo', `${auth.currentUser?.uid}`);
       const docSnap = await getDoc(docRef);
       console.log('docSnap', docSnap);
       if (docSnap.exists()) {
@@ -51,7 +51,7 @@ export default function MyPage({}: Props) {
       }
     };
     fetch();
-  }, [user?.uid]);
+  }, [auth.currentUser]);
 
   if (loading) {
     return <div>로딩중입니다...</div>;
@@ -74,14 +74,10 @@ export default function MyPage({}: Props) {
             />
           </div>
           <p>닉네임 {user.displayName} 님</p>
-          <p>
-            별들을 프랑시스 이제 가을로 거외다. 노루, 가득 것은 다 많은 슬퍼하는
-            듯합니다
-          </p>
+
           <p>{profileData.introduction}</p>
           <p>이메일: {user.email}</p>
           <p>팔로워 100명</p>
-          <p>디자이너</p>
           <button onClick={() => auth.signOut()}>로그아웃</button>
           <button onClick={() => console.log('유저정보', user)}>
             유저정보 보기

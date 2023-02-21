@@ -1,4 +1,4 @@
-import { app, auth } from '@/shared/firebase';
+import { app, auth, dbService } from '@/shared/firebase';
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 type Props = {};
 
@@ -140,27 +141,58 @@ export default function SignIn({}: Props) {
   };
 
   //구글로그인
-
   const googleAuth = new GoogleAuthProvider();
   const googleLogin = async () => {
-    const result_google = await signInWithPopup(auth, googleAuth);
-    updateProfile(result_google.user, {
-      photoURL: '/images/defaultProfile.png',
-    });
+    try {
+      const result_google = await signInWithPopup(auth, googleAuth);
+
+      await updateProfile(result_google.user, {
+        photoURL: '/images/defaultProfile.png',
+      });
+
+      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
+      const payload = {
+        userId: auth.currentUser?.uid,
+        scraps: [],
+        following: [],
+        introduction: '안녕하세요!',
+      };
+
+      await setDoc(collectionRef, payload);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
   //페이스북 로그인
 
   const facebookAuth = new FacebookAuthProvider();
   const facebookLogin = async () => {
-    const result_facebook = await signInWithPopup(auth, facebookAuth);
-    updateProfile(result_facebook.user, {
-      photoURL: '/images/defaultProfile.png',
-    });
+    try {
+      const result_facebook = await signInWithPopup(auth, facebookAuth);
+
+      await updateProfile(result_facebook.user, {
+        photoURL: '/images/defaultProfile.png',
+      });
+
+      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
+      const payload = {
+        userId: auth.currentUser?.uid,
+        scraps: [],
+        following: [],
+        introduction: '안녕하세요!',
+      };
+
+      await setDoc(collectionRef, payload);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
-    console.log('userInfo', user);
-  }, [user]);
+    console.log('userInfo', auth.currentUser);
+  }, [auth.currentUser]);
+
   return (
     <StyledBackground>
       <StyledDiv>

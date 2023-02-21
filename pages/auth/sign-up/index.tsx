@@ -1,5 +1,6 @@
-import { auth } from '@/shared/firebase';
+import { auth, dbService } from '@/shared/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -102,20 +103,58 @@ export default function SignUp({}: Props) {
       setNicknameValid(false);
     }
   };
-
-  const onClickConfirmButton = () => {
-    createUserWithEmailAndPassword(auth, email, pw).then((data: any) => {
+  const onClickConfirmButton = async () => {
+    try {
+      const data = await createUserWithEmailAndPassword(auth, email, pw);
       const remainInfo = {
         email: email,
         displayName: nickname,
         photoURL: '/images/defaultProfile.png',
       };
 
-      updateProfile(data.user, remainInfo);
-    });
-    alert('회원가입 성공');
-    // router("/");
+      await updateProfile(data.user, remainInfo);
+
+      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
+      const payload = {
+        userId: auth.currentUser?.uid,
+        scraps: [],
+        following: [],
+        introduction: '안녕하세요!',
+      };
+
+      await setDoc(collectionRef, payload);
+
+      alert('회원가입 성공');
+      // router("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
+  // const onClickConfirmButton = async () => {
+  //   await createUserWithEmailAndPassword(auth, email, pw).then((data: any) => {
+  //     const remainInfo = {
+  //       email: email,
+  //       displayName: nickname,
+  //       photoURL: '/images/defaultProfile.png',
+  //     };
+
+  //     updateProfile(data.user, remainInfo);
+  //   });
+  //   const collectionRef = doc(dbService, `userInfo/${auth.currentUser.uid}`);
+  // const payload = {
+  //     userId: auth.currentUser.uid,
+  //     scraps: [],
+  //     following: [],
+  //     introduction: '안녕하세요!',
+  //   };
+
+  //   setDoc(collectionRef, payload).catch((error) => {
+  //     console.error(error);
+  //   });
+
+  //   alert('회원가입 성공');
+  //   // router("/");
+  // };
 
   useEffect(() => {
     if (ageCheck === true && useCheck === true && marketingCheck === true) {
