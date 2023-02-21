@@ -17,43 +17,66 @@ import GlobalNavigationBar from '../../components/GlobalNavigationBar';
 import PostListFilterBar from '../../components/PostListFilterBar';
 import ProductsList from '../../components/ProductsList';
 import PostListItem from '@/components/post-list/PostListItem';
+import { useRouter } from 'next/router';
 
 export default function PostList() {
   // 🔖 로그인 기능과 합쳐지면, userId 초기값을 UID 로 변경합니다.
   const [postList, setPostList] = useState<PostType[]>();
   const [userId, setUserId] = useState('좋아요봇');
 
-  // 🔖 임시 구현한 검색창 검색어를 상태관리합니다.
-  const [searchInput, setSearchInput] = useState<string>('');
-  const [search, setSearch] = useState<string>('');
+  // 🔖 현재 페이지의 query 값을 가져옵니다.
+  const router = useRouter();
+  const { query: currentQuery } = router;
+  const order = currentQuery.order;
+  const select =
+    currentQuery.select === 'developer'
+      ? '개발자'
+      : currentQuery.select === 'designer'
+      ? '디자이너'
+      : currentQuery.select === 'student'
+      ? '학생'
+      : '게이머';
+
+  // 전체 필터 - 최신순
+  const defaultFilter = query(
+    collection(dbService, 'postData'),
+    orderBy('createdAt', 'desc'),
+  );
+  // 트렌드 필터 - 좋아요순 + 최신순
+  const trendFilter = query(
+    collection(dbService, 'postData'),
+    orderBy('likesCount', 'desc'),
+    orderBy('createdAt', 'desc'),
+  );
+  // 직업별 필터 - 직업별 + 최신순
+  const jobFilter = query(
+    collection(dbService, 'postData'),
+    where('jobCategory', '==', `${select}`),
+    orderBy('createdAt', 'desc'),
+  );
 
   // READ post-list
   useEffect(() => {
-    // 전체 필터 - 최신순
-    const defaultFilter = query(
-      collection(dbService, 'postData'),
-      orderBy('createdAt', 'desc'),
-    );
-    // 트렌드 필터 - 좋아요순 + 최신순
-    const trendFilter = query(
-      collection(dbService, 'postData'),
-      orderBy('likesCount', 'desc'),
-      orderBy('createdAt', 'desc'),
-    );
-    // 직업별 필터 - 직업별 + 최신순
-    const jobFilter = query(
-      collection(dbService, 'postData'),
-      where('jobCategory', '==', '디자이너'),
-      orderBy('createdAt', 'desc'),
-    );
-    onSnapshot(jobFilter, (snapshot) => {
+    console.log('order', order);
+    console.log('select', select);
+    console.log('useEffect 요');
+
+    const filter =
+      order == 'popular'
+        ? trendFilter
+        : order == 'category'
+        ? jobFilter
+        : defaultFilter;
+
+    onSnapshot(filter, (snapshot) => {
+      console.log('filter', filter);
       const postData: any = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
       setPostList(postData);
     });
-  }, []);
+  }, [currentQuery]);
 
   return (
     <PostListLayout>
