@@ -57,10 +57,6 @@ export default function PostList() {
 
   // READ post-list
   useEffect(() => {
-    console.log('order', order);
-    console.log('select', select);
-    console.log('useEffect 요');
-
     const filter =
       order == 'popular'
         ? trendFilter
@@ -69,7 +65,6 @@ export default function PostList() {
         : defaultFilter;
 
     onSnapshot(filter, (snapshot) => {
-      console.log('filter', filter);
       const postData: any = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -115,6 +110,7 @@ const PostListBox = styled.div`
   width: 75rem;
   padding-bottom: 2rem;
   gap: 1rem;
+
   ::-webkit-scrollbar {
     display: none;
   }

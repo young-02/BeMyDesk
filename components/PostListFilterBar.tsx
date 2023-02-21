@@ -3,22 +3,50 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import editor from './detail-write/DetailWriteFormEditor';
 
 const PostListFilterBar = () => {
+  const router = useRouter();
+  const { query: currentQuery } = router;
+  const currentSelect =
+    currentQuery.select === 'developer'
+      ? '개발자'
+      : currentQuery.select === 'designer'
+      ? '디자이너'
+      : currentQuery.select === 'student'
+      ? '학생'
+      : currentQuery.select === 'gamer'
+      ? '게이머'
+      : '직업별';
+
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleDropdown = () => {
+  const handleDropdown = (e: any) => {
     setIsOpen(!isOpen);
   };
 
   return (
     <PostListFilterBarLayout>
-      <FilterLink href="/post-list">전체</FilterLink>
-      <FilterLink href="/post-list?order=popular">트렌드</FilterLink>
+      <FilterLink
+        href="/post-list"
+        className={currentQuery.order == undefined ? 'selected' : 'unselected'}
+      >
+        전체
+      </FilterLink>
+      <FilterLink
+        href="/post-list?order=popular"
+        className={currentQuery.order == 'popular' ? 'selected' : 'unselected'}
+      >
+        트렌드
+      </FilterLink>
       <div>
-        <DropdownBox>
+        <DropdownBox
+          className={
+            currentQuery.order == 'category' ? 'selected' : 'unselected'
+          }
+        >
           <div className="selector" onClick={handleDropdown}>
-            <div>직업별</div>
+            <div>{currentSelect}</div>
             <div
               className={isOpen ? 'dropdown-toggle-rotate' : 'dropdown-toggle'}
             >
@@ -35,18 +63,26 @@ const PostListFilterBar = () => {
               <DropdownFilterLink
                 href="/post-list?order=category&select=designer"
                 style={{ borderRadius: '10px 10px 0px 0px' }}
+                onClick={handleDropdown}
               >
                 디자이너
               </DropdownFilterLink>
-              <DropdownFilterLink href="/post-list?order=category&select=developer">
+              <DropdownFilterLink
+                href="/post-list?order=category&select=developer"
+                onClick={handleDropdown}
+              >
                 개발자
               </DropdownFilterLink>
-              <DropdownFilterLink href="/post-list?order=category&select=student">
+              <DropdownFilterLink
+                href="/post-list?order=category&select=student"
+                onClick={handleDropdown}
+              >
                 학생
               </DropdownFilterLink>
               <DropdownFilterLink
                 href="/post-list?order=category&select=gamer"
                 style={{ borderRadius: '0px 0px 10px 10px ' }}
+                onClick={handleDropdown}
               >
                 게이머
               </DropdownFilterLink>
@@ -62,7 +98,6 @@ export default PostListFilterBar;
 
 const PostListFilterBarLayout = styled.div`
   width: 100vw;
-  /* position: relative; */
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -87,6 +122,9 @@ const FilterLink = styled(Link)`
   :hover {
     font-weight: 700;
   }
+  &.selected {
+    font-weight: 700;
+  }
 `;
 
 const DropdownBox = styled.div`
@@ -97,7 +135,11 @@ const DropdownBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-color: rebeccapurple; */
+
+  &.selected {
+    font-weight: 700;
+  }
+
   .selector {
     width: 6rem;
     height: 2.5rem;
@@ -107,10 +149,11 @@ const DropdownBox = styled.div`
     align-items: center;
     padding: 0.625rem 1.25rem 0.625rem;
     cursor: pointer;
-    /* background-color: yellow; */
+
     :hover {
       font-weight: 700;
     }
+
     .dropdown-toggle {
       display: flex;
       justify-content: center;
@@ -130,6 +173,7 @@ const DropdownBox = styled.div`
       transition: all 0.3s;
     }
   }
+
   .dropdown-wrapper {
     background-color: white;
     border-radius: 0.625rem;
@@ -146,12 +190,9 @@ const DropdownFilterLink = styled(Link)`
   align-items: center;
   padding: 0.625rem 1.25rem 0.625rem;
   cursor: pointer;
-  /* background-color: rebeccapurple; */
+
   :hover {
     font-weight: 700;
     background-color: #f1f3f5;
-  }
-  + dropdown {
-    background-color: red;
   }
 `;
