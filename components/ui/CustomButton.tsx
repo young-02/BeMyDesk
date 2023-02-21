@@ -8,8 +8,9 @@ interface CustomButtonProps {
   fontSize?: string;
   paddingRow?: string;
   paddingColumns?: string;
-  fonstColor?: string;
+  fontColor?: string;
   onClick?: any;
+  borderColor?:string
 }
 
 export default function CustomButton({
@@ -18,8 +19,9 @@ export default function CustomButton({
   fontSize,
   paddingRow,
   paddingColumns,
-  fonstColor,
+  fontColor,
   onClick,
+  borderColor
 }: CustomButtonProps) {
   return (
     <Button
@@ -28,8 +30,9 @@ export default function CustomButton({
       paddingColumns={paddingColumns}
       fontSize={fontSize}
       onClick={onClick}
-      fonstColor={fonstColor}
-    >
+      fontColor={fontColor}
+      borderColor={borderColor}
+>
       {children}
     </Button>
   );
@@ -38,8 +41,9 @@ export default function CustomButton({
 const Button = styled.button<CustomButtonProps>`
   padding: ${(props) => props.paddingColumns}rem
     ${(props) => props.paddingRow}rem;
-  color: ${(props) => props.fonstColor};
+  color: ${(props) => props.fontColor};
   background: ${(props) => props.backgoundColor};
-  border: none;
+  border-radius: 0.625rem;
   cursor: pointer;
+  border:1px solid ${props=>props.borderColor}
 `;

@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import Top from '@/components/layout/Top';
 import GlobalNavigationBar from '../components/GlobalNavigationBar';
+import styled from 'styled-components';
 
 declare global {
   interface Window {
@@ -33,8 +34,15 @@ export default function App({ Component, pageProps }: AppProps) {
         onLoad={kakaoInit}
       ></Script>
       <QueryClientProvider client={client}>
-        <Component {...pageProps} />
+        <LayoutStyle>
+          <Component {...pageProps} />
+        </LayoutStyle>
       </QueryClientProvider>
     </>
   );
 }
+
+const LayoutStyle = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;

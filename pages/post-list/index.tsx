@@ -84,10 +84,11 @@ export default function PostList() {
         ))}
       </PostListBox>
     </PostListLayout>
+
   );
 }
 
-const PostListLayout = styled.div`
+const PostListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -106,12 +107,5 @@ const Header = styled.div`
 const PostListBox = styled.div`
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  width: 75rem;
-  padding-bottom: 2rem;
-  gap: 1rem;
 
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `;

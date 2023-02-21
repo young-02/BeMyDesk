@@ -1,72 +1,44 @@
-import { app, auth } from '@/shared/firebase';
-import { updateProfile } from 'firebase/auth';
-import React, { useEffect, useState } from 'react';
+import { app, auth, storage } from '@/shared/firebase';
+import { updatePassword, updateProfile } from 'firebase/auth';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import ChangePassword from './editProfile/ChangePassword';
+import ChangeProfile from './editProfile/ChangeProfile';
 
-function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
+export function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
   const [toggleEditMenu, setToggleEditMenu] = useState(true);
-  const [profileChangeDone, setProfileChangeDone] = useState(false);
-  const [nickNameEditEnable, setNickNameEditEnable] = useState(true);
-  const [nickNameEdit, setNickNameEdit] = useState('');
-  const [countCharacters, setCountCharacters] = useState(0);
-  const [Characters, setCharacters] = useState('');
+  //프로필사진
+  const [profileImageUrl, setProfileImageUrl] = useState(user.photoURL);
 
-  const countOnChangeHandler = function (event: any) {
-    const inputText = event.target.value;
-    const inputLength = inputText.length;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-    if (countCharacters < 50) {
-      setCharacters(inputText);
-      setCountCharacters(inputLength);
-    } else {
-      alert('자기소개는 50자를 초과할 수 없습니다.');
-      const truncated = inputText.substring(0, inputLength - 2);
-      setCharacters(truncated);
-      setCountCharacters(truncated.length);
-    }
+  //프로필사진 클릭시 input실행
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+  // 프로필 사진 변경
+  const handleImageUpload = async (event: any) => {
+    const file = event.target.files[0];
+    const storageRef = ref(storage, `profile/${user.uid}/profile-image`);
+    const snapshot = await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
+    await updateProfile(user, {
+      photoURL: downloadURL,
+    });
+    setProfileImageUrl(downloadURL);
   };
 
-  const nickNameEditHandler = function (event: any) {
-    setNickNameEditEnable(!nickNameEditEnable);
+  //프사삭제
+  const removeProfileImage = function () {
+    const default_Image = '/images/defaultProfile.png';
+    updateProfile(user, {
+      photoURL: default_Image,
+    });
+    setProfileImageUrl(default_Image);
   };
 
-  const nickNameEditonChangeHandler = function (event: any) {
-    const inputText = event.target.value;
-
-    if (!inputText) {
-      setNickNameEdit(user.displayName);
-    } else {
-      setNickNameEdit(inputText);
-    }
-  };
-
-  const confirmButtonHandler = function () {
-    const regex = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,8}$/;
-    if (regex.test(nickNameEdit)) {
-      updateProfile(auth.currentUser as any, {
-        displayName: nickNameEdit,
-      });
-      setProfileChangeDone(true);
-    } else {
-      alert(
-        '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자이하이어야합니다.',
-      );
-    }
-  };
-
-  // const confirmButtonHandler = function () {
-  //   const regex =
-  //     /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
-  //   if (regex.test(nickNameEdit)) {
-  //     updateProfile(auth.currentUser as any, {
-  //       displayName: nickNameEdit,
-  //     });
-  //   } else {
-  //     alert(
-  //       '비밀번호는 8~16자리 / 영문 대소문자, 숫자, 특수문자 포함이어야합니다.',
-  //     );
-  //   }
-  // };
   return (
     <StyledEditProfileModalContainer>
       <div
@@ -76,21 +48,39 @@ function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
       <div className="modal-content">
         <div className="left-continer">
           <div>
-            {' '}
             <img
-              src={user.photoURL}
+              src={profileImageUrl}
               alt="ProfileImage"
               width={202}
               height={202}
+              onClick={handleImageClick}
+              style={{ cursor: 'pointer' }}
             />
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              style={{ display: 'none' }}
+            />
+            <button onClick={removeProfileImage}>기본 이미지 변경하기</button>
           </div>
+
           <div>
             <button onClick={() => setToggleEditMenu(true)}>
               프로필 정보 설정
             </button>
-            <button onClick={() => setToggleEditMenu(false)}>
+            <button
+              onClick={() => setToggleEditMenu(false)}
+              disabled={user.providerData[0].providerId !== 'password'}
+            >
               비밀번호 변경
             </button>
+            <p>
+              {user.providerData[0].providerId !== 'password'
+                ? 'SNS 로그인 유저는 비밀번호를 변경할수 없습니다.'
+                : null}{' '}
+            </p>
           </div>
         </div>
         <div className="right-continer">
@@ -105,72 +95,15 @@ function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
           </div>
 
           {toggleEditMenu ? (
-            <div className="ProfileEdit">
-              <div>닉네임</div>
-              <input
-                type="text"
-                placeholder={user.displayName}
-                disabled={nickNameEditEnable}
-                onChange={nickNameEditonChangeHandler}
-              />
-              <button onClick={nickNameEditHandler}>닉네임수정</button>
-              <div>프로필소개</div>
-              <input
-                type="text"
-                placeholder="프로필 소개 들어감"
-                onChange={countOnChangeHandler}
-                value={Characters}
-              />
-              <p>{countCharacters}/50</p>
-              <div>
-                <p>
-                  {profileChangeDone
-                    ? '프로필 정보를 성공적으로 변경하였습니다.'
-                    : null}
-                </p>
-                <button onClick={confirmButtonHandler}>적용하기</button>
-              </div>
-            </div>
+            <ChangeProfile user={user} />
           ) : (
-            <div className="PasswordEdit">
-              <div>
-                <p>현재 비밀번호</p>
-                <input
-                  type="text"
-                  placeholder="기존 비밀번호를 입력해주세요."
-                />
-              </div>
-              <div>
-                <p>변경할 비밀번호</p>
-                <input
-                  type="text"
-                  placeholder="변경할 비밀번호를 입력해주세요."
-                />
-              </div>
-              <div>
-                <p>한번 더 입력해주세요 </p>
-                <input
-                  type="text"
-                  placeholder="변경할 비밀번호를 한 번 더 입력해주세요."
-                />
-              </div>
-              <div>
-                <p>
-                  {profileChangeDone
-                    ? '비밀번호를 성공적으로 변경하였습니다.'
-                    : null}
-                </p>
-                <button onClick={confirmButtonHandler}>적용하기</button>
-              </div>
-            </div>
+            <ChangePassword user={user} />
           )}
         </div>
       </div>
     </StyledEditProfileModalContainer>
   );
 }
-
-export default ProfileEditModal;
 
 const StyledEditProfileModalContainer = styled.div`
   position: fixed;
@@ -215,3 +148,4 @@ const StyledEditProfileModalContainer = styled.div`
     cursor: pointer;
   }
 `;
+export default ProfileEditModal;
