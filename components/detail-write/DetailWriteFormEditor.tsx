@@ -1,70 +1,57 @@
-import React from 'react';
+import dynamic from 'next/dynamic';
+import React, { useMemo, memo } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
 
-type Props = {};
+const Editor = dynamic(() => import('react-quill'), {
+  ssr: false,
+  loading: () => <p>loading</p>,
+});
 
-const editor = (props: Props) => {
-  const modules = React.useMemo(
-    () => ({
-      toolbar: {
-        container: [
-          [{ font: [] }],
-          [{ header: [1, 2, 3, 4, 5, 6, false] }], // header 설정
-          [
-            'bold',
-            'italic',
-            'underline',
-            'strike',
-            'blockquote',
-            'code-block',
-            'formula',
-          ],
-          [
-            { list: 'ordered' },
-            { list: 'bullet' },
-            { indent: '-1' },
-            { indent: '+1' },
-          ],
-          ['link', 'image'],
-          [{ align: [] }, { color: [] }, { background: [] }], // 정렬, 글씨 색깔, 글씨 배경색 설정
-          ['clean'], // toolbar 설정 초기화 설정
-        ],
-      },
-    }),
-    [],
-  );
-
-  const formats = [
-    'font',
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'code-block',
-    'formula',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'align',
-    'color',
-    'background',
-  ];
-  return (
-    <EditorStyle
-      theme="snow"
-      modules={modules}
-      formats={formats}
-      placeholder="내용을 입력해주세요"
-    />
-  );
+const modules = {
+  toolbar: [
+    [{ header: '1' }, { header: '2' }, { font: [] }],
+    [{ size: [] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [
+      { list: 'ordered' },
+      { list: 'bullet' },
+      { indent: '-1' },
+      { indent: '+1' },
+    ],
+  ],
 };
 
-const EditorStyle = styled(ReactQuill)`
+const formats = [
+  'header',
+  'font',
+  'size',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'indent',
+  'link',
+];
+
+export default function DetailWriteFormEditor() {
+  return (
+    <div>
+      <EditorStyle
+        theme="snow"
+        modules={modules}
+        formats={formats}
+        placeholder="내용을 입력해주세요"
+      />
+    </div>
+  );
+}
+
+const EditorStyle = styled(Editor)`
   width: 77rem;
   height: 37.5rem;
   box-sizing: border-box;
@@ -81,5 +68,3 @@ const EditorStyle = styled(ReactQuill)`
     border: 0.125rem solid #868e96;
   }
 `;
-
-export default editor;

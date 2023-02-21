@@ -1,22 +1,34 @@
 import React from 'react';
 import styled from 'styled-components';
+import { DetailWriteSearchProps } from './DetailWriteForm';
 
-type Props = {};
+type Props = {
+  item?: string;
+  list?: any[];
+};
 
 // 모달창에서 선택한 제품이 들어가는 카드
-const DetailWriteProductCard = (props: Props) => {
+const DetailWriteProductCard = ({ selectList }: any) => {
   return (
-    <CardLayout>
-      <CardBox>
-        <div></div>
-        <h3>제목입니다</h3>
-      </CardBox>
-    </CardLayout>
+    <>
+      {/* <CardBox> */}
+
+      {selectList?.map((i: any) => (
+        <CardLayout key={i.productId}>
+          <CardBox>
+            <img src={i.image} style={{ width: '200px', height: '200px' }} />
+          </CardBox>
+        </CardLayout>
+      ))}
+      {/* </CardBox> */}
+    </>
   );
 };
 
 const CardLayout = styled.div`
   display: flex;
+  justify-items: flex-start;
+  flex-direction: row;
   align-items: center;
 `;
 

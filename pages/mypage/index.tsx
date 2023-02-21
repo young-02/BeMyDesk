@@ -4,6 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { Router, useRouter } from 'next/router';
 import Image from 'next/image';
 import styled from 'styled-components';
+
 import MyPost from '@/components/mypage/contents/MyPost';
 import MyScrap from '@/components/mypage/contents/MyScrap';
 import MyFollow from '@/components/mypage/contents/MyFollow';
