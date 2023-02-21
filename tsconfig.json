@@ -19,6 +19,14 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/main/index.tsx", "components/post-list/Comment/Comment.ksx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "pages/main/index.tsx",
+    "components/post-list/Comment/Comment.ksx",
+    "pages/mypage/index.jsx",
+    "pages/mypage/index.jsx"
+  ],
   "exclude": ["node_modules"]
 }
