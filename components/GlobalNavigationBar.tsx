@@ -59,7 +59,7 @@ const GNBLayout = styled.div`
   z-index: 999;
 
   > div {
-    height: 6.75rem;
+    height: 5rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

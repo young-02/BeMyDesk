@@ -2,27 +2,25 @@ import React, { useEffect, useState } from 'react';
 import {
   collection,
   onSnapshot,
-  addDoc,
-  serverTimestamp,
   query,
   orderBy,
-  getDocs,
-  doc,
   where,
 } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import { dbService } from '../../shared/firebase';
 import styled from 'styled-components';
-import PostListCard from '@/components/PostListCard';
-import GlobalNavigationBar from '../../components/GlobalNavigationBar';
-import PostListFilterBar from '../../components/PostListFilterBar';
-import ProductsList from '../../components/ProductsList';
-import PostListItem from '@/components/post-list/PostListItem';
 import { useRouter } from 'next/router';
+import PostListFilterBar from '../../components/PostListFilterBar';
+import PostListCard from '../../components/PostListCard';
 
 export default function PostList() {
   // 🔖 로그인 기능과 합쳐지면, userId 초기값을 UID 로 변경합니다.
   const [postList, setPostList] = useState<PostType[]>();
-  const [userId, setUserId] = useState('좋아요봇');
+
+  // 현재 로그인한 유저 정보 가져오기
+  const auth = getAuth();
+  const currentUserId = auth.currentUser?.uid;
+  console.log('currentUserId', currentUserId);
 
   // 🔖 현재 페이지의 query 값을 가져옵니다.
   const router = useRouter();
@@ -57,6 +55,7 @@ export default function PostList() {
 
   // READ post-list
   useEffect(() => {
+    // 포스트리스트 필터정보 확인
     const filter =
       order == 'popular'
         ? trendFilter
@@ -64,6 +63,7 @@ export default function PostList() {
         ? jobFilter
         : defaultFilter;
 
+    // 필터 적용한 포스트 리스트 READ
     onSnapshot(filter, (snapshot) => {
       const postData: any = snapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -80,38 +80,41 @@ export default function PostList() {
       </Header>
       <PostListBox>
         {postList?.map((post) => (
-          <PostListCard key={post.id} post={post} currentUserId={userId} />
+          <PostListCard
+            key={post.id}
+            post={post}
+            currentUserId={currentUserId}
+          />
         ))}
       </PostListBox>
     </PostListLayout>
   );
 }
+
 const PostListLayout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
-  /* overflow-y: scroll;
-  overflow-x: hidden; */
+  overflow-y: scroll;
+  overflow-x: hidden;
 `;
 
 const Header = styled.div`
-  position: fixed;
-  top: 6.25rem;
+  position: sticky;
+  top: 0rem;
   z-index: 1;
-  width: 100%;
 `;
 
 const PostListBox = styled.div`
   display: flex;
+  margin-top: 1.25rem;
   flex-direction: row;
   flex-wrap: wrap;
   width: 75rem;
   padding-bottom: 2rem;
   gap: 1rem;
-  margin-top: 9.25rem;
-
   ::-webkit-scrollbar {
     display: none;
   }

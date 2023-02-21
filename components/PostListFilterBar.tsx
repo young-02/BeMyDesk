@@ -64,18 +64,21 @@ const PostListFilterBar = () => {
                 href="/post-list?order=category&select=designer"
                 style={{ borderRadius: '10px 10px 0px 0px' }}
                 onClick={handleDropdown}
+                selected={currentSelect}
               >
                 디자이너
               </DropdownFilterLink>
               <DropdownFilterLink
                 href="/post-list?order=category&select=developer"
                 onClick={handleDropdown}
+                selected={currentSelect}
               >
                 개발자
               </DropdownFilterLink>
               <DropdownFilterLink
                 href="/post-list?order=category&select=student"
                 onClick={handleDropdown}
+                selected={currentSelect}
               >
                 학생
               </DropdownFilterLink>
@@ -83,6 +86,7 @@ const PostListFilterBar = () => {
                 href="/post-list?order=category&select=gamer"
                 style={{ borderRadius: '0px 0px 10px 10px ' }}
                 onClick={handleDropdown}
+                selected={currentSelect}
               >
                 게이머
               </DropdownFilterLink>
@@ -97,13 +101,13 @@ const PostListFilterBar = () => {
 export default PostListFilterBar;
 
 const PostListFilterBarLayout = styled.div`
-  width: 100%;
+  width: 100vw;
+  margin-top: 5rem;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   gap: 1.875rem;
   padding-left: 21rem;
-  margin-bottom: 0.625rem;
   font-family: 'Pretendard Variable';
   font-size: 1rem;
   font-weight: 500;
@@ -130,7 +134,7 @@ const FilterLink = styled(Link)`
 const DropdownBox = styled.div`
   height: fit-content;
   position: absolute;
-  top: 0rem;
+  top: 5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -190,6 +194,9 @@ const DropdownFilterLink = styled(Link)`
   align-items: center;
   padding: 0.625rem 1.25rem 0.625rem;
   cursor: pointer;
+  font-weight: 500;
+  color: ${(props) =>
+    props.selected === props.children ? '#206EFB' : 'black'};
 
   :hover {
     font-weight: 700;
