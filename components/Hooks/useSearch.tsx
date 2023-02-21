@@ -40,7 +40,7 @@ export default function useSearch() {
       ),
     );
     // console.log(a);
-    console.log(q);
+    // console.log(q);
   }, [searchWord]);
 
   return {

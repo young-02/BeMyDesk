@@ -52,7 +52,7 @@ export default function CommentWrite({ path }) {
         />
         <CustomButton
           backgoundColor="#206EFB"
-          fonstColor="#fff"
+          fontColor="#fff"
           fontSize="20"
           paddingRow="1.25"
           paddingColumns="0.4"
