@@ -14,7 +14,6 @@ import PostListFilterBar from '../../components/PostListFilterBar';
 import PostListCard from '../../components/PostListCard';
 
 export default function PostList() {
-  // 🔖 로그인 기능과 합쳐지면, userId 초기값을 UID 로 변경합니다.
   const [postList, setPostList] = useState<PostType[]>();
 
   // 현재 로그인한 유저 정보 가져오기
