@@ -1,60 +1,73 @@
 import Image from 'next/image';
-import React from 'react';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
+import Search from './Search';
 
-function GlobalNavigationBar({ theme }: ThemeProp) {
-  // 🔖 dark 와 light 를 theme prop 으로 내려받습니다.
+function GlobalNavigationBar() {
+  const router = useRouter();
+  const { pathname } = router;
 
   return (
-    <GNBLayout theme={theme}>
+    <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>
       <div>
-        <h1>BE MY DESK</h1>
-        <p>포스트</p>
-        <p>글쓰기</p>
+        <Link href="/main" className="logo">
+          BE MY DESK
+        </Link>
+        <Link href="/post-list" className="button">
+          포스트
+        </Link>
+        <Link href="/detail/write" className="button">
+          글쓰기
+        </Link>
       </div>
       <div>
-        <Image
-          alt="likes-icon"
-          src={`/images/${theme}ThemeSearch.png`}
-          width={20}
-          height={20}
-          style={{ cursor: 'pointer' }}
-        />
-        <p>로그인</p>
-        <p>회원가입</p>
+        <Search pathname={pathname} />
+        <Link href="/auth/sign-in" className="button">
+          로그인
+        </Link>
+        <Link href="/auth/sign-up" className="button">
+          회원가입
+        </Link>
       </div>
     </GNBLayout>
   );
 }
 
-export default GlobalNavigationBar;
+export default React.memo(GlobalNavigationBar);
 
 const GNBLayout = styled.div`
-  width: calc(100vw - 12.5rem);
+  width: 100%;
   display: flex;
+  position: fixed;
+  top: 0rem;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 0px 6.25rem 0px;
-  background-color: ${(props) => (props.theme === 'light' ? 'white' : 'black')};
+  background-color: ${(props) =>
+    props.theme === 'light' ? 'white' : '#17171C'};
   font-family: 'Pretendard Variable';
-  color: ${(props) => (props.theme === 'light' ? 'black' : 'white')};
+  color: ${(props) => (props.theme === 'light' ? '#17171C' : 'white')};
+  z-index: 999;
+  transition: all 0.2s ease;
 
   > div {
-    height: 6.75rem;
+    height: 5rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: 2.5rem;
 
-    > h1 {
+    .logo {
       font-size: 2.125rem;
       font-weight: 700;
       cursor: pointer;
     }
 
-    > p {
+    .button {
       height: 100%;
       display: flex;
       justify-content: center;
@@ -64,7 +77,7 @@ const GNBLayout = styled.div`
       cursor: pointer;
       :hover {
         font-weight: 700;
-        color: ${(props) => (props.theme === 'light' ? 'black' : 'white')};
+        color: ${(props) => (props.theme === 'light' ? '#17171C' : 'white')};
       }
     }
   }

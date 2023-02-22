@@ -1,5 +1,6 @@
-import { auth } from '@/shared/firebase';
+import { auth, dbService } from '@/shared/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -8,6 +9,7 @@ import styled from 'styled-components';
 type Props = {};
 
 export default function SignUp({}: Props) {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [pwVerfy, setPwVerfy] = useState('');
@@ -102,21 +104,57 @@ export default function SignUp({}: Props) {
       setNicknameValid(false);
     }
   };
-
-  const onClickConfirmButton = () => {
-    createUserWithEmailAndPassword(auth, email, pw).then((data: any) => {
+  const onClickConfirmButton = async () => {
+    try {
+      const data = await createUserWithEmailAndPassword(auth, email, pw);
       const remainInfo = {
         email: email,
         displayName: nickname,
-        photoURL:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/680px-Default_pfp.svg.png?20220226140232',
+        photoURL: '/images/defaultProfile.png',
       };
 
-      updateProfile(data.user, remainInfo);
-    });
-    alert('회원가입 성공');
-    // router("/");
+      await updateProfile(data.user, remainInfo);
+
+      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
+      const payload = {
+        userId: auth.currentUser?.uid,
+        scraps: [],
+        following: [],
+        introduction: '안녕하세요!',
+      };
+
+      await setDoc(collectionRef, payload).then(router.push('/post-list'));
+
+      alert('회원가입 성공');
+    } catch (error) {
+      console.error(error);
+    }
   };
+  // const onClickConfirmButton = async () => {
+  //   await createUserWithEmailAndPassword(auth, email, pw).then((data: any) => {
+  //     const remainInfo = {
+  //       email: email,
+  //       displayName: nickname,
+  //       photoURL: '/images/defaultProfile.png',
+  //     };
+
+  //     updateProfile(data.user, remainInfo);
+  //   });
+  //   const collectionRef = doc(dbService, `userInfo/${auth.currentUser.uid}`);
+  // const payload = {
+  //     userId: auth.currentUser.uid,
+  //     scraps: [],
+  //     following: [],
+  //     introduction: '안녕하세요!',
+  //   };
+
+  //   setDoc(collectionRef, payload).catch((error) => {
+  //     console.error(error);
+  //   });
+
+  //   alert('회원가입 성공');
+  //   // router("/");
+  // };
 
   useEffect(() => {
     if (ageCheck === true && useCheck === true && marketingCheck === true) {
