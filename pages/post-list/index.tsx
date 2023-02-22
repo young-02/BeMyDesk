@@ -84,9 +84,18 @@ export default function PostList() {
         ))}
       </PostListBox>
     </PostListLayout>
-
   );
 }
+
+const PostListLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+`;
 
 const PostListWrapper = styled.div`
   display: flex;
@@ -107,5 +116,4 @@ const Header = styled.div`
 const PostListBox = styled.div`
   display: flex;
   flex-direction: row;
-
 `;
