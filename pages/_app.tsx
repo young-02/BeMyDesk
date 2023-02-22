@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Head from 'next/head';
 import Script from 'next/script';
-import Top from '@/components/layout/Top';
+import Top from '@/components/Search';
 import GlobalNavigationBar from '../components/GlobalNavigationBar';
 import styled from 'styled-components';
 
@@ -34,10 +34,8 @@ export default function App({ Component, pageProps }: AppProps) {
         onLoad={kakaoInit}
       ></Script>
       <QueryClientProvider client={client}>
-          <Component {...pageProps} />
+        <Component {...pageProps} />
       </QueryClientProvider>
     </>
   );
 }
-
-

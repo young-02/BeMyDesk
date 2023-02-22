@@ -9,6 +9,7 @@ import styled from 'styled-components';
 type Props = {};
 
 export default function SignUp({}: Props) {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [pwVerfy, setPwVerfy] = useState('');
@@ -122,10 +123,9 @@ export default function SignUp({}: Props) {
         introduction: '안녕하세요!',
       };
 
-      await setDoc(collectionRef, payload);
+      await setDoc(collectionRef, payload).then(router.push('/post-list'));
 
       alert('회원가입 성공');
-      // router("/");
     } catch (error) {
       console.error(error);
     }
