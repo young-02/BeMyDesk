@@ -38,61 +38,85 @@ export default function MyPage({}: Props) {
   const [profileData, setProfileData] = useState({});
 
   useEffect(() => {
-    // 유저정보 문서만 가져오기
     const uid = auth.currentUser?.uid;
     if (!uid) {
       return;
     }
-
-    const fetch = async () => {
+    // 유저정보 문서 가져오기
+    const fetchUserDataHandler = async () => {
       const docRef = doc(dbService, 'userInfo', uid);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
+        const fetchedProfile = docSnap.data();
         setProfileData(docSnap.data());
+        // 마이 포스트 불러오기 (getdocs로 리팩토링 추천)
+        onSnapshot(
+          query(collection(dbService, 'postData'), where('userId', '==', uid)),
+          (snapshot) => {
+            const fetchedMyPostData = snapshot.docs.map((doc) => ({
+              ...doc.data(),
+            }));
+            setMyPost(fetchedMyPostData);
+            console.log('마이포스트 데이터 불러오기 완료');
+          },
+        );
+        // 스크랩한 글 가져오기 (getdocs로 리팩토링 추천)
+        onSnapshot(
+          query(
+            collection(dbService, 'postData'),
+            where('__name__', 'in', fetchedProfile.scraps),
+          ),
+          (snapshot) => {
+            const fetchedScrapData = snapshot.docs.map((doc) => ({
+              ...doc.data(),
+            }));
+            setMyScrap(fetchedScrapData);
+            console.log('스크랩 데이터 불러오기 완료');
+          },
+        );
+        // 팔로우 유저 가져오기 (getdocs로 리팩토링 추천)
+        onSnapshot(
+          query(
+            collection(dbService, 'userInfo'),
+            where('__name__', 'in', fetchedProfile.following),
+          ),
+          (snapshot) => {
+            const fetchedFollowingData = snapshot.docs.map((doc) => ({
+              ...doc.data(),
+            }));
+            setMyFollow(fetchedFollowingData);
+            console.log('팔로우 유저 데이터 불러오기 완료');
+          },
+        );
       } else {
         console.log('No such document!');
       }
     };
 
-    fetch();
-
-    if (
-      profileData &&
-      Array.isArray(profileData.scraps) &&
-      profileData.scraps.length > 0
-    ) {
-      onSnapshot(
-        query(
-          collection(dbService, 'postData'),
-          where('__name__', 'in', profileData.scraps),
-        ),
-        (snapshot) => {
-          const fetchedScrapData = snapshot.docs.map((doc) => ({
-            ...doc.data(),
-          }));
-          setMyScrap(fetchedScrapData);
-        },
-      );
-      console.log('스크랩 데이터 불러오기 완료');
-    } else {
-      console.log(' 스크랩 데이터가 없습니다');
-    }
-
-    // 마이 포스트 불러오기
-    onSnapshot(
-      query(collection(dbService, 'postData'), where('userId', '==', uid)),
-      (snapshot) => {
-        const fetchedMyPostData = snapshot.docs.map((doc) => ({
-          ...doc.data(),
-        }));
-        setMyPost(fetchedMyPostData);
-      },
-    );
+    fetchUserDataHandler();
+    //스크랩한 글 정보 불러오기
+    // if (
+    //   profileData &&
+    //   Array.isArray(profileData.scraps) &&
+    //   profileData.scraps.length > 0
+    // ) {
+    //   onSnapshot(
+    //     query(
+    //       collection(dbService, 'postData'),
+    //       where('__name__', 'in', profileData.scraps),
+    //     ),
+    //     (snapshot) => {
+    //       const fetchedScrapData = snapshot.docs.map((doc) => ({
+    //         ...doc.data(),
+    //       }));
+    //       setMyScrap(fetchedScrapData);
+    //       console.log('스크랩 데이터 불러오기 완료');
+    //     },
+    //   );
+    // } else {
+    //   console.log('스크랩 데이터가 없습니다');
+    // }
   }, [auth.currentUser]);
-
-  useEffect(() => {
-    console.log(myScrap);
-  }, [myScrap, category]);
 
   if (loading) {
     return <div>로딩중입니다...</div>;
@@ -143,7 +167,7 @@ export default function MyPage({}: Props) {
         <div>
           {category === 'myPost' && <MyPost myPost={myPost} />}
           {category === 'myScrap' && <MyScrap myScrap={myScrap} />}
-          {category === 'myFollow' && <MyFollow />}
+          {category === 'myFollow' && <MyFollow myFollow={myFollow} />}
         </div>
       </StyledDivOne>
     );

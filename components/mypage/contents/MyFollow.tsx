@@ -1,14 +1,14 @@
 import React from 'react';
 
-function MyFollow() {
+function MyFollow({ myFollow }: any) {
   return (
     <div>
-      {/* {myPost.map((post) => (
-    <div style={{ border: '1px solid black' }}>
-      <p style={{ fontWeight: '700' }}>{post.postTitle}</p>
-      <p>{post.postText}</p>
-    </div>
-  ))} */}
+      {myFollow.map((profile) => (
+        <div key={profile.documentName} style={{ border: '1px solid black' }}>
+          <p style={{ fontWeight: '700' }}>{profile.introduction}</p>
+          <p>{profile.userId}</p>
+        </div>
+      ))}
     </div>
   );
 }
