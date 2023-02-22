@@ -12,7 +12,7 @@ export default function Comment({ path }: any) {
 
   useEffect(() => {
     const collectionRef = collection(dbService, path);
-    const q = query(collectionRef, orderBy('timestamp', 'asc'));
+    const q = query(collectionRef, orderBy('createdAt', 'asc'));
 
     onSnapshot(q, (snapshot: any) =>
       setComments(
