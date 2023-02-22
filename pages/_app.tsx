@@ -34,15 +34,10 @@ export default function App({ Component, pageProps }: AppProps) {
         onLoad={kakaoInit}
       ></Script>
       <QueryClientProvider client={client}>
-        <LayoutStyle>
           <Component {...pageProps} />
-        </LayoutStyle>
       </QueryClientProvider>
     </>
   );
 }
 
-const LayoutStyle = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
+

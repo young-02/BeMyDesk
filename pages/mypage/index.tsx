@@ -15,6 +15,7 @@ import {
   doc,
   getDoc,
   onSnapshot,
+  orderBy,
   query,
   where,
 } from 'firebase/firestore';
@@ -35,23 +36,63 @@ export default function MyPage({}: Props) {
   const followCount = myFollow.length;
 
   const [profileData, setProfileData] = useState({});
-  console.log(user);
+
   useEffect(() => {
+    // 유저정보 문서만 가져오기
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+      return;
+    }
+
     const fetch = async () => {
-      const docRef = doc(dbService, 'userInfo', `${auth.currentUser?.uid}`);
+      const docRef = doc(dbService, 'userInfo', uid);
       const docSnap = await getDoc(docRef);
-      console.log('docSnap', docSnap);
       if (docSnap.exists()) {
-        console.log('Document data:', docSnap.data());
         setProfileData(docSnap.data());
-        console.log('aa', profileData);
       } else {
-        // doc.data() will be undefined in this case
         console.log('No such document!');
       }
     };
+
     fetch();
+
+    if (
+      profileData &&
+      Array.isArray(profileData.scraps) &&
+      profileData.scraps.length > 0
+    ) {
+      onSnapshot(
+        query(
+          collection(dbService, 'postData'),
+          where('__name__', 'in', profileData.scraps),
+        ),
+        (snapshot) => {
+          const fetchedScrapData = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+          }));
+          setMyScrap(fetchedScrapData);
+        },
+      );
+      console.log('스크랩 데이터 불러오기 완료');
+    } else {
+      console.log(' 스크랩 데이터가 없습니다');
+    }
+
+    // 마이 포스트 불러오기
+    onSnapshot(
+      query(collection(dbService, 'postData'), where('userId', '==', uid)),
+      (snapshot) => {
+        const fetchedMyPostData = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+        }));
+        setMyPost(fetchedMyPostData);
+      },
+    );
   }, [auth.currentUser]);
+
+  useEffect(() => {
+    console.log(myScrap);
+  }, [myScrap, category]);
 
   if (loading) {
     return <div>로딩중입니다...</div>;
@@ -63,51 +104,48 @@ export default function MyPage({}: Props) {
 
   if (user) {
     return (
-      <>
+      <StyledDivOne>
         <div>
-          <div>
-            <img
-              src={user.photoURL}
-              alt="ProfileImage"
-              width={202}
-              height={202}
-            />
-          </div>
-          <p>닉네임 {user.displayName} 님</p>
-
-          <p>{profileData.introduction}</p>
-          <p>이메일: {user.email}</p>
-          <p>팔로워 100명</p>
-          <button onClick={() => auth.signOut()}>로그아웃</button>
-          <button onClick={() => console.log('유저정보', user)}>
-            유저정보 보기
-          </button>
-          <button
-            onClick={() => {
-              setProfileEditModalOpen(true);
-            }}
-          >
-            프로필수정 열기
-          </button>
-          <div>
-            {profileEditModalOpen && (
-              <ProfileEditModal
-                setProfileEditModalOpen={setProfileEditModalOpen}
-                user={user}
-              />
-            )}
-          </div>
+          <img
+            src={user.photoURL}
+            alt="ProfileImage"
+            width={202}
+            height={202}
+          />
         </div>
-
+        <p>닉네임 {user.displayName} 님</p>
+        <p>{profileData.introduction}</p>
+        <p>UID: {auth.currentUser?.uid}</p>
+        <p>이메일: {user.email}</p>
+        <p>팔로워 100명</p>
+        <button onClick={() => auth.signOut()}>로그아웃</button>
+        <button onClick={() => console.log('유저정보', user)}>
+          유저정보 보기
+        </button>
+        <button
+          onClick={() => {
+            setProfileEditModalOpen(true);
+          }}
+        >
+          프로필수정 열기
+        </button>
+        <div>
+          {profileEditModalOpen && (
+            <ProfileEditModal
+              setProfileEditModalOpen={setProfileEditModalOpen}
+              user={user}
+            />
+          )}
+        </div>
         <StyledDivTwo>
           <CategoryButton category={category} setCategory={setCategory} />
         </StyledDivTwo>
         <div>
-          {category === 'myPost' && <MyPost />}
-          {category === 'myScrap' && <MyScrap />}
+          {category === 'myPost' && <MyPost myPost={myPost} />}
+          {category === 'myScrap' && <MyScrap myScrap={myScrap} />}
           {category === 'myFollow' && <MyFollow />}
         </div>
-      </>
+      </StyledDivOne>
     );
   } else {
     alert('로그인이 필요한 서비스입니다.');
@@ -115,9 +153,11 @@ export default function MyPage({}: Props) {
     return null;
   }
 }
-
+const StyledDivOne = styled.div`
+  margin-top: 9.25rem;
+`;
 const StyledDivTwo = styled.div`
-  margin-top: 30px;
+  margin-top: 20px;
   margin-bottom: 15px;
 
   button:nth-child(1) {

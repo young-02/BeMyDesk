@@ -9,6 +9,7 @@ const ChangePassword = ({ user }: any) => {
   const [newPassword, setNewPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPasswordVerfyInput, setNewPasswordVerifyInput] = useState('');
+  const [errorNowPasswordEmpty, setErrorNowPasswordEmpty] = useState(false);
   const [nowPasswordVerfy, setNowPasswordVerfy] = useState(false);
   const [passwordVerfyValid, setPasswordVerfyValid] = useState(true);
   const [allDone, setAllDone] = useState(false);
@@ -16,7 +17,6 @@ const ChangePassword = ({ user }: any) => {
   // 비밀번호 변경 버튼
   const handlePasswordChange = async () => {
     if (newPassword === newPasswordVerfyInput) {
-      await setPasswordVerfyValid(true);
       const credential = await EmailAuthProvider.credential(
         user.email,
         currentPassword,
@@ -34,7 +34,11 @@ const ChangePassword = ({ user }: any) => {
         .catch((error: any) => {
           console.error(error);
           console.log('현재 비밀번호를 확인하세요');
-          setNowPasswordVerfy(true);
+          {
+            currentPassword === ''
+              ? setErrorNowPasswordEmpty(true)
+              : setNowPasswordVerfy(true);
+          }
         });
     } else {
       setPasswordVerfyValid(false);
@@ -82,6 +86,9 @@ const ChangePassword = ({ user }: any) => {
         </p>
         <p>{allDone ? '비밀번호 변경완료' : null}</p>
         <p>{nowPasswordVerfy ? '현재 비밀번호를 확인해주세요' : null}</p>
+        <p>
+          {errorNowPasswordEmpty ? '(현재비밀번호)필수 입력 사항입니다' : null}
+        </p>
       </div>
       <button onClick={handlePasswordChange}>적용</button>
     </div>

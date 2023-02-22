@@ -54,14 +54,41 @@ function ChangeProfile({ user }: any) {
 
   const profileChangeConfirmButtonHandler = function () {
     const regex = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,8}$/;
-    if (nicknameInputEnable && nickNameEdit === '') {
-      setErrorNickNameEmpty(true);
-    } else if (nicknameInputEnable && regex.test(nickNameEdit)) {
-      updateProfile(auth.currentUser as any, {
-        displayName: nickNameEdit,
-      });
-      setProfileChangeDone(true);
-      // 자기소개가 들어있을때만 업데이트되게하기
+
+    if (nicknameInputEnable) {
+      //regex 통과시 닉네임 업데이트
+      if (regex.test(nickNameEdit)) {
+        updateProfile(auth.currentUser as any, {
+          displayName: nickNameEdit,
+        });
+        setProfileChangeDone(true);
+        // 자기소개가 들어있을때만 업데이트되게하기
+        if (Characters !== '') {
+          const collectionRef = doc(dbService, `userInfo/${user.uid}`);
+          const payload = {
+            userId: user.uid,
+            // 스크랩한 글번호
+            // 팔로잉한 사람 UID
+            introduction: Characters,
+          };
+
+          updateDoc(collectionRef, payload)
+            .then(() => {
+              setCharacters('');
+              setNickNameEdit(user.displayName);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+      } else {
+        {
+          nickNameEdit === ''
+            ? setErrorNickNameEmpty(true)
+            : setErrorNickNameRegex(true);
+        }
+      }
+    } else {
       if (Characters !== '') {
         const collectionRef = doc(dbService, `userInfo/${user.uid}`);
         const payload = {
@@ -73,15 +100,12 @@ function ChangeProfile({ user }: any) {
 
         updateDoc(collectionRef, payload)
           .then(() => {
-            setCharacters('');
             setNickNameEdit(user.displayName);
           })
           .catch((error) => {
             console.error(error);
           });
       }
-    } else {
-      setErrorNickNameRegex(true);
     }
   };
 
@@ -110,12 +134,19 @@ function ChangeProfile({ user }: any) {
       <br />
       <br />
       <div>프로필소개</div>
-      <input
+      {/* <input
         type="text"
         placeholder="프로필 소개 들어감"
         onChange={countOnChangeHandler}
         value={Characters}
         style={{ height: '3em' }}
+      /> */}
+      <textarea
+        placeholder="프로필 소개 들어감"
+        onChange={countOnChangeHandler}
+        value={Characters}
+        style={{ height: '3em' }}
+        rows={3}
       />
       <p>{countCharacters}/50</p>
       <div>
@@ -129,7 +160,7 @@ function ChangeProfile({ user }: any) {
           <p>
             {errorNickNameRegex ? '닉네임 양식을 확인해주세요 2~8자' : null}
           </p>
-          <p>{errorNickNameEmpty ? '닉네임을 입력해주세요' : null}</p>
+          <p>{errorNickNameEmpty ? '(닉네임)필수 입력사항입니다' : null}</p>
         </div>
         <button onClick={profileChangeConfirmButtonHandler}>
           프로필 정보변경 적용하기

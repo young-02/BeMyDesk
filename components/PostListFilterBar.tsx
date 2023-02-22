@@ -97,7 +97,7 @@ const PostListFilterBar = () => {
 export default PostListFilterBar;
 
 const PostListFilterBarLayout = styled.div`
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: flex-start;

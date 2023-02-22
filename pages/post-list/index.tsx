@@ -91,29 +91,29 @@ const PostListLayout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
-`;
-
-const PostListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  /* overflow-y: scroll;
+  overflow-x: hidden; */
 `;
 
 const Header = styled.div`
-  position: sticky;
-  top: 0rem;
+  position: fixed;
+  top: 6.25rem;
   z-index: 1;
+  width: 100%;
 `;
 
 const PostListBox = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  width: 75rem;
+  padding-bottom: 2rem;
+  gap: 1rem;
+  margin-top: 9.25rem;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
