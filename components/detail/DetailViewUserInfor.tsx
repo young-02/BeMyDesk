@@ -9,38 +9,36 @@ import { useRouter } from 'next/router';
 
 export default function DetailViewUserInfor({ detail }) {
   const router = useRouter();
-  const { userProfile, userId, jobCategory, likesCount, id, likes, scrap } =
-    detail;
+  const { userProfile, userId, jobCategory, likesCount, id, likes } = detail;
   const { isLogin, isUserObj, logOut } = useCheckLogin();
   const like = likes.includes(isUserObj) ? true : false;
   const { userInfor } = useGetReaction();
-  const [followings, setFollowings] = useState();
-  const [scraps, setScraps] = useState();
-  const follow = !!followings?.includes(userId) ? true : false;
-  const scraping = !!scraps?.includes(id) ? true : false;
+  const [following, setFollowing] = useState<[] | undefined>();
+  const [scraps, setScraps] = useState<[] | undefined>();
+  const scraper = scraps?.includes(id) ? true : false;
+  const follower = following?.includes(userId) ? true : false;
 
   useEffect(() => {
     userInfor?.map(
       (item) =>
-        (auth.currentUser?.uid === item.id && setFollowings(item.followings)) ||
-        (auth.currentUser?.uid === item.id && setScraps(item.scraps)),
+        (auth.currentUser?.uid === item.id && setFollowing(item.following)) ||
+        (auth.currentUser?.uid == item.id && setScraps(item.scraps)),
     );
-  }, [userInfor]);
+  }, [userInfor, following, scraps]);
 
-  const onclickScrap = async (num) => {
+  const onclickScrap = async (num: any) => {
     if (isLogin) {
-      if (!!scraps.includes(id)) {
-        scraps.pop(id);
+      if (scraps?.includes(id)) {
+        scraps?.pop(id);
       } else {
-        scraps.push(id);
+        scraps?.push(id);
       }
-
-      const docRef = doc(dbService, 'userInfo', num);
-      const payload = { scraps };
-      await updateDoc(docRef, payload);
     } else {
       router.push('/auth/sign-in');
     }
+    const docRef = doc(dbService, 'userInfo', num);
+    const payload = { scraps };
+    await updateDoc(docRef, payload);
   };
 
   const onclickLove = async (num: any) => {
@@ -63,18 +61,17 @@ export default function DetailViewUserInfor({ detail }) {
 
   const onclickFollow = async (num: any) => {
     if (isLogin) {
-      if (!!followings.includes(userId)) {
-        followings.pop(userId);
+      if (following?.includes(userId)) {
+        following?.pop(userId);
       } else {
-        followings.push(userId);
+        following?.push(userId);
       }
-
-      const docRef = doc(dbService, 'userInfo', num);
-      const payload = { followings };
-      await updateDoc(docRef, payload);
     } else {
       router.push('/auth/sign-in');
     }
+    const docRef = doc(dbService, 'userInfo', num);
+    const payload = { following };
+    await updateDoc(docRef, payload);
   };
 
   return (
@@ -86,10 +83,9 @@ export default function DetailViewUserInfor({ detail }) {
           <p className="user-job">{jobCategory}</p>
         </div>
       </UserProfile>
-      <button onClick={logOut}>로그아웃</button>
       <div className="user-expression">
         <button onClick={() => onclickScrap(auth.currentUser?.uid)}>
-          {scraping ? (
+          {scraper ? (
             <span className="follow active">스크립</span>
           ) : (
             <span className="follow ">스크립</span>
@@ -105,8 +101,9 @@ export default function DetailViewUserInfor({ detail }) {
           </button>
           {likesCount}
         </>
+
         <div>
-          {!follow ? (
+          {!follower ? (
             <CustomButton
               backgoundColor="#206EFB"
               fontColor="#fff"
@@ -118,7 +115,7 @@ export default function DetailViewUserInfor({ detail }) {
             </CustomButton>
           ) : (
             <CustomButton
-              borderColor="#206EFB"
+              border="1px solid #206EFB"
               fontColor="#206EFB"
               paddingColumns="0.5"
               paddingRow="1"

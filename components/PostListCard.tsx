@@ -59,6 +59,7 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
   const nowDate = detailDate(post.createdAt);
 
   return (
+
     <PostListCardLayout key={post.id}>
       <Link href={`/detail/${post.id}`}>
         <div

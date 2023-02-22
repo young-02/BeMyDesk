@@ -21,15 +21,19 @@ export default function DetailView({}) {
         (detail) =>
           id == detail.id && (
             <DetailViewLayout key={detail.id}>
-              <div className="detail-view">
+              <div className="detail-header">
                 <DetailViewUserInfor detail={detail} />
-                <DetailViewSlide detail={detail} />
-                <DetailViewText detail={detail} />
-                <Comment path={`postData/${id}/comments`} />
               </div>
-              <div className="detail-product">
-                <DetailViewProducts detail={detail} />
-              </div>
+              <DetailViewDiv>
+                <div className="detail-view">
+                  <DetailViewSlide detail={detail} />
+                  <DetailViewText detail={detail} />
+                  <Comment path={`postData/${id}/comments`} />
+                </div>
+                <div className="detail-product">
+                  <DetailViewProducts detail={detail} />
+                </div>
+              </DetailViewDiv>
             </DetailViewLayout>
           ),
       )}
@@ -38,15 +42,31 @@ export default function DetailView({}) {
 }
 
 const DetailViewLayout = styled.div`
+  max-width: 75rem;
+  width: 100%;
+  margin: 9.25rem auto;
+
+  .detail-header {
+    width: 100%;
+    max-width: 55.875rem;
+  }
+`;
+
+const DetailViewDiv = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 1.5rem;
 
   .detail-view {
     width: 100%;
     max-width: 55.875rem;
   }
+
   .detail-product {
     width: calc(100% - 55.875rem);
+    background-color: #f1f3f5;
+    padding: 1.25rem;
+    border-radius: 0.625rem;
   }
 `;

@@ -7,7 +7,9 @@ import styled from 'styled-components';
 type Props = {};
 
 export default function CommentList({ comment, path }) {
-  const { userProfile, userNickName, createdAt, commentText, id } = comment;
+  console.log(comment);
+  const { userProfile, userNickName, createdAt, commentText, id, userId } =
+    comment;
   const [edit, setEdit] = useState({
     active: false,
     editText: commentText,
@@ -51,47 +53,54 @@ export default function CommentList({ comment, path }) {
     updateDoc(docRef, payload);
   };
 
+  console.log(auth.currentUser?.uid);
+
   return (
     <CommentListLayout>
       <WriteInformationDiv>
         <ProfileImg src={userProfile} alt="profileImg" />
+      </WriteInformationDiv>
+
+      <CommentTextDiv>
         <div className="userInformation">
           <p className="nickName">{userNickName}</p>
           <p className="date">{nowDate}</p>
         </div>
-      </WriteInformationDiv>
-      <CommentText>
-        {!active ? (
-          <p className="commenText">{commentText}</p>
-        ) : (
-          // <div dangerouslySetInnerHTML={{ __html: commentText }}></div>
-          <input
-            className="editInput"
-            type="text"
-            placeholder={commentText}
-            value={editText}
-            onChange={(e) => setEdit({ ...edit, editText: e.target.value })}
-          />
-        )}
-        {/* {auth.currentUser && ( */}
-        <div className="commentModify">
-          <CustomButton
-            backgoundColor="none"
-            fontColor="#868E96"
-            onClick={() => editComment(id)}
-          >
-            수정
-          </CustomButton>
-          <CustomButton
-            backgoundColor="none"
-            fontColor="#868E96"
-            onClick={() => deleteComment(id)}
-          >
-            삭제
-          </CustomButton>
+        <div className="comment-list">
+          {!active ? (
+            <p className="commenText">{commentText}</p>
+          ) : (
+            // <div dangerouslySetInnerHTML={{ __html: commentText }}></div>
+            <input
+              className="editInput"
+              type="text"
+              placeholder={commentText}
+              value={editText}
+              onChange={(e) => setEdit({ ...edit, editText: e.target.value })}
+            />
+          )}
         </div>
-        {/* )} */}
-      </CommentText>
+      </CommentTextDiv>
+      <CommentModify>
+        {auth.currentUser?.uid === userId ? (
+          <>
+            <CustomButton
+              backgoundColor="none"
+              fontColor="#868E96"
+              onClick={() => editComment(id)}
+            >
+              수정
+            </CustomButton>
+            <CustomButton
+              backgoundColor="none"
+              fontColor="#868E96"
+              onClick={() => deleteComment(id)}
+            >
+              삭제
+            </CustomButton>
+          </>
+        ) : null}
+      </CommentModify>
     </CommentListLayout>
   );
 }
@@ -103,6 +112,7 @@ const CommentListLayout = styled.div`
   width: 100%;
   border-radius: 0.5rem;
   margin-bottom: 1.25rem;
+  padding: 0.125rem;
 
   &:hover {
     background: #f1f3f5;
@@ -112,8 +122,27 @@ const CommentListLayout = styled.div`
 export const WriteInformationDiv = styled.div`
   display: flex;
   align-items: center;
+  flex-direction: column;
+`;
+
+export const ProfileImg = styled.img`
+  width: 40px;
+  height: 40px;
+
+  border-radius: 100%;
+  object-fit: cover;
+`;
+
+const CommentTextDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: calc(100% - 10rem);
 
   .userInformation {
+    display: flex;
+    align-items: center;
+
     .nickName {
       margin-bottom: 0.125rem;
       font-size: 0.875rem;
@@ -121,27 +150,13 @@ export const WriteInformationDiv = styled.div`
     }
 
     .date {
+      margin-left: 0.625rem;
       font-size: 0.75rem;
+      color: #868e96;
     }
   }
-`;
-
-export const ProfileImg = styled.img`
-  width: 40px;
-  height: 40px;
-  margin-right: 0.625rem;
-  border-radius: 100%;
-  object-fit: cover;
-`;
-
-const CommentText = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-
   .commenText {
     overflow-wrap: anywhere;
-    
   }
 
   .editInput {
@@ -154,8 +169,15 @@ const CommentText = styled.div`
     font-size: 0.875rem;
   }
 
-  .commentModify {
+  .comment-list {
+    width: 100%;
     display: flex;
-    font-size: 0.75rem;
+    margin-top: 0.375rem;
+    justify-content: space-between;
   }
+`;
+
+const CommentModify = styled.div`
+  display: flex;
+  gap: 10px;
 `;
