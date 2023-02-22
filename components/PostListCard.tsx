@@ -3,23 +3,27 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import activeLikes from '../public/images/activeLikes.png';
 import inactiveLikes from '../public/images/inactiveLikes.png';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, query } from 'firebase/firestore';
 import { dbService } from '../shared/firebase';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 type PostListCardProps = { post: PostType; currentUserId: string };
 
 const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
-  // currentUser 가 해당 포스트가 좋아요 눌렀는지 여부 확인
+  const router = useRouter();
 
+  // currentUser 가 해당 포스트가 좋아요 눌렀는지 여부 확인
   const initialState = post.likes.includes(currentUserId) ? true : false;
   const [isLikesClicked, setIsLikesClicked] = useState(initialState);
 
   // 좋아요 버튼을 클릭했을 때, firebase 의 likes & likesCount 수정 로직
-  // 🔖 로그인 안된 undefined 상태일 때 로그인 페이지로 이동하는 기능 추가 예정입니다.
   const updateLikes = async () => {
     const postRef = doc(dbService, 'postData', post.id);
-    if (isLikesClicked === false) {
+    // 🔖 로그인 안된 undefined 상태일 때 로그인 페이지로 이동
+    if (currentUserId === undefined) {
+      router.push('auth/sign-in');
+    } else if (isLikesClicked === false) {
       await updateDoc(postRef, {
         likes: [...post.likes, currentUserId],
         likesCount: post.likes.length + 1,
@@ -34,46 +38,67 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
     }
   };
 
+  //시간경과
+  const detailDate = (time: any) => {
+    const milliSeconds = new Date() - time;
+    const seconds = milliSeconds / 1000;
+    if (seconds < 60) return `방금 전`;
+    const minutes = seconds / 60;
+    if (minutes < 60) return `${Math.floor(minutes)}분 전`;
+    const hours = minutes / 60;
+    if (hours < 24) return `${Math.floor(hours)}시간 전`;
+    const days = hours / 24;
+    if (days < 7) return `${Math.floor(days)}일 전`;
+    const weeks = days / 7;
+    if (weeks < 5) return `${Math.floor(weeks)}주 전`;
+    const months = days / 30;
+    if (months < 12) return `${Math.floor(months)}개월 전`;
+    const years = days / 365;
+    return `${Math.floor(years)}년 전`;
+  };
+  const nowDate = detailDate(post.createdAt);
+
   return (
-    <Link href={`/post-list/${post.id}`}>
-      <PostListCardLayout key={post.id}>
+
+    <PostListCardLayout key={post.id}>
+      <Link href={`/detail/${post.id}`}>
         <div
           className="post-image"
           style={{
             backgroundImage: `url(https://i.pinimg.com/564x/39/43/6c/39436c3a2f88447e3f87bb702368cf7a.jpg)`,
           }}
         />
-        <CardContentBox>
-          <div
-            className="profile-image"
-            style={{
-              backgroundImage: `url(https://i.pinimg.com/564x/78/c5/4d/78c54def60d50449183cb8161ff78983.jpg)`,
-            }}
-          />
-          <div className="top">
-            <h4>{post.userId}</h4>
-            <p>1분전</p>
-            {/* 🔖 타임스탬프 ~분전 변환 적용 예정입니다. */}
-            {/* <p>{post.createdAt}</p> */}
-          </div>
+      </Link>
+      <CardContentBox>
+        <div
+          className="profile-image"
+          style={{
+            backgroundImage: `url(https://i.pinimg.com/564x/78/c5/4d/78c54def60d50449183cb8161ff78983.jpg)`,
+          }}
+        />
+        <div className="top">
+          <h4>{post.userId}</h4>
+          <p>{nowDate}</p>
+        </div>
+        <Link href={`/detail/${post.id}`}>
           <div className="middle">
             <h3>{post.postTitle}</h3>
             <p>{post.postText}</p>
           </div>
-          <div className="bottom">
-            <p>{post.jobCategory}의 책상</p>
-            <div onClick={updateLikes}>
-              <p>{post.likesCount}</p>
-              <Image
-                src={isLikesClicked ? activeLikes : inactiveLikes}
-                alt="likes-icon"
-                width={10}
-              />
-            </div>
+        </Link>
+        <div className="bottom">
+          <p>{post.jobCategory}의 책상</p>
+          <div onClick={updateLikes}>
+            <p>{post.likesCount}</p>
+            <Image
+              src={isLikesClicked ? activeLikes : inactiveLikes}
+              alt="likes-icon"
+              width={10}
+            />
           </div>
-        </CardContentBox>
-      </PostListCardLayout>
-    </Link>
+        </div>
+      </CardContentBox>
+    </PostListCardLayout>
   );
 };
 
@@ -146,10 +171,21 @@ const CardContentBox = styled.div`
     }
 
     > p {
+      height: 2rem;
       font-size: 0.75rem;
       font-weight: 500;
       color: #868e96;
       margin-bottom: 1.25rem;
+      line-height: 1rem;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+
+    :hover {
+      opacity: 50%;
+      transition: all 0.1s;
     }
   }
 

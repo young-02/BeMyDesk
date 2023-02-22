@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import Search from './Search';
 
 function GlobalNavigationBar() {
   const router = useRouter();
@@ -22,15 +23,7 @@ function GlobalNavigationBar() {
         </Link>
       </div>
       <div>
-        <Image
-          alt="likes-icon"
-          src={`/images/${
-            pathname === '/main' ? 'dark' : 'light'
-          }ThemeSearch.png`}
-          width={20}
-          height={20}
-          style={{ cursor: 'pointer' }}
-        />
+        <Search pathname={pathname} />
         <Link href="/auth/sign-in" className="button">
           로그인
         </Link>
@@ -53,13 +46,15 @@ const GNBLayout = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0px 6.25rem 0px;
-  background-color: ${(props) => (props.theme === 'light' ? 'white' : 'black')};
+  background-color: ${(props) =>
+    props.theme === 'light' ? 'white' : '#17171C'};
   font-family: 'Pretendard Variable';
-  color: ${(props) => (props.theme === 'light' ? 'black' : 'white')};
+  color: ${(props) => (props.theme === 'light' ? '#17171C' : 'white')};
   z-index: 999;
+  transition: all 0.2s ease;
 
   > div {
-    height: 6.75rem;
+    height: 5rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -82,7 +77,7 @@ const GNBLayout = styled.div`
       cursor: pointer;
       :hover {
         font-weight: 700;
-        color: ${(props) => (props.theme === 'light' ? 'black' : 'white')};
+        color: ${(props) => (props.theme === 'light' ? '#17171C' : 'white')};
       }
     }
   }
