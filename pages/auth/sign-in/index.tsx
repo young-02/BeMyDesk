@@ -17,7 +17,7 @@ import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, setDoc } from 'firebase/firestore';
-
+import useGetReaction from '../../../components/Hooks/useGetReaction';
 type Props = {};
 
 export default function SignIn({}: Props) {
@@ -36,6 +36,9 @@ export default function SignIn({}: Props) {
   const [pwEmptyError, setPwEmptyError] = useState(false);
   const [user, setUser] = useAuthState(auth);
   const [stayLoginisChecked, setStayLoginIsChecked] = useState(false);
+
+  const { follow ,scrap} = useGetReaction();
+  
 
   const handleRadioChange = (e: any) => {
     console.log(e.target.checked);
@@ -153,8 +156,8 @@ export default function SignIn({}: Props) {
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const payload = {
         userId: auth.currentUser?.uid,
-        scraps: [],
-        following: [],
+        scraps: [...scrap],
+        following: [...follow],
         introduction: '안녕하세요!',
       };
 
@@ -178,8 +181,8 @@ export default function SignIn({}: Props) {
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const payload = {
         userId: auth.currentUser?.uid,
-        scraps: [],
-        following: [],
+        scraps: [...scrap],
+        following: [...follow],
         introduction: '안녕하세요!',
       };
 
