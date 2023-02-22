@@ -21,6 +21,7 @@ import { doc, setDoc } from 'firebase/firestore';
 type Props = {};
 
 export default function SignIn({}: Props) {
+  const router = useRouter();
   // const emailRef = useRef<HTMLInputElement>(null);
   // const pwRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState('');
@@ -80,6 +81,7 @@ export default function SignIn({}: Props) {
         .then(() => {
           alert('로그인 성공');
           console.log('login sucess', auth.currentUser);
+          router.push('/post-list');
         })
         .catch((error) => {
           console.log('error message: ', error.message);
@@ -158,7 +160,7 @@ export default function SignIn({}: Props) {
         introduction: '안녕하세요!',
       };
 
-      await setDoc(collectionRef, payload);
+      await setDoc(collectionRef, payload).then(router.push('/post-list'));
     } catch (error) {
       console.error(error);
     }
@@ -183,7 +185,7 @@ export default function SignIn({}: Props) {
         introduction: '안녕하세요!',
       };
 
-      await setDoc(collectionRef, payload);
+      await setDoc(collectionRef, payload).then(router.push('/post-list'));
     } catch (error) {
       console.error(error);
     }
