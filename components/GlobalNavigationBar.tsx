@@ -46,8 +46,7 @@ const GNBLayout = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0px 6.25rem 0px;
-  background-color: ${(props) =>
-    props.theme === 'light' ? 'white' : '#17171C'};
+  background-color: ${(props) => (props.theme === 'light' ? 'white' : 'none')};
   font-family: 'Pretendard Variable';
   color: ${(props) => (props.theme === 'light' ? '#17171C' : 'white')};
   z-index: 999;
