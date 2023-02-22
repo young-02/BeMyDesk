@@ -35,7 +35,7 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
   };
 
   return (
-    <Link href={`/post-list/${post.id}`}>
+    <Link href={`/detail/${post.id}`}>
       <PostListCardLayout key={post.id}>
         <div
           className="post-image"
