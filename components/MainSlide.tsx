@@ -8,6 +8,11 @@ import main2 from '../public/images/main2.png';
 import main3 from '../public/images/main3.png';
 import main4 from '../public/images/main4.png';
 import main5 from '../public/images/main5.png';
+import designer from '../public/images/category/designer.jpg';
+import developer from '../public/images/category/developer.jpg';
+import student from '../public/images/category/student.jpg';
+import gamer from '../public/images/category/gamer.jpg';
+import footer from '../public/images/footer.png';
 
 const text = {
   inactive: { opacity: 0, translateY: 120 },
@@ -48,8 +53,8 @@ const image3 = {
 const MainSlide = () => {
   return (
     <MainPageLayout>
-      <MainPageSlide>
-        <SlideContent>
+      <Slide>
+        <SlideContentTop>
           <MotionText variants={text} initial="inactive" whileInView="active">
             <div className="text-top">
               <h3>
@@ -63,11 +68,10 @@ const MainSlide = () => {
             <div className="text-bottom">
               <div className="icon-row">
                 <Image
-                  className="desk"
                   src={scrap}
                   alt="scrap-icon"
                   width={24}
-                  style={{ marginRight: '2.5rem' }}
+                  style={{ marginRight: '40px' }}
                 />
                 <p>10K+</p>
                 <hr />
@@ -88,19 +92,19 @@ const MainSlide = () => {
               src={main1}
               alt="main-image"
               width={312}
-              style={{ borderRadius: '1.25rem' }}
+              style={{ borderRadius: '20px' }}
             />
             <Image
               src={main2}
               alt="main-image"
               width={312}
-              style={{ borderRadius: '1.25rem' }}
+              style={{ borderRadius: '20px' }}
             />
             <Image
               src={main1}
               alt="main-image"
               width={312}
-              style={{ borderRadius: '1.25rem' }}
+              style={{ borderRadius: '20px' }}
             />
           </MotionImage>
           <MotionImage
@@ -113,25 +117,25 @@ const MainSlide = () => {
               src={main3}
               alt="main-image"
               width={210}
-              style={{ borderRadius: '1.25rem' }}
+              style={{ borderRadius: '20px' }}
             />
             <Image
               src={main4}
               alt="main-image"
               width={210}
-              style={{ borderRadius: '1.25rem' }}
+              style={{ borderRadius: '20px' }}
             />
             <Image
               src={main3}
               alt="main-image"
               width={210}
-              style={{ borderRadius: '1.25rem' }}
+              style={{ borderRadius: '20px' }}
             />
           </MotionImage>
-        </SlideContent>
-      </MainPageSlide>
-      <MainPageSlide>
-        <SlideContent>
+        </SlideContentTop>
+      </Slide>
+      <Slide>
+        <SlideContentTop>
           <MotionText variants={text} initial="inactive" whileInView="active">
             <div className="text-top">
               <h3>
@@ -145,11 +149,10 @@ const MainSlide = () => {
             <div className="text-bottom">
               <div className="icon-row">
                 <Image
-                  className="desk"
                   src={scrap}
                   alt="scrap-icon"
                   width={24}
-                  style={{ marginRight: '2.5rem' }}
+                  style={{ marginRight: '40px' }}
                 />
                 <p>10K+</p>
                 <hr />
@@ -170,17 +173,94 @@ const MainSlide = () => {
               src={main5}
               alt="main-image"
               width={546}
-              style={{ borderRadius: '1.25rem' }}
+              style={{ borderRadius: '20px' }}
             />
           </MotionImage>
-        </SlideContent>
-      </MainPageSlide>
-      <MainPageSlide>
-        <SlideContent>3</SlideContent>
-      </MainPageSlide>
-      <MainPageSlide>
-        <SlideContent>4</SlideContent>
-      </MainPageSlide>
+        </SlideContentTop>
+      </Slide>
+      <Slide>
+        <SlideContentMiddle>
+          <CategoryCardBox>
+            <div className="gradient" />
+            <h3>디자이너</h3>
+            <p>디자이너의 공간을 보러 가볼까요?</p>
+            <CardImage
+              src={designer}
+              alt="designer"
+              width={800}
+              style={{ borderRadius: '20px' }}
+            />
+          </CategoryCardBox>
+          <CategoryCardBox>
+            <div className="gradient" />
+            <h3>개발자</h3>
+            <p>개발자의 공간을 보러 가볼까요?</p>
+            <CardImage
+              src={developer}
+              alt="designer"
+              width={800}
+              style={{ borderRadius: '20px' }}
+            />
+          </CategoryCardBox>
+          <CategoryCardBox>
+            <div className="gradient" />
+            <h3>학생</h3>
+            <p>학생의 공간을 보러 가볼까요?</p>
+            <CardImage
+              src={student}
+              alt="designer"
+              width={800}
+              style={{ borderRadius: '20px' }}
+            />
+          </CategoryCardBox>
+          <CategoryCardBox>
+            <div className="gradient" />
+            <h3>게이머</h3>
+            <p>게이머의 공간을 보러 가볼까요?</p>
+            <CardImage
+              src={gamer}
+              alt="designer"
+              width={800}
+              style={{ borderRadius: '20px' }}
+            />
+          </CategoryCardBox>
+        </SlideContentMiddle>
+        <div className="background" />
+      </Slide>
+      <Slide>
+        <SlideContentBottom>
+          <div>
+            <h3>BE MY DESK</h3>
+            <p>나다운 공간에서 나다움을 만들다</p>
+          </div>
+          <div className="slide"></div>
+        </SlideContentBottom>
+        <FooterBox>
+          <FooterInfo>
+            <div>
+              <h4>BE MY DESK</h4>
+              <div>
+                <p>
+                  당연시 여겼던 아침 아홉 시의 해와 음악에 몰두하던 밤들로부터
+                </p>
+                <p>fade out, Marlboro와 함께 탄 내 20대의 생활</p>
+              </div>
+            </div>
+            <div>
+              <h4>Be my desk</h4>
+              <p>상단 페이지</p>
+              <p>소개 페이지</p>
+              <p>직업별 페이지</p>
+            </div>
+            <div>
+              <h4>Be my desk</h4>
+              <p>프로필 설정</p>
+              <p>나의 게시글</p>
+            </div>
+          </FooterInfo>
+        </FooterBox>
+        <div className="background" />
+      </Slide>
     </MainPageLayout>
   );
 };
@@ -195,35 +275,40 @@ const MainPageLayout = styled.div`
   scroll-snap-type: y mandatory;
   color: white;
   background-color: none;
-  /* background-color: #17171c; */
-  font-size: 20rem;
+  font-size: 320px;
 `;
 
-const MainPageSlide = styled.div`
+const Slide = styled.div`
   width: 100vw;
   height: 100vh;
+  position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   scroll-snap-align: center;
   background-color: none;
+  .background {
+    z-index: -2;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #17171c;
+  }
 `;
 
-const SlideContent = styled.div`
-  width: 75rem;
-  height: 30rem;
+const SlideContentTop = styled.div`
+  width: 1200px;
+  height: 480px;
   display: flex;
   flex-direction: row;
-  gap: 1.5rem;
-  /* position: relative; */
-  /* background-color: black; */
+  gap: 24px;
 `;
 
 const MotionImage = styled(motion.div)`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 24px;
 `;
 
 const MotionText = styled(motion.div)`
@@ -240,15 +325,14 @@ const MotionText = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.25rem;
-    /* background-color: red; */
+    gap: 20px;
 
     > h3 {
       display: flex;
       flex-wrap: wrap;
-      font-size: 3rem;
+      font-size: 48px;
       font-weight: 200;
-      line-height: 4rem;
+      line-height: 64px;
 
       .text-point {
         font-weight: 600;
@@ -257,9 +341,9 @@ const MotionText = styled(motion.div)`
 
     > p {
       width: 100%;
-      font-size: 1rem;
+      font-size: 16px;
       font-weight: 400;
-      line-height: 1.5rem;
+      line-height: 24px;
       display: -webkit-box;
       -webkit-box-orient: vertical;
     }
@@ -270,7 +354,7 @@ const MotionText = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.25rem;
+    gap: 20px;
 
     .icon-row {
       width: 100%;
@@ -279,25 +363,203 @@ const MotionText = styled(motion.div)`
       align-items: center;
 
       > p {
-        font-size: 1rem;
+        font-size: 16px;
         font-weight: 400;
-        margin-right: 1.5rem;
+        margin-right: 24px;
       }
 
       > hr {
         width: 100%;
-        border-top: 0.0625rem solid white;
+        border-top: 1px solid white;
         margin: 0;
       }
     }
 
     > p {
-      width: 16rem;
-      font-size: 0.875rem;
+      width: 256px;
+      font-size: 14px;
       font-weight: 400;
-      line-height: 1.25rem;
+      line-height: 20px;
       display: -webkit-box;
       -webkit-box-orient: vertical;
+    }
+  }
+`;
+
+const SlideContentMiddle = styled.div`
+  width: 1200px;
+  height: 800px;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  transition: all 0.6s ease-in-out;
+
+  :hover {
+    width: 1360px;
+    transition: all 0.8s ease-in-out;
+  }
+`;
+
+const CategoryCardBox = styled.div`
+  flex: 1;
+  width: 282px;
+  height: 100%;
+  position: relative;
+  gap: 10px;
+  padding: 32px;
+  border-radius: 10px;
+  font-family: 'Pretendard Variable';
+  overflow: hidden;
+  transition: all 0.8s ease-in-out;
+
+  .gradient {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    bottom: 0px;
+    z-index: 1;
+    mix-blend-mode: multiply;
+    background: linear-gradient(
+      rgba(217, 217, 217, 0),
+      86%,
+      rgba(154, 154, 154, 1)
+    );
+  }
+
+  > h3 {
+    position: absolute;
+    z-index: 1;
+    font-size: 34px;
+    font-weight: 400;
+    transform: rotate(-90deg);
+    transform-origin: 0% 100%;
+    left: 64px;
+    bottom: 32px;
+  }
+
+  > p {
+    position: absolute;
+    z-index: 1;
+    font-size: 16px;
+    font-weight: 400;
+    display: none;
+    white-space: nowrap;
+    left: 32px;
+    bottom: 32px;
+  }
+
+  :hover {
+    flex: 5;
+    transition: all 0.8s ease-in-out;
+
+    > p {
+      display: block;
+    }
+
+    > h3 {
+      transform: rotate(0deg);
+      left: 32px;
+      bottom: 64px;
+    }
+  }
+`;
+
+const CardImage = styled(Image)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const SlideContentBottom = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Pretendard Variable';
+  overflow: hidden;
+
+  > div {
+    width: 1200px;
+    height: 100%;
+    > h3 {
+      font-size: 204.8px;
+      font-weight: 700;
+    }
+
+    > p {
+      font-size: 18px;
+      margin-left: 16px;
+      margin-bottom: 40px;
+    }
+  }
+
+  .slide {
+    background-image: url('/images/footer.png');
+    width: 151.5rem;
+    height: 10.75rem;
+    animation: slider 30s linear infinite;
+  }
+
+  @keyframes slider {
+    0% {
+      background-position: 0 center;
+    }
+    100% {
+      background-position: -151.5rem center;
+    }
+  }
+`;
+
+const FooterBox = styled.div`
+  z-index: -1;
+  width: 100%;
+  height: 200px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0%;
+  font-family: 'Pretendard Variable';
+  border-top: 0.0625rem solid #868e96;
+`;
+
+const FooterInfo = styled.div`
+  width: 1200px;
+  display: flex;
+  flex-direction: row;
+  gap: 120px;
+
+  > div {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    > h4 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ced4da;
+    }
+
+    > p {
+      font-size: 16px;
+      font-weight: 400;
+      color: #868e96;
+    }
+
+    > div {
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      > p {
+        font-size: 16px;
+        font-weight: 400;
+        color: #868e96;
+      }
     }
   }
 `;
