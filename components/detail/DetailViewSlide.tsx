@@ -29,7 +29,7 @@ export default function DetailViewSlide({ detail }) {
 }
 
 const DetailViewSlideLayout = styled.div`
-  border-radius: 10px;
+  border-radius: 0.625rem;
   overflow: hidden;
 
   .post-img {
