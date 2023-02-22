@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
-import React, { useMemo, memo } from 'react';
-import ReactQuill from 'react-quill';
+import React, { useMemo, memo, useState } from 'react';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
 
@@ -38,7 +38,7 @@ const formats = [
   'link',
 ];
 
-export default function DetailWriteFormEditor() {
+export default function DetailWriteFormEditor({ value, onChange }: any) {
   return (
     <div>
       <EditorStyle
@@ -46,6 +46,10 @@ export default function DetailWriteFormEditor() {
         modules={modules}
         formats={formats}
         placeholder="내용을 입력해주세요"
+        value={value || ''}
+        onChange={(content, delta, source, editor) =>
+          onChange(editor.getHTML())
+        }
       />
     </div>
   );
