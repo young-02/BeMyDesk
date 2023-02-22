@@ -2,13 +2,19 @@ import React, { useState, useRef, useCallback, memo } from 'react';
 import styled from 'styled-components';
 import DetailWriteSearch from './DetailWriteSearch';
 import DetailWriteProductCard from './DetailWriteProductCard';
-import DetaillWriteImageInput from './DetaillWriteImageInput';
 import { listProps } from './DetailWriteSearch';
 import axios from 'axios';
 import QuillEditor from './DetailWriteFormEditor';
 import { collection, addDoc } from 'firebase/firestore';
-import { dbService } from '../../shared/firebase';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { dbService, auth, storage } from '../../shared/firebase';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+  uploadString,
+} from 'firebase/storage';
+import Link from 'next/link';
 axios.defaults.withCredentials = true;
 
 export interface DetailWriteSearchProps {
@@ -38,6 +44,19 @@ const DetailWriteForm = () => {
 
   // 직업 선택 state
   const [selectJob, setSelectJob] = useState('');
+
+  // 에디터 내의 텍스트 관리 state
+  const [text, setText] = useState(null);
+
+  const [imageFile, setImageFile] = useState([]);
+
+  const [postImages, setPostImages] = useState<any>(null); // 서버로 보낼거
+  const [detailImages, setDetailImages] = useState<any[]>([]); // 프리뷰이미지
+
+  // 에디터 텍스트 onchange함수
+  const changeEditorText = (value: any) => {
+    setText(value);
+  };
 
   /**
    * 인풋창에 작성할 때 딜레이가 안 되게끔 하는 함수
@@ -92,6 +111,7 @@ const DetailWriteForm = () => {
   const selectedProducts = (e: any) => {
     setSelectList(list);
     hideSearchModal();
+    console.log(list, '들어옴');
   };
 
   // 글쓰기 폼 제목 입력
@@ -109,31 +129,85 @@ const DetailWriteForm = () => {
     setSelectJob(e.target.value);
   };
 
+  // 데스크 테리어 사진 파일 선택
+  const uploadImgFiles = (e: any) => {
+    const fileArr = e.target.files;
+    setPostImages(Array.from(fileArr) as any);
+    let fileUrlss = [] as any;
+    let fileLength =
+      fileArr.length > 2 ? alert('이미지는 2개만 가능함') : fileArr.length;
+
+    // 데스크 테리어 사진 프리뷰
+    for (let i = 0; i < fileLength; i++) {
+      const fileArr = e.target.files;
+      let file = fileArr[i];
+      let reader = new FileReader();
+      reader.onload = () => {
+        const fileUrlss = [] as any;
+        fileUrlss[i] = reader.result;
+        setDetailImages([...fileUrlss]);
+      };
+      reader.readAsDataURL(file);
+    }
+    console.log(fileArr, '??');
+    console.log(fileUrlss, 'fileUrlss');
+  };
+
+  // 처음 썼던 함수
+  // const fileUpload = (event: any) => {
+  //   const imageUpload = event.target.files;
+  //   const imageUrlList: string[] | any = [...imageFile];
+
+  //   for (let i = 0; i < imageUpload.length; i++) {
+  //     const currentImageUrl = URL.createObjectURL(imageUpload[i]);
+  //     imageUrlList.push(currentImageUrl);
+  //   }
+
+  //   if (imageUrlList.length > 2) {
+  //     return alert('이미지 갯수 초과');
+  //   }
+
+  //   setImageFile(imageUrlList);
+  // };
+
+  // const deleteImage = (image: any) => {
+  //   const imageUrlList = [...imageFile];
+  //   setImageFile(imageUrlList.filter((i) => i !== image));
+
   //글쓰기 폼에서 최종적으로 등록하기 버튼을 누를 때 파이어베이스에 저장되는 놈
   const submitPostForm = async (e: any) => {
     e.preventDefault();
+
+    const products = list.map((item) => {
+      return {
+        productId: item.productId,
+        images: item.image,
+        title: item.title,
+        url: item.link,
+        hashTag: item.category2,
+      };
+    });
+
+    const fileArr = e.target.files;
+    const storageRef = ref(storage, `authService.currentUser.uid/'imageName`);
+    const snapshot = await uploadBytes(storageRef, fileArr);
+    console.log(fileArr, 'fileArr');
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
     const docRef = await addDoc(collection(dbService, 'postData'), {
       createdAt: new Date(),
-      userId: '11d2sad15s',
+      // userId: auth.currentUser?.uid,
       jobCategory: selectJob,
       postTitle: title,
-      postText: 'dsda',
-      postImage1: 'dsadsa',
-      postImage2: 'dsadsads',
+      postText: text,
+      postImage1: downloadURL,
+      postImage2: downloadURL,
       likes: [],
       likesCount: [],
-      products: [
-        // {
-        //   productId: list.productId,
-        //   images: list.image,
-        //   title: list.title,
-        //   url: list.url,
-        //   hashTag: list.category2,
-        // },
-        //수정할 예정
-      ],
+      products: products,
     });
     console.log('Document written with ID: ', docRef.id);
+    // <Link href="/detail/detailView"></Link>;
   };
 
   return (
@@ -173,12 +247,24 @@ const DetailWriteForm = () => {
           value={title}
           onChange={inputTitle}
         />
-        <QuillEditor />
+        <QuillEditor onChange={changeEditorText} value={text} />
         <DetailWriteBox>
-          <span className="title_span">
-            테스크테리어 사진을 선택해주세요
-            <DetaillWriteImageInput />
-          </span>
+          <>
+            <span className="title_span">테스크테리어 사진을 선택해주세요</span>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={uploadImgFiles}
+            />
+
+            {detailImages &&
+              detailImages.map((item: any) => (
+                <div key={item}>
+                  <img src={item} style={{ width: '300px', height: '300px' }} />
+                </div>
+              ))}
+          </>
         </DetailWriteBox>
         <DetailWriteBox>
           <span className="title_span">사용하신 제품을 선택해주세요</span>

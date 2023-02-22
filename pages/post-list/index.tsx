@@ -86,6 +86,7 @@ export default function PostList() {
     </PostListLayout>
   );
 }
+
 const PostListLayout = styled.div`
   display: flex;
   flex-direction: column;
