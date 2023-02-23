@@ -26,13 +26,13 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
     } else if (isLikesClicked === false) {
       await updateDoc(postRef, {
         likes: [...post.likes, currentUserId],
-        likesCount: post.likes.length + 1,
+        likesCount: post.likesCount + 1,
       });
       setIsLikesClicked(true);
     } else {
       await updateDoc(postRef, {
         likes: post.likes.filter((id) => id !== currentUserId),
-        likesCount: post.likes.length - 1,
+        likesCount: post.likesCount - 1,
       });
       setIsLikesClicked(false);
     }
