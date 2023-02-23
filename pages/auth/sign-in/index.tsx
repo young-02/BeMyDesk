@@ -38,8 +38,7 @@ export default function SignIn({}: Props) {
   const [user, setUser] = useAuthState(auth);
   const [stayLoginisChecked, setStayLoginIsChecked] = useState(false);
 
-  const { follow ,scrap} = useGetReaction();
-  
+  const { follow, scrap } = useGetReaction();
 
   const handleRadioChange = (e: any) => {
     console.log(e.target.checked);
@@ -157,6 +156,8 @@ export default function SignIn({}: Props) {
 
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const payload = {
+        profileImage: '/images/defaultProfile.png',
+        nickname: auth.currentUser?.displayName,
         userId: auth.currentUser?.uid,
         scraps: [...scrap],
         following: [...follow],
@@ -182,6 +183,8 @@ export default function SignIn({}: Props) {
 
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const payload = {
+        profileImage: '/images/defaultProfile.png',
+        nickname: auth.currentUser?.displayName,
         userId: auth.currentUser?.uid,
         scraps: [...scrap],
         following: [...follow],

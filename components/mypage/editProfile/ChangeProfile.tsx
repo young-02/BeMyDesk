@@ -4,19 +4,21 @@ import { app, auth, dbService } from '@/shared/firebase';
 import { addDoc, collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 import styled from 'styled-components';
 
-function ChangeProfile({ user }: any) {
-  //적용버튼
-  const [profileChangeDone, setProfileChangeDone] = useState(false);
+function ChangeProfile({ user, profileData }: any) {
   //자기소개
   const [countCharacters, setCountCharacters] = useState(0);
-  const [Characters, setCharacters] = useState('');
+  const [Characters, setCharacters] = useState(profileData?.introduction);
   //닉네임
   const [nickNameEdit, setNickNameEdit] = useState('');
   const [nicknameInputEnable, setNicknameInputEnable] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  //적용완료
+  const [profileChangeDone, setProfileChangeDone] = useState(false);
   //오류처리
   const [errorNickNameEmpty, setErrorNickNameEmpty] = useState(false);
   const [errorNickNameRegex, setErrorNickNameRegex] = useState(false);
+  const [errorIntroductionEmpty, setErrorIntroductionEmpty] = useState(false);
   //자기소개 글자수 세기
   const countOnChangeHandler = function (event: any) {
     const inputText = event.target.value;
@@ -37,12 +39,6 @@ function ChangeProfile({ user }: any) {
   ) {
     const inputText = event.target.value;
     setNickNameEdit(inputText);
-    // if (!inputText) {
-    //   setNickNameEdit(user.displayName);
-    //   setErrorNickNameEmpty(true);
-    // } else {
-    //   setNickNameEdit(inputText);
-    // }
   };
 
   // disable 상태인 닉네임 첫클릭
@@ -51,64 +47,73 @@ function ChangeProfile({ user }: any) {
   };
 
   // 적용 버튼
-
   const profileChangeConfirmButtonHandler = function () {
     const regex = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,8}$/;
+    const collectionRef = doc(dbService, `userInfo/${user.uid}`);
 
+    // 1. 닉네임 활성화 여부
+    // 2. 닉네임 유효성검사
+    // 3. 자기소개 입력여부
+
+    //1.닉네임 활성화 여부 - 활성화
     if (nicknameInputEnable) {
-      //regex 통과시 닉네임 업데이트
-      if (regex.test(nickNameEdit)) {
+      //2. 닉네임 유효성검사 - 정상입력
+      // 3. 자기소개 입력여부 - 입력완료
+      if (regex.test(nickNameEdit) && Characters !== '') {
         updateProfile(auth.currentUser as any, {
           displayName: nickNameEdit,
         });
-        setProfileChangeDone(true);
-        // 자기소개가 들어있을때만 업데이트되게하기
-        if (Characters !== '') {
-          const collectionRef = doc(dbService, `userInfo/${user.uid}`);
-          const payload = {
-            userId: user.uid,
-            // 스크랩한 글번호
-            // 팔로잉한 사람 UID
-            introduction: Characters,
-          };
-
-          updateDoc(collectionRef, payload)
-            .then(() => {
-              setCharacters('');
-              setNickNameEdit(user.displayName);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        }
+        const payload = {
+          nickname: nickNameEdit,
+          introduction: Characters,
+        };
+        updateDoc(collectionRef, payload)
+          .then(() => {
+            setProfileChangeDone(true);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
-        {
+        // 3. 자기소개 입력여부 - 비어있음
+        if (Characters == '') {
+          setErrorIntroductionEmpty(true);
+          // 2. 닉네임 유효성검사 regex 오류
+          // 2. 닉네임 유효성검사 비어있음
+          nickNameEdit === ''
+            ? setErrorNickNameEmpty(true)
+            : setErrorNickNameRegex(true);
+        } else {
+          // 2. 닉네임 유효성검사 regex 오류
+          // 2. 닉네임 유효성검사 비어있음
           nickNameEdit === ''
             ? setErrorNickNameEmpty(true)
             : setErrorNickNameRegex(true);
         }
       }
-    } else {
+    }
+    // 1.닉네임 활성화 여부 - 비활성화
+    else {
+      // 3. 자기소개 입력여부 - 비어있음
       if (Characters !== '') {
-        const collectionRef = doc(dbService, `userInfo/${user.uid}`);
         const payload = {
-          userId: user.uid,
-          // 스크랩한 글번호
-          // 팔로잉한 사람 UID
           introduction: Characters,
         };
-
         updateDoc(collectionRef, payload)
           .then(() => {
-            setNickNameEdit(user.displayName);
+            setProfileChangeDone(true);
           })
           .catch((error) => {
             console.error(error);
           });
       }
+      //2.자기소개 비어있음
+      else {
+        //3. 오류처리
+        setErrorIntroductionEmpty(true);
+      }
     }
   };
-
   // input창 enable시 자동 focus
   useEffect(() => {
     if (nicknameInputEnable && inputRef.current) {
@@ -134,15 +139,8 @@ function ChangeProfile({ user }: any) {
       <br />
       <br />
       <div>프로필소개</div>
-      {/* <input
-        type="text"
-        placeholder="프로필 소개 들어감"
-        onChange={countOnChangeHandler}
-        value={Characters}
-        style={{ height: '3em' }}
-      /> */}
+
       <textarea
-        placeholder="프로필 소개 들어감"
         onChange={countOnChangeHandler}
         value={Characters}
         style={{ height: '3em' }}
@@ -161,6 +159,7 @@ function ChangeProfile({ user }: any) {
             {errorNickNameRegex ? '닉네임 양식을 확인해주세요 2~8자' : null}
           </p>
           <p>{errorNickNameEmpty ? '(닉네임)필수 입력사항입니다' : null}</p>
+          <p>{errorIntroductionEmpty ? '자기소개를 입력해주세요' : null}</p>
         </div>
         <button onClick={profileChangeConfirmButtonHandler}>
           프로필 정보변경 적용하기
@@ -169,6 +168,7 @@ function ChangeProfile({ user }: any) {
     </ProfileEdit>
   );
 }
+
 const ProfileEdit = styled.div`
   .inputNickname {
     /* Pretendard Medium 18 */

@@ -1,12 +1,17 @@
-import { app, auth, storage } from '@/shared/firebase';
+import { app, auth, dbService, storage } from '@/shared/firebase';
 import { updatePassword, updateProfile } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ChangePassword from './editProfile/ChangePassword';
 import ChangeProfile from './editProfile/ChangeProfile';
 
-export function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
+export function ProfileEditModal({
+  setProfileEditModalOpen,
+  user,
+  profileData,
+}: any) {
   const [toggleEditMenu, setToggleEditMenu] = useState(true);
   //프로필사진
   const [profileImageUrl, setProfileImageUrl] = useState(user.photoURL);
@@ -23,11 +28,17 @@ export function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
     const storageRef = ref(storage, `profile/${user.uid}/profile-image`);
     const snapshot = await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(snapshot.ref);
-
+    // auth에 올리기
     await updateProfile(user, {
       photoURL: downloadURL,
     });
     setProfileImageUrl(downloadURL);
+    // userInfo에 올리기
+    const collectionRef = doc(dbService, `userInfo/${user.uid}`);
+    const payload = {
+      profileImage: downloadURL,
+    };
+    updateDoc(collectionRef, payload);
   };
 
   //프사삭제
@@ -37,6 +48,13 @@ export function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
       photoURL: default_Image,
     });
     setProfileImageUrl(default_Image);
+    // auth에 올리기
+    // userInfo에 올리기
+    const collectionRef = doc(dbService, `userInfo/${user.uid}`);
+    const payload = {
+      profileImage: default_Image,
+    };
+    updateDoc(collectionRef, payload);
   };
 
   return (
@@ -95,7 +113,7 @@ export function ProfileEditModal({ setProfileEditModalOpen, user }: any) {
           </div>
 
           {toggleEditMenu ? (
-            <ChangeProfile user={user} />
+            <ChangeProfile user={user} profileData={profileData} />
           ) : (
             <ChangePassword user={user} />
           )}
