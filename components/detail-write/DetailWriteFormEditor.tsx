@@ -51,11 +51,7 @@ export default function DetailWriteFormEditor({
         formats={formats}
         placeholder="내용을 입력해주세요"
         value={value}
-        onChange={
-          onChange
-          // (content, delta, source, editor) =>
-          // onChange(editor.getHTML())
-        }
+        onChange={onChange}
       />
     </div>
   );
