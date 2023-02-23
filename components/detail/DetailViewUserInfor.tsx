@@ -33,12 +33,13 @@ export default function DetailViewUserInfor({ detail }) {
       } else {
         scraps?.push(id);
       }
+      const docRef = doc(dbService, 'userInfo', num);
+      const payload = { scraps };
+      await updateDoc(docRef, payload);
     } else {
       router.push('/auth/sign-in');
     }
-    const docRef = doc(dbService, 'userInfo', num);
-    const payload = { scraps };
-    await updateDoc(docRef, payload);
+   
   };
 
   const onclickLove = async (num: any) => {
@@ -66,12 +67,13 @@ export default function DetailViewUserInfor({ detail }) {
       } else {
         following?.push(userId);
       }
+      const docRef = doc(dbService, 'userInfo', num);
+      const payload = { following };
+      await updateDoc(docRef, payload);
     } else {
       router.push('/auth/sign-in');
     }
-    const docRef = doc(dbService, 'userInfo', num);
-    const payload = { following };
-    await updateDoc(docRef, payload);
+  
   };
 
   return (
