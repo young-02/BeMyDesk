@@ -3,7 +3,6 @@ import DetailWriteSearchModal from './DetailWriteSearchModal';
 import styled from 'styled-components';
 import axios from 'axios';
 import close from 'public/images/close.png';
-// import ReactHtmlParser from 'react-html-parser';
 const parse = require('html-react-parser');
 
 axios.defaults.withCredentials = true;
@@ -45,7 +44,6 @@ const DetailWriteSearch = ({
           <DetailWriteSearchBox>
             <div>
               <span className="search">검색하기</span>
-              <span className="search">직접 등록하기</span>
             </div>
             <button className="closeBtn" onClick={onClose}>
               <img className="closeBtnImage" src={close.src} />
