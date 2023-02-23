@@ -38,7 +38,11 @@ const formats = [
   'link',
 ];
 
-export default function DetailWriteFormEditor({ value, onChange }: any) {
+export default function DetailWriteFormEditor({
+  value,
+  onChange,
+  onLoad,
+}: any) {
   return (
     <div>
       <EditorStyle
@@ -46,9 +50,11 @@ export default function DetailWriteFormEditor({ value, onChange }: any) {
         modules={modules}
         formats={formats}
         placeholder="내용을 입력해주세요"
-        value={value || ''}
-        onChange={(content, delta, source, editor) =>
-          onChange(editor.getHTML())
+        value={value}
+        onChange={
+          onChange
+          // (content, delta, source, editor) =>
+          // onChange(editor.getHTML())
         }
       />
     </div>
