@@ -3,6 +3,8 @@ import DetailWriteSearchModal from './DetailWriteSearchModal';
 import styled from 'styled-components';
 import axios from 'axios';
 import close from 'public/images/close.png';
+// import ReactHtmlParser from 'react-html-parser';
+const parse = require('html-react-parser');
 
 axios.defaults.withCredentials = true;
 
@@ -72,7 +74,7 @@ const DetailWriteSearch = ({
               onClick={() => selectProduct(item)}
             >
               <div className="searchProduct">
-                {item.title.split('<b>').join('').split('</b>').join('')}
+                {parse(item.title)}
                 {item.category2}
               </div>
             </DetailWriteSearchProductBox>
@@ -81,7 +83,7 @@ const DetailWriteSearch = ({
         <DetailWriteSearchBoxBottom>
           {list?.map((item: any) => (
             <div key={item.productId}>
-              {item.title.split('<b>').join('').split('</b>').join('')}
+              {parse(item.title)}
               <button onClick={() => deleteProduct(item)}>삭제</button>
             </div>
           ))}
