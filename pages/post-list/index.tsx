@@ -95,13 +95,12 @@ const PostListLayout = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100vw;
-  height: 100vh;
-  overflow-y: scroll;
+  margin-top: 8rem;
   overflow-x: hidden;
 `;
 
 const Header = styled.div`
-  position: sticky;
+  position: fixed;
   top: 0rem;
   z-index: 1;
 `;
@@ -112,6 +111,7 @@ const PostListBox = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   width: 75rem;
+  height: fit-content; //
   padding-bottom: 2rem;
   gap: 1rem;
   ::-webkit-scrollbar {
