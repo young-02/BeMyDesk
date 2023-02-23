@@ -9,7 +9,15 @@ import { useRouter } from 'next/router';
 
 export default function DetailViewUserInfor({ detail }) {
   const router = useRouter();
-  const { userProfile, userId, jobCategory, likesCount, id, likes } = detail;
+  const {
+    userProfile,
+    userId,
+    jobCategory,
+    likesCount,
+    id,
+    likes,
+    userNickname,
+  } = detail;
   const { isLogin, isUserObj, logOut } = useCheckLogin();
 
   const initialState = likes.includes(isUserObj) ? true : false;
@@ -19,6 +27,7 @@ export default function DetailViewUserInfor({ detail }) {
   const [scraps, setScraps] = useState<[] | undefined>();
   const scraper = scraps?.includes(id) ? true : false;
   const follower = following?.includes(userId) ? true : false;
+  const userProfileImg = userProfile ?? '/images/defaultProfile.png';
 
   useEffect(() => {
     userInfor?.map(
@@ -79,9 +88,13 @@ export default function DetailViewUserInfor({ detail }) {
   return (
     <DetailViewUserInforLayout>
       <UserProfile>
-        <img className="user-profile" src={userProfile} alt="userProfileImg" />
+        <img
+          className="user-profile"
+          src={userProfileImg}
+          alt="userProfileImg"
+        />
         <div className="user-information">
-          <p className="user-id">{userId}</p>
+          <p className="user-id">{userNickname ?? '닉네임'}</p>
           <p className="user-job">{jobCategory}</p>
         </div>
       </UserProfile>
