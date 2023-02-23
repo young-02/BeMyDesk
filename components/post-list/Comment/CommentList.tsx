@@ -1,4 +1,5 @@
 import CustomButton from '@/components/ui/CustomButton';
+import CustomModal from '@/components/ui/CustomModal';
 import { auth, dbService } from '@/shared/firebase';
 import { deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
@@ -7,7 +8,6 @@ import styled from 'styled-components';
 type Props = {};
 
 export default function CommentList({ comment, path }) {
-  console.log(comment);
   const { userProfile, userNickName, createdAt, commentText, id, userId } =
     comment;
   const [edit, setEdit] = useState({
@@ -15,6 +15,7 @@ export default function CommentList({ comment, path }) {
     editText: commentText,
   });
   const { active, editText } = edit;
+  const [isOpen, setIsOpen] = useState(false);
 
   //시간경과
   const detailDate = (time: any) => {
@@ -38,7 +39,6 @@ export default function CommentList({ comment, path }) {
 
   //삭제
   const deleteComment = async (id: string) => {
-    alert('정말삭제하시겠습니까?');
     const docRef = doc(dbService, path, id);
     await deleteDoc(docRef);
   };
@@ -53,55 +53,82 @@ export default function CommentList({ comment, path }) {
     updateDoc(docRef, payload);
   };
 
-  console.log(auth.currentUser?.uid);
-
   return (
-    <CommentListLayout>
-      <WriteInformationDiv>
-        <ProfileImg src={userProfile} alt="profileImg" />
-      </WriteInformationDiv>
+    <>
+      <CommentListLayout>
+        <WriteInformationDiv>
+          <ProfileImg src={userProfile} alt="profileImg" />
+        </WriteInformationDiv>
 
-      <CommentTextDiv>
-        <div className="userInformation">
-          <p className="nickName">{userNickName}</p>
-          <p className="date">{nowDate}</p>
-        </div>
-        <div className="comment-list">
-          {!active ? (
-            <p className="commenText">{commentText}</p>
-          ) : (
-            // <div dangerouslySetInnerHTML={{ __html: commentText }}></div>
-            <input
-              className="editInput"
-              type="text"
-              placeholder={commentText}
-              value={editText}
-              onChange={(e) => setEdit({ ...edit, editText: e.target.value })}
-            />
-          )}
-        </div>
-      </CommentTextDiv>
-      <CommentModify>
-        {auth.currentUser?.uid === userId ? (
-          <>
+        <CommentTextDiv>
+          <div className="userInformation">
+            <p className="nickName">{userNickName}</p>
+            <p className="date">{nowDate}</p>
+          </div>
+          <div className="comment-list">
+            {!active ? (
+              <p className="commenText">{commentText}</p>
+            ) : (
+              // <div dangerouslySetInnerHTML={{ __html: commentText }}></div>
+              <input
+                className="editInput"
+                type="text"
+                placeholder={commentText}
+                value={editText}
+                onChange={(e) => setEdit({ ...edit, editText: e.target.value })}
+              />
+            )}
+          </div>
+        </CommentTextDiv>
+        <CommentModify>
+          {auth.currentUser?.uid === userId ? (
+            <>
+              <CustomButton
+                backgoundColor="none"
+                fontColor="#868E96"
+                onClick={() => editComment(id)}
+              >
+                수정
+              </CustomButton>
+              <CustomButton
+                backgoundColor="none"
+                fontColor="#868E96"
+                onClick={() => setIsOpen((prev) => !prev)}
+              >
+                삭제
+              </CustomButton>
+            </>
+          ) : null}
+        </CommentModify>
+      </CommentListLayout>
+      {isOpen && (
+        <CustomModal
+          title="정말 삭제 하시겠습니까?"
+          description="삭제 이후 복원이 불가능합니다."
+        >
+          <div className="buttonWrap">
             <CustomButton
-              backgoundColor="none"
-              fontColor="#868E96"
-              onClick={() => editComment(id)}
-            >
-              수정
-            </CustomButton>
-            <CustomButton
-              backgoundColor="none"
-              fontColor="#868E96"
+              paddingRow="0"
+              paddingColumns="0.5"
+              backgoundColor="#F83E4B"
+              fontColor="#fff"
               onClick={() => deleteComment(id)}
             >
               삭제
             </CustomButton>
-          </>
-        ) : null}
-      </CommentModify>
-    </CommentListLayout>
+            <CustomButton
+              paddingRow="0"
+              paddingColumns="0.5"
+              backgoundColor="#fff"
+              fontColor="#868E96"
+              onClick={() => setIsOpen((prev) => !prev)}
+            >
+              취소
+            </CustomButton>
+          </div>
+        </CustomModal>
+      )}
+    </>
   );
 }
 

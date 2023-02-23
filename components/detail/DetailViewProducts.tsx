@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import ReactHtmlParser from 'html-react-parser';
 type Props = {};
 
 export default function DetailViewProducts({ detail }: Props) {
@@ -18,7 +18,7 @@ export default function DetailViewProducts({ detail }: Props) {
               src={product.img}
               alt={product.title}
             />
-            <p className="product-title">{product.title}</p>
+            <p className="product-title">{ReactHtmlParser(product.title)}</p>
             <p className="product-hasTag">{product.hashTag}</p>
           </div>
         ))}
