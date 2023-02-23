@@ -7,42 +7,38 @@ import useGetReaction from '../Hooks/useGetReaction';
 import CustomButton from '../ui/CustomButton';
 import { useRouter } from 'next/router';
 
-export default function DetailViewUserInfor({ detail }: any) {
+export default function DetailViewUserInfor({ detail }) {
   const router = useRouter();
-  const { userProfile, userId, jobCategory, likesCount, id, likes }: any =
-    detail;
+  const { userProfile, userId, jobCategory, likesCount, id, likes } = detail;
   const { isLogin, isUserObj, logOut } = useCheckLogin();
   const like = likes.includes(isUserObj) ? true : false;
   const { userInfor } = useGetReaction();
-  const [following, setFollowing] = useState<string[] | undefined>();
-  const [scraps, setScraps] = useState<string[]>();
+  const [following, setFollowing] = useState<[] | undefined>();
+  const [scraps, setScraps] = useState<[] | undefined>();
   const scraper = scraps?.includes(id) ? true : false;
   const follower = following?.includes(userId) ? true : false;
 
   useEffect(() => {
     userInfor?.map(
-      (item: userInforType) =>
+      (item) =>
         (auth.currentUser?.uid === item.id && setFollowing(item.following)) ||
         (auth.currentUser?.uid == item.id && setScraps(item.scraps)),
     );
   }, [userInfor, following, scraps]);
 
-  // console.log(auth.currentUser.uid, 'following');
-  console.log(scraps, 'scraps');
-  const onclickScrap = async (num: string) => {
+  const onclickScrap = async (num: any) => {
     if (isLogin) {
       if (scraps?.includes(id)) {
         scraps?.pop(id);
       } else {
         scraps?.push(id);
       }
-
-      const docRef = doc(dbService, 'userInfo', num);
-      const payload = { scraps };
-      await updateDoc(docRef, payload);
     } else {
       router.push('/auth/sign-in');
     }
+    const docRef = doc(dbService, 'userInfo', num);
+    const payload = { scraps };
+    await updateDoc(docRef, payload);
   };
 
   const onclickLove = async (num: any) => {
@@ -63,19 +59,19 @@ export default function DetailViewUserInfor({ detail }: any) {
     await updateDoc(docRef, payload);
   };
 
-  const onclickFollow = async (num: string) => {
+  const onclickFollow = async (num: any) => {
     if (isLogin) {
       if (following?.includes(userId)) {
         following?.pop(userId);
       } else {
         following?.push(userId);
       }
-      const docRef = doc(dbService, 'userInfo', num);
-      const payload = { following };
-      await updateDoc(docRef, payload);
     } else {
       router.push('/auth/sign-in');
     }
+    const docRef = doc(dbService, 'userInfo', num);
+    const payload = { following };
+    await updateDoc(docRef, payload);
   };
 
   return (
