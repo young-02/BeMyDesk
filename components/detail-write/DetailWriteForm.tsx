@@ -7,17 +7,10 @@ import axios from 'axios';
 import QuillEditor from './DetailWriteFormEditor';
 import { collection, addDoc } from 'firebase/firestore';
 import { dbService, auth, storage } from '../../shared/firebase';
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadString,
-} from 'firebase/storage';
+import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Link from 'next/link';
 import { Quill } from 'react-quill';
 import { useRouter } from 'next/router';
-import ReactHtmlParser from 'html-react-parser';
-import DOMPurify from 'dompurify';
 axios.defaults.withCredentials = true;
 
 export interface DetailWriteSearchProps {
@@ -330,8 +323,9 @@ const DetailWriteLayout = styled.form`
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  margin-top: 9rem;
   width: 80%;
-  height: 160vh;
+  height: 100vh;
   padding: 0.5rem;
 `;
 
