@@ -3,12 +3,6 @@ import styled from 'styled-components';
 import CustomButton from './CustomButton';
 // import CustomButton from '../';
 
-declare interface CustomModalType {
-  children?: React.ReactNode;
-  title?: string;
-  description?: string;
-}
-
 export default function CustomModal({
   children,
   title,
