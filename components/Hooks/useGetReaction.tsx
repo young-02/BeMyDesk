@@ -12,7 +12,7 @@ export default function useGetReaction() {
 
     onSnapshot(collectionRef, (snapshot: any) =>
       setUserInfor(
-        snapshot.docs?.map((doc: any) => ({ ...doc.data(), id: doc.id })),
+        snapshot.docs.map((doc: any) => ({ ...doc.data(), id: doc.id })),
       ),
     );
 
