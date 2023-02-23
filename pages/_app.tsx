@@ -6,6 +6,7 @@ import Script from 'next/script';
 import Top from '@/components/Search';
 import GlobalNavigationBar from '../components/GlobalNavigationBar';
 import styled from 'styled-components';
+import Footer from '@/components/Footer';
 
 declare global {
   interface Window {
@@ -35,6 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={client}>
         <Component {...pageProps} />
       </QueryClientProvider>
+      <Footer />
     </>
   );
 }

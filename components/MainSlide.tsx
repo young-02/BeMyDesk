@@ -13,6 +13,8 @@ import developer from '../public/images/category/developer.jpg';
 import student from '../public/images/category/student.jpg';
 import gamer from '../public/images/category/gamer.jpg';
 import footer from '../public/images/footer.png';
+import { useRouter } from 'next/router';
+import Footer from '@/components/Footer';
 
 const text = {
   inactive: { opacity: 0, translateY: 120 },
@@ -51,6 +53,7 @@ const image3 = {
 };
 
 const MainSlide = () => {
+  const router = useRouter();
   return (
     <MainPageLayout>
       <Slide>
@@ -61,8 +64,8 @@ const MainSlide = () => {
                 당신의<div className="text-point">크리에이티비티가</div>
               </h3>
               <p>
-                보내는 아니더면, 우리는 그들을 부패뿐이다. 인생의 그들의 같은
-                있으랴? 끝에 하는 우리의 아니다.
+                BE MY DESK에서 당신의 창의성을 빛내줄 공간을 찾아보세요. 공간을
+                통해 우리의 삶이 달라집니다.
               </p>
             </div>
             <div className="text-bottom">
@@ -141,10 +144,14 @@ const MainSlide = () => {
               <h3>
                 <div className="text-point">당신다움</div>으로
               </h3>
-              <p>
-                보내는 아니더면, 우리는 그들을 부패뿐이다. 인생의 그들의 같은
-                있으랴? 끝에 하는 우리의 아니다.
-              </p>
+              <p>당신만의 공간을 찾아 당신다움을 빛내보세요.</p>
+              <button
+                onClick={() => {
+                  router.push('/post-list');
+                }}
+              >
+                시작하기
+              </button>
             </div>
             <div className="text-bottom">
               <div className="icon-row">
@@ -180,7 +187,11 @@ const MainSlide = () => {
       </Slide>
       <Slide>
         <SlideContentMiddle>
-          <CategoryCardBox>
+          <CategoryCardBox
+            onClick={() => {
+              router.push('/post-list?order=category&select=designer');
+            }}
+          >
             <div className="gradient" />
             <h3>디자이너</h3>
             <p>디자이너의 공간을 보러 가볼까요?</p>
@@ -191,7 +202,11 @@ const MainSlide = () => {
               style={{ borderRadius: '20px' }}
             />
           </CategoryCardBox>
-          <CategoryCardBox>
+          <CategoryCardBox
+            onClick={() => {
+              router.push('/post-list?order=category&select=developer');
+            }}
+          >
             <div className="gradient" />
             <h3>개발자</h3>
             <p>개발자의 공간을 보러 가볼까요?</p>
@@ -202,7 +217,11 @@ const MainSlide = () => {
               style={{ borderRadius: '20px' }}
             />
           </CategoryCardBox>
-          <CategoryCardBox>
+          <CategoryCardBox
+            onClick={() => {
+              router.push('/post-list?order=category&select=student');
+            }}
+          >
             <div className="gradient" />
             <h3>학생</h3>
             <p>학생의 공간을 보러 가볼까요?</p>
@@ -213,7 +232,11 @@ const MainSlide = () => {
               style={{ borderRadius: '20px' }}
             />
           </CategoryCardBox>
-          <CategoryCardBox>
+          <CategoryCardBox
+            onClick={() => {
+              router.push('/post-list?order=category&select=gamer');
+            }}
+          >
             <div className="gradient" />
             <h3>게이머</h3>
             <p>게이머의 공간을 보러 가볼까요?</p>
@@ -240,10 +263,8 @@ const MainSlide = () => {
             <div>
               <h4>BE MY DESK</h4>
               <div>
-                <p>
-                  당연시 여겼던 아침 아홉 시의 해와 음악에 몰두하던 밤들로부터
-                </p>
-                <p>fade out, Marlboro와 함께 탄 내 20대의 생활</p>
+                <p>BE MY DESK에서 당신의 창의성을 빛내줄 공간을 찾아보세요.</p>
+                <p>공간을 통해 우리의 삶이 달라집니다.</p>
               </div>
             </div>
             <div>
@@ -321,7 +342,7 @@ const MotionText = styled(motion.div)`
   font-family: 'Pretendard Variable';
 
   .text-top {
-    width: 70%;
+    width: 25rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -344,8 +365,18 @@ const MotionText = styled(motion.div)`
       font-size: 16px;
       font-weight: 400;
       line-height: 24px;
+      margin-bottom: 2.5rem;
       display: -webkit-box;
       -webkit-box-orient: vertical;
+    }
+
+    > button {
+      width: 8rem;
+      height: 2.5rem;
+      border-radius: 20rem;
+      border: 1px solid white;
+      color: white;
+      background-color: none;
     }
   }
 
@@ -411,6 +442,7 @@ const CategoryCardBox = styled.div`
   font-family: 'Pretendard Variable';
   overflow: hidden;
   transition: all 0.8s ease-in-out;
+  cursor: pointer;
 
   .gradient {
     position: absolute;
@@ -479,6 +511,7 @@ const SlideContentBottom = styled.div`
   align-items: center;
   font-family: 'Pretendard Variable';
   overflow: hidden;
+  /* background-color: aqua; */
 
   > div {
     width: 1200px;
