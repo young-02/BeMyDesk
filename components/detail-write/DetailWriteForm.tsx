@@ -11,10 +11,13 @@ import {
   getDownloadURL,
   getStorage,
   ref,
-  uploadBytes,
   uploadString,
 } from 'firebase/storage';
 import Link from 'next/link';
+import { Quill } from 'react-quill';
+import { useRouter } from 'next/router';
+import ReactHtmlParser from 'html-react-parser';
+import DOMPurify from 'dompurify';
 axios.defaults.withCredentials = true;
 
 export interface DetailWriteSearchProps {
@@ -24,6 +27,7 @@ export interface DetailWriteSearchProps {
 
 // 글쓰기 페이지 폼 함수입니다
 const DetailWriteForm = () => {
+  const router = useRouter();
   // console.log('form 자체');
 
   // 모달 관리 State
@@ -45,25 +49,30 @@ const DetailWriteForm = () => {
   // 직업 선택 state
   const [selectJob, setSelectJob] = useState('');
 
-  // 에디터 내의 텍스트 관리 state
-  const [text, setText] = useState(null);
+  // 에디터 내의 content 관리 state
+  const [content, setContent] = useState('');
 
-  const [imageFile, setImageFile] = useState([]);
-
-  const [postImages, setPostImages] = useState<any>(null); // 서버로 보낼거
-  const [detailImages, setDetailImages] = useState<any[]>([]); // 프리뷰이미지
+  const [attachment, setAttachment] = useState('');
 
   // 에디터 텍스트 onchange함수
-  const changeEditorText = (value: any) => {
-    setText(value);
+  const changeEditorText = (value: string) => {
+    // const extractTextPattern = /(<([^>]+)>)/gi;
+    // const newValue = value.replace(extractTextPattern, '');
+    setContent(value);
+    console.log(value, 'value');
   };
+
+  // const [imageFile, setImageFile] = useState([]);
+
+  const jobRef = useRef<any>();
+  const titleRef = useRef<any>();
 
   /**
    * 인풋창에 작성할 때 딜레이가 안 되게끔 하는 함수
    */
   const inputSearchWord = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log('검색 인풋');
+      // console.log('검색 인풋');
       setSearchWord(e.target.value);
     },
     [],
@@ -129,37 +138,19 @@ const DetailWriteForm = () => {
     setSelectJob(e.target.value);
   };
 
-  // 데스크 테리어 사진 파일 선택
-  const uploadImgFiles = (e: any) => {
-    const fileArr = e.target.files;
-    setPostImages(Array.from(fileArr) as any);
-    let fileUrlss = [] as any;
-    let fileLength =
-      fileArr.length > 2 ? alert('이미지는 2개만 가능함') : fileArr.length;
-
-    // 데스크 테리어 사진 프리뷰
-    for (let i = 0; i < fileLength; i++) {
-      const fileArr = e.target.files;
-      let file = fileArr[i];
-      let reader = new FileReader();
-      reader.onload = () => {
-        const fileUrlss = [] as any;
-        fileUrlss[i] = reader.result;
-        setDetailImages([...fileUrlss]);
-      };
-      reader.readAsDataURL(file);
-    }
-    console.log(fileArr, '??');
-    console.log(fileUrlss, 'fileUrlss');
-  };
-
-  // 처음 썼던 함수
   // const fileUpload = (event: any) => {
   //   const imageUpload = event.target.files;
   //   const imageUrlList: string[] | any = [...imageFile];
 
   //   for (let i = 0; i < imageUpload.length; i++) {
   //     const currentImageUrl = URL.createObjectURL(imageUpload[i]);
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(currentImageUrl as any);
+  //     console.log(imageUpload, 'imageUpload');
+  //     reader.onloadend = () => {
+  //       const base64Data = reader.result;
+  //       console.log(base64Data);
+  //     };
   //     imageUrlList.push(currentImageUrl);
   //   }
 
@@ -173,10 +164,50 @@ const DetailWriteForm = () => {
   // const deleteImage = (image: any) => {
   //   const imageUrlList = [...imageFile];
   //   setImageFile(imageUrlList.filter((i) => i !== image));
+  // };
 
-  //글쓰기 폼에서 최종적으로 등록하기 버튼을 누를 때 파이어베이스에 저장되는 놈
+  const onFileChange = (e: any) => {
+    const files = e.target.files;
+
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      }: any = finishedEvent;
+      setAttachment(result);
+    };
+    reader.readAsDataURL(theFile);
+  };
+
+  // 글쓰기 폼에서 최종적으로 등록하기 버튼을 누를 때 파이어베이스에 저장되는 놈
   const submitPostForm = async (e: any) => {
     e.preventDefault();
+
+    // 유효성 검사
+    if (!selectJob || selectJob === '선택해주세요') {
+      alert('누구의 책상인지 골라주세요!');
+      return jobRef.current.focus();
+    }
+
+    if (!title) {
+      alert('제목을 입력해주세요');
+      titleRef.current.focus();
+    }
+
+    // if (!text) {
+    //   alert('내용을 입력해주세요');
+    //   textRef.current.focus();
+    // }
+
+    // if ((text.length < 15, text.length > 0)) {
+    //   alert('15자 이상 입력해주세요');
+    //   textRef.current.focus();
+    // }
+
+    if (!attachment) {
+      alert('데스크테리어 사진을 선택해주세요');
+    }
 
     const products = list.map((item) => {
       return {
@@ -188,26 +219,30 @@ const DetailWriteForm = () => {
       };
     });
 
-    const fileArr = e.target.files;
-    const storageRef = ref(storage, `authService.currentUser.uid/'imageName`);
-    const snapshot = await uploadBytes(storageRef, fileArr);
-    console.log(fileArr, 'fileArr');
-    const downloadURL = await getDownloadURL(snapshot.ref);
+    const imageFile = '';
+    const fileRef = await ref(
+      storage,
+      `authService.currentUser.uid/'imageName`,
+    );
+    const uploadFile = await uploadString(fileRef, attachment, 'data_url');
+    console.log(imageFile, 'imageFile');
+    const fileURL = await getDownloadURL(uploadFile.ref);
 
     const docRef = await addDoc(collection(dbService, 'postData'), {
-      createdAt: new Date(),
+      createdAt: Date.now(),
       // userId: auth.currentUser?.uid,
       jobCategory: selectJob,
       postTitle: title,
-      postText: text,
-      postImage1: downloadURL,
-      postImage2: downloadURL,
+      postText: content,
+      postImage1: fileURL,
+      postImage2: null,
       likes: [],
       likesCount: [],
       products: products,
     });
     console.log('Document written with ID: ', docRef.id);
-    // <Link href="/detail/detailView"></Link>;
+    console.log(content, 'content');
+    router.push('/');
   };
 
   return (
@@ -230,13 +265,18 @@ const DetailWriteForm = () => {
           />
         )}
         <DetailWriteSelectBox>
-          <select className="job_select" onChange={getJob} value={selectJob}>
+          <select
+            className="job_select"
+            onChange={getJob}
+            value={selectJob}
+            ref={jobRef}
+          >
             <option className="optionOne">선택해주세요</option>
-            <option value="developer">개발자</option>
-            <option value="designer">디자이너</option>
-            <option value="Planner">기획자</option>
-            <option value="student">학생</option>
-            <option value="etc">기타</option>
+            <option value="개발자">개발자</option>
+            <option value="디자이너">디자이너</option>
+            <option value="기획자">기획자</option>
+            <option value="학생">학생</option>
+            <option value="기타">기타</option>
           </select>
           <p className="job_span">의 책상</p>
         </DetailWriteSelectBox>
@@ -246,25 +286,27 @@ const DetailWriteForm = () => {
           maxLength={30}
           value={title}
           onChange={inputTitle}
+          ref={titleRef}
         />
-        <QuillEditor onChange={changeEditorText} value={text} />
+        <QuillEditor onChange={changeEditorText} value={content} />
         <DetailWriteBox>
-          <>
-            <span className="title_span">테스크테리어 사진을 선택해주세요</span>
+          <span className="title_span">테스크테리어 사진을 선택해주세요</span>
+          <div>
             <input
               type="file"
-              accept="image/*"
               multiple
-              onChange={uploadImgFiles}
+              accept="image/*"
+              onChange={onFileChange}
             />
-
-            {detailImages &&
-              detailImages.map((item: any) => (
-                <div key={item}>
-                  <img src={item} style={{ width: '300px', height: '300px' }} />
-                </div>
-              ))}
-          </>
+          </div>
+          {attachment && (
+            <div>
+              <img
+                src={attachment}
+                style={{ width: '300px', height: '300px' }}
+              />
+            </div>
+          )}
         </DetailWriteBox>
         <DetailWriteBox>
           <span className="title_span">사용하신 제품을 선택해주세요</span>
@@ -280,7 +322,7 @@ const DetailWriteForm = () => {
   );
 };
 
-export default memo(DetailWriteForm);
+export default DetailWriteForm;
 
 const DetailWriteLayout = styled.form`
   display: flex;
@@ -289,7 +331,7 @@ const DetailWriteLayout = styled.form`
   align-items: center;
   margin: 0 auto;
   width: 80%;
-  height: 125vh;
+  height: 160vh;
   padding: 0.5rem;
 `;
 
