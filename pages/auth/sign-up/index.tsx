@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import CustomButton from '../../../components/ui/CustomButton';
+
 type Props = {};
 
 export default function SignUp({}: Props) {
@@ -19,35 +19,13 @@ export default function SignUp({}: Props) {
   const [pwValid, setPwValid] = useState(false);
   const [pwVerfyValid, setPwVerfyValid] = useState(false);
   const [nicknameValid, setNicknameValid] = useState(false);
+
   const [notAllow, setNotAllow] = useState(true);
+
   const [allCheck, setAllCheck] = useState(false);
   const [ageCheck, setAgeCheck] = useState(false);
   const [useCheck, setUseCheck] = useState(false);
   const [marketingCheck, setMarketingCheck] = useState(false);
-  const [selected, setSelected] = useState({
-    selectBox: false,
-    currentValue: '선택해주세요',
-  });
-  const [WriteValue, setWriteValue] = useState('');
-  console.log(WriteValue);
-  const { selectBox, currentValue } = selected;
-
-  const selectTarget = (e) => {
-    const { innerText } = e.target;
-
-    setSelected((selected) => ({
-      ...selected,
-      currentValue: innerText,
-    }));
-
-    // const regex =
-    //   /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-    if (currentValue) {
-      setEmailValid(true);
-    } else {
-      setEmailValid(false);
-    }
-  };
 
   const allBtnEvent = () => {
     if (allCheck === false) {
@@ -89,6 +67,13 @@ export default function SignUp({}: Props) {
 
   const handleEmail = function (event: any) {
     setEmail(event.target.value);
+    const regex =
+      /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+    if (regex.test(event.target.value)) {
+      setEmailValid(true);
+    } else {
+      setEmailValid(false);
+    }
   };
   const handlePw = function (event: any) {
     setPw(event.target.value);
@@ -119,16 +104,11 @@ export default function SignUp({}: Props) {
       setNicknameValid(false);
     }
   };
-  const emailValue =
-    currentValue === '직접입력하기'
-      ? `${email}@${WriteValue}`
-      : `${email}@${currentValue}`;
-  console.log(emailValue);
   const onClickConfirmButton = async () => {
     try {
-      const data = await createUserWithEmailAndPassword(auth, emailValue, pw);
+      const data = await createUserWithEmailAndPassword(auth, email, pw);
       const remainInfo = {
-        email: emailValue,
+        email: email,
         displayName: nickname,
         photoURL: '/images/defaultProfile.png',
       };
@@ -150,7 +130,6 @@ export default function SignUp({}: Props) {
       console.error(error);
     }
   };
-  console.log(emailValid);
   // const onClickConfirmButton = async () => {
   //   await createUserWithEmailAndPassword(auth, email, pw).then((data: any) => {
   //     const remainInfo = {
@@ -202,227 +181,155 @@ export default function SignUp({}: Props) {
 
   return (
     <StyledBackground>
-      <SignUpLayout>
-        <div className="title">회원가입</div>
+      <StyledDiv>
+        <div className="titleWrap">회원가입</div>
         <div className="contentWrap">
-          <div>
-            <div className="inputTitleWrap">
-              <p className="title">닉네임</p>
-              <p className="description">닉네임 8글자 이내</p>
-            </div>
-            <div className="inputWrap">
-              <input
-                type="text"
-                className={!nicknameValid && nickname.length > 0 ? "input error" : 'input'}
-                placeholder="닉네임을 작성해주세요."
-                value={nickname}
-                onChange={handleNickname}
-              />
-            </div>
-            <div className="error-text">
-              {!nicknameValid && nickname.length > 0 && (
-                <div className="errorMessageWrap">
-                  닉네임은 특수문자를 포함할수 없고 2글자 이상 8자
-                  이하이어야합니다.
-                </div>
-              )}
-            </div>
+          <div style={{ marginTop: '26px' }} className="inputTitleWrap">
+            <p>닉네임</p>
+            <p>닉네임 8글자 이내</p>
           </div>
 
+          <div className="inputWrap">
+            <input
+              type="text"
+              className="input"
+              placeholder="잠은죽어서잔다
+"
+              value={nickname}
+              onChange={handleNickname}
+            />
+          </div>
           <div>
-            <div className="inputTitleWrap">
-              <p className="title">이메일</p>
-            </div>
-            <div className="inputWrap error">
-              <input
-                type="text"
-                className={
-                  !emailValid && email.length > 0 ? 'inpu error' : 'input'
-                }
-                placeholder="test"
-                value={email}
-                autocomplete="off"
-                onChange={handleEmail}
-              />
-              @
-              <SelectBox
-                onClick={() =>
-                  setSelected((selected) => ({
-                    ...selected,
-                    selectBox: !selected.selectBox,
-                  }))
-                }
-                className={
-                  !emailValid && email.length > 0 ? 'input error' : 'input'
-                }
-              >
-                <p
-                  className={
-                    currentValue === '선택해주세요' && email.length > 0 
-                      ? 'selectedText error'
-                      : selectBox
-                      ? 'selectedText active'
-                      : 'selectedText'
-                  }
-                >
-                  {currentValue}
-                  <span className="arrow" />
-                </p>
-                {selectBox && (
-                  <ul className="select-list">
-                    <li onClick={selectTarget}>naver.com</li>
-                    <li onClick={selectTarget}>google.com</li>
-                    <li onClick={selectTarget}>hanmail.net</li>
-                    <li onClick={selectTarget}>daum.net</li>
-                    <li onClick={selectTarget}>nate.com</li>
-                    <li onClick={selectTarget}>직접입력하기</li>
-                  </ul>
-                )}
-              </SelectBox>
-            </div>
-            {currentValue === '직접입력하기' && (
-              <div className="inputWrap">
-                <input
-                  className="direct"
-                  placeholder={currentValue}
-                  onChange={(e) => {
-                    setWriteValue(e.target.value);
-                  }}
-                />
+            {!nicknameValid && nickname.length > 0 && (
+              <div className="errorMessageWrap">
+                닉네임은 특수문자를 포함할수 없고 2글자 이상 8자
+                이하이어야합니다.
               </div>
             )}
-            <div className="error-text">
-              {currentValue === '선택해주세요' && email.length > 0 && (
-                <div className="errorMessageWrap">필수 입력 항목입니다.</div>
-              )}
-            </div>
           </div>
-
-          <div>
-            <div className="inputTitleWrap">
-              <p className="title">비밀번호</p>
-              <p className="description">
-                8~16 자리 / 영문 대소문자, 숫자, 특수문자 포함
-              </p>
-            </div>
+          <div className="inputTitle">이메일</div>
+          <div style={{ border: '1px solid black' }}>
             <div className="inputWrap">
               <input
-                type="password"
-                className={!pwValid && pw.length > 0 ? 'input error' : 'input'}
-                placeholder="비밀번호를 입력해주세요"
-                value={pw}
-                onChange={handlePw}
+                type="text"
+                className="input"
+                placeholder="이메일"
+                value={email}
+                onChange={handleEmail}
               />
             </div>
-            <div className="error-text">
-              {!pwValid && pw.length > 0 && (
+            <div>
+              {!emailValid && email.length > 0 && (
                 <div className="errorMessageWrap">
-                  영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
+                  올바른 이메일을 입력해주세요.
                 </div>
               )}
             </div>
-          </div>
-
-          <div>
-            <div className="inputTitleWrap">
-              <p className="title">비밀번호 확인</p>
-            </div>
+            @
             <div className="inputWrap">
               <input
-                type="password"
-                className={
-                  !pwVerfyValid && pwVerfy.length > 0 ? 'input error' : 'input'
-                }
-                placeholder="비밀번호를 입력해주세요"
-                onChange={handleVerfyPw}
-                autocomplete="off"
+                type="text"
+                className="input"
+                placeholder="이메일뒤(임시)"
               />
             </div>
-            <div className="error-text">
-              {!pwVerfyValid && pwVerfy.length > 0 && (
-                <div className="errorMessageWrap">비밀번호가 다릅니다.</div>
-              )}
-            </div>
+          </div>
+
+          <div style={{ marginTop: '26px' }} className="inputTitle">
+            비밀번호
+          </div>
+          <div className="inputWrap">
+            <input
+              type="password"
+              className="input"
+              placeholder="비밀번호를 입력해주세요"
+              value={pw}
+              onChange={handlePw}
+            />
+          </div>
+          <div>
+            {!pwValid && pw.length > 0 && (
+              <div className="errorMessageWrap">
+                영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
+              </div>
+            )}
+          </div>
+
+          <div style={{ marginTop: '26px' }} className="inputTitle">
+            비밀번호 확인
+          </div>
+          <div className="inputWrap">
+            <input
+              type="password"
+              className="input"
+              placeholder="비밀번호를 입력해주세요"
+              onChange={handleVerfyPw}
+            />
+          </div>
+          <div>
+            {!pwVerfyValid && pwVerfy.length > 0 && (
+              <div className="errorMessageWrap">비밀번호가 다릅니다.</div>
+            )}
           </div>
         </div>
 
-        <SignUpAgreeDiv>
-          <div className="agree-input-wrap">
-            <label htmlFor="all-check" className="agree-title">
+        <div>
+          <div>
+            <div>
               <input
                 type="checkbox"
                 id="all-check"
                 checked={allCheck}
                 onChange={allBtnEvent}
               />
-              <span className="check-custorm" />
-              전체동의
-            </label>
-          </div>
-          <div className="agree-input-wrap">
-            <label htmlFor="check1">
+              <label htmlFor="all-check">전체동의</label>
+            </div>
+            <div>
               <input
                 type="checkbox"
                 id="check1"
                 checked={ageCheck}
                 onChange={ageBtnEvent}
               />
-              <span className="check-custorm" />만 14세 이상입니다
-              <span>(필수)</span>
-            </label>
-          </div>
-          <div className="agree-input-wrap">
-            <label htmlFor="check2">
+              <label htmlFor="check1">
+                만 14세 이상입니다 <span>(필수)</span>
+              </label>
+            </div>
+            <div>
               <input
                 type="checkbox"
                 id="check2"
                 checked={useCheck}
                 onChange={useBtnEvent}
               />
-              <span className="check-custorm" />
-              개인정보 수집/이용에 동의합니다. <span>(필수)</span>
-            </label>
-          </div>
-          <div className="agree-input-wrap">
-            <label htmlFor="check3">
+              <label htmlFor="check2">
+                개인정보 수집/이용에 동의합니다. <span>(필수)</span>
+              </label>
+            </div>
+            <div>
               <input
                 type="checkbox"
                 id="check3"
                 checked={marketingCheck}
                 onChange={marketingBtnEvent}
               />
-              <span className="check-custorm" />
-              개인정보 제3자 제공에 동의합니다.
-            </label>
+              <label htmlFor="check3">
+                마케팅동의 <span>(선택)</span>
+              </label>
+            </div>
           </div>
-          <div className="agree-input-wrap">
-            <label htmlFor="check3">
-              <input
-                type="checkbox"
-                id="check3"
-                checked={marketingCheck}
-                onChange={marketingBtnEvent}
-              />
-              <span className="check-custorm" />
-              서비스 이용약관에 동의합니다.
-            </label>
-          </div>
-        </SignUpAgreeDiv>
 
-        <div className="buttonWrap">
-          <CustomButton
-            backgoundColor="#206EFB"
-            fontColor="#fff"
-            paddingColumns="0.875"
-            paddingRow="0.875"
-            fontSize="1.25"
-            onClick={onClickConfirmButton}
-            disabled={notAllow}
-          >
-            회원가입
-          </CustomButton>
+          <div>
+            <button
+              onClick={onClickConfirmButton}
+              disabled={notAllow}
+              className="bottomButton"
+            >
+              회원가입
+            </button>
+          </div>
         </div>
-      </SignUpLayout>
+      </StyledDiv>
     </StyledBackground>
   );
 }
@@ -431,189 +338,107 @@ const StyledBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
   height: 100vh;
   background: url(https://images.pexels.com/photos/251225/pexels-photo-251225.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)
     no-repeat center;
   background-size: cover;
+
+  div {
+    border: 1px solid black;
+  }
 `;
 
-const SignUpLayout = styled.div`
-  max-width: 36.75rem;
-  width: 100%;
-  padding: 3.375rem 2.5rem;
+const StyledDiv = styled.div`
+  width: 588px;
+  height: 716px;
+  left: 666px;
+  top: 182px;
+  background: #ffffff;
+  box-shadow: 0rem 0.25rem 1rem rgba(0, 0, 0, 0.29);
   border-radius: 1.25rem;
-  background: #fff;
 
-  .title {
-    text-align: center;
-    font-size: 2.125rem;
+  .titleWrap {
+    padding-top: 40px;
+    font-style: normal;
     font-weight: 700;
+    font-size: 2.125rem;
+    line-height: 3rem;
+    text-align: center;
+    justify-content: center;
   }
 
-  .contentWrap {
-    display: flex;
-    flex-direction: column;
-    gap: 26px;
-
-    .inputTitleWrap {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.875rem;
-
-      > .title {
-        font-size: 1.25rem;
-        font-weight: 700;
-      }
-
-      > .description {
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: #adb5bd;
-      }
-    }
-
-    .inputWrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      color: #adb5bd;
-
-      > input {
-        flex: 1;
-
-        border-radius: 0.625rem;
-        padding: 0.8125rem 1.25rem;
-        border: 0.0625rem solid #adb5bd;
-
-        &.direct {
-          margin-top: 1rem;
-        }
-
-        &.error {
-          border: 1px solid red;
-        }
-      }
-    }
+  .inputWrap {
+    margin: 1.875rem 3.375rem;
   }
 
-  .buttonWrap {
-    display: flex;
-    margin-top: 2.5rem;
-
-    > button {
-      width: 100%;
-    }
-  }
-  .error-text {
-    color: #f83e4b;
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
+  /* .inputTitle {
+    font-family: 'Pretendard';
+    font-style: normal;
     font-weight: 500;
-  }
-`;
-const SelectBox = styled.div`
-  flex: 1;
-  position: relative;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
 
-  .selectedText {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 10px;
-    padding: 13px 20px;
-    border: 1px solid #adb5bd;
 
-    &.active {
-      border: 0.0625rem solid #206efb;
-      color: #206efb;
+    color: #17171c;
+  } */
 
-      .arrow {
-        display: inline-block;
-        margin-left: 1rem;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 0;
-        border-bottom: 6px solid #206efb;
-      }
-    }
-    &.error {
-      border-color: red;
-    }
-    .arrow {
-      display: inline-block;
+  /* .inputWrap:hover {
+    border-bottom: 0.125rem solid #206efb;
+  } */
 
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 6px solid #adb5bd;
-    }
+  .inputWrap:focus-within {
+    border-bottom: 0.125rem solid #206efb;
   }
 
-  .select-list {
-    position: absolute;
-    top: 120%;
+  input {
     width: 100%;
-    border-radius: 10px;
-    border: 1px solid #adb5bd;
-    background: #fff;
-    box-shadow: 0px 4px 6px 0px #00000040;
-    overflow: hidden;
-
-    > li {
-      padding: 20px;
-
-      :hover {
-        background: #f1f3f5;
-        color: #206efb;
-      }
-    }
+    outline: none;
+    border: none;
+    height: 3rem;
+    font-size: 14px;
+    font-weight: 400;
   }
-`;
-const SignUpAgreeDiv = styled.div`
-  margin-top: 1.75rem;
 
-  .agree-input-wrap {
-    margin-bottom: 0.625rem;
+  .errorMessageWrap {
+    margin: 1.875rem 3.375rem;
+    color: #ef0000;
+    font-size: 0.75rem;
+  }
+  .LoginButtonWrap {
+    justify-content: center;
+  }
+  .LoginButton {
+    width: 30rem;
+    height: 3rem;
+    border: none;
+    font-weight: 700;
+    background: #206efb;
+    border-radius: 0.625rem;
+    color: white;
+    margin-bottom: 1rem;
+    cursor: pointer;
+  }
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+  .buttonBottomWrap {
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.875rem 3.375rem;
+  }
 
-    label {
-      display: flex;
-      align-items: center;
-      font-size: 0.75rem;
-      cursor: pointer;
+  .buttonBottomWrap label {
+  }
 
-      input[type='checkbox'] {
-        display: none;
-      }
-      .check-custorm {
-        display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        margin-right: 0.625rem;
-        border-radius: 100%;
-        border: 0.0625rem solid #adb5bd;
-      }
-      input[type='checkbox']:checked + .check-custorm {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+  .buttonBottomWrap input {
+    height: 1rem;
+  }
 
-        :after {
-          content: '';
-          width: 8px;
-          height: 8px;
-          background: #206efb;
-          border-radius: 100%;
-        }
-      }
-    }
-    .agree-title {
-      font-size: 0.875rem;
-      font-weight: 700;
-      margin-bottom: 1.0625rem;
-    }
+  .buttonBottomWrap p {
+    font-size: 1rem;
+  }
+
+  .buttonBottomWrap .SNSWrap {
+    justify-content: center;
+    align-items: center;
   }
 `;
