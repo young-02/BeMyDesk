@@ -197,6 +197,7 @@ const StyledContainer = styled.div`
   display: flex;
   margin: 108px 360px 0 360px;
   flex-direction: column;
+  align-items: center;
 `;
 
 const StyledDivButton = styled.div`
@@ -249,6 +250,7 @@ const StyledDivProfile = styled.div`
   }
 
   .secondLine {
+    height: 80px;
     .introduction {
       font-family: 'Pretendard';
       font-style: normal;
@@ -300,5 +302,4 @@ const StyledDivProfile = styled.div`
 const StyledDivContents = styled.div`
   width: 894px;
   flex-direction: column;
-  border: 1px solid red;
 `;
