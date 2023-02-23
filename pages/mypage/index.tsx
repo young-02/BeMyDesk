@@ -119,58 +119,71 @@ export default function MyPage({}: Props) {
             유저정보 보기
           </button>
         </div> */}
-        <StyledDivProfile>
-          <div>
-            <img
-              className="profileImage"
-              src={user.photoURL}
-              alt="ProfileImage"
-              width={202}
-              height={202}
-            />
-          </div>
-          <div className="firstLine">
-            <p className="userName">{user.displayName}</p>
-            <p className="nim">님</p>
-          </div>
-          <div className="secondLine">
-            <p className="introduction">{profileData.introduction}</p>
-          </div>
-          <div className="thirdLine">
-            <div className="followerDiv">
-              <p className="followerLetter">팔로워</p>
-              <p className="followerCount">212</p>
-            </div>
-            <div className="settingIcon">
-              <AiOutlineSetting
-                onClick={() => {
-                  setProfileEditModalOpen(true);
-                }}
-                size={24}
+        <StyledDivButton>
+          <CategoryButton
+            category={category}
+            setCategory={setCategory}
+            postCount={postCount}
+            scrapCount={scrapCount}
+            followCount={followCount}
+          />
+        </StyledDivButton>
+        <StyledDivMain>
+          <StyledDivProfile>
+            <div>
+              <img
+                className="profileImage"
+                src={user.photoURL}
+                alt="ProfileImage"
+                width={202}
+                height={202}
               />
             </div>
-          </div>
+            <div className="firstLine">
+              <p className="userName">{user.displayName}</p>
+              <p className="nim">님</p>
+            </div>
+            <div className="secondLine">
+              <p className="introduction">{profileData.introduction}</p>
+            </div>
+            <div className="thirdLine">
+              <div className="followerDiv">
+                <p className="followerLetter">팔로워</p>
+                <p className="followerCount">212</p>
+              </div>
+              <div className="settingIcon">
+                <AiOutlineSetting
+                  onClick={() => {
+                    setProfileEditModalOpen(true);
+                  }}
+                  size={24}
+                />
+              </div>
+            </div>
 
-          <div>
-            {profileEditModalOpen && (
-              <ProfileEditModal
-                setProfileEditModalOpen={setProfileEditModalOpen}
-                user={user}
-                profileData={profileData}
-              />
+            <div>
+              {profileEditModalOpen && (
+                <ProfileEditModal
+                  setProfileEditModalOpen={setProfileEditModalOpen}
+                  user={user}
+                  profileData={profileData}
+                />
+              )}
+            </div>
+          </StyledDivProfile>
+
+          <StyledDivContents>
+            {category === 'myPost' && (
+              <MyPost myPost={myPost} postCount={postCount} />
             )}
-          </div>
-        </StyledDivProfile>
-        <StyledDivContents>
-          <div>
-            <CategoryButton category={category} setCategory={setCategory} />
-          </div>
-          <div>
-            {category === 'myPost' && <MyPost myPost={myPost} />}
-            {category === 'myScrap' && <MyScrap myScrap={myScrap} />}
-            {category === 'myFollow' && <MyFollow myFollow={myFollow} />}
-          </div>
-        </StyledDivContents>
+            {category === 'myScrap' && (
+              <MyScrap myScrap={myScrap} scrapCount={scrapCount} />
+            )}
+            {category === 'myFollow' && (
+              <MyFollow myFollow={myFollow} followCount={followCount} />
+            )}
+          </StyledDivContents>
+        </StyledDivMain>
       </StyledContainer>
     );
   } else {
@@ -182,15 +195,25 @@ export default function MyPage({}: Props) {
 
 const StyledContainer = styled.div`
   display: flex;
-
   margin: 108px 360px 0 360px;
+  flex-direction: column;
+`;
+
+const StyledDivButton = styled.div`
+  margin: 20px 0px;
+  width: 571px;
+  height: 54px;
+`;
+
+const StyledDivMain = styled.div`
+  display: flex;
 `;
 
 const StyledDivProfile = styled.div`
   width: 282px;
   height: 424px;
   padding: 40px 40px 0px 40px;
-
+  margin-right: 24px;
   border: 1px solid #868e96;
   border-radius: 10px;
 
