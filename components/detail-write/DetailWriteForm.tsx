@@ -223,7 +223,7 @@ const DetailWriteForm = () => {
 
     const docRef = await addDoc(collection(dbService, 'postData'), {
       createdAt: Date.now(),
-      // userId: auth.currentUser?.uid,
+      userId: auth.currentUser?.uid,
       jobCategory: selectJob,
       postTitle: title,
       postText: content,
