@@ -20,9 +20,9 @@ export default function DetailViewSlide({ detail }) {
         <SwiperSlide>
           <img className="post-img" src={detail.postImage1} alt="postImage1" />
         </SwiperSlide>
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <img className="post-img" src={detail.postImage2} alt="postImage1" />
-        </SwiperSlide>
+        </SwiperSlide> */}
       </Swiper>
     </DetailViewSlideLayout>
   );
