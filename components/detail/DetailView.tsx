@@ -25,8 +25,8 @@ export default function DetailView({}) {
 
   return (
     <>
-      {posts.map(
-        (detail) =>
+      {posts?.map(
+        (detail: PostType) =>
           id == detail.id && (
             <DetailViewLayout key={detail.id}>
               <div className="detail-header">

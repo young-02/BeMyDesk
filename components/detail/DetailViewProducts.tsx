@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ReactHtmlParser from 'html-react-parser';
 type Props = {};
 
-export default function DetailViewProducts({ detail }: Props) {
+export default function DetailViewProducts({ detail }) {
   const { products } = detail;
   return (
     <DetailViewProductsLayout>

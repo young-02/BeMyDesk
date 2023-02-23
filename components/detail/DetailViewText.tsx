@@ -6,7 +6,7 @@ import { useGetKakao } from '../Hooks/useGetKakao';
 import ReactHtmlParser from 'html-react-parser';
 type Props = {};
 
-export default function DetailViewText({ detail }: Props) {
+export default function DetailViewText({ detail }) {
   const [socialSharing, setSocialSharing] = useState(false);
 
   const clickToShare = () => {
