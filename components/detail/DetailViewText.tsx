@@ -3,6 +3,7 @@ import { FacebookShareButton } from 'react-share';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useGetKakao } from '../Hooks/useGetKakao';
+import ReactHtmlParser from 'html-react-parser';
 type Props = {};
 
 export default function DetailViewText({ detail }: Props) {
@@ -33,7 +34,9 @@ export default function DetailViewText({ detail }: Props) {
     <>
       <DetailViewTextLayout>
         <div className="detail-view-title">{detail.postTitle}</div>
-        <div className="detail-view-text">{detail.postText}</div>
+        <div className="detail-view-text">
+          {ReactHtmlParser(detail.postText)}
+        </div>
       </DetailViewTextLayout>
       <ShareLayout>
         <div className="share" onClick={clickToShare}>

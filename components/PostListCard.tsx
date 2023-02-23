@@ -59,7 +59,6 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
   const nowDate = detailDate(post.createdAt);
 
   return (
-
     <PostListCardLayout key={post.id}>
       <Link href={`/detail/${post.id}`}>
         <div
@@ -83,7 +82,7 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
         <Link href={`/detail/${post.id}`}>
           <div className="middle">
             <h3>{post.postTitle}</h3>
-            <p>{post.postText}</p>
+            <p>{post.postText?.replace(/(<([^>]+)>)/gi, '')}</p>
           </div>
         </Link>
         <div className="bottom">
