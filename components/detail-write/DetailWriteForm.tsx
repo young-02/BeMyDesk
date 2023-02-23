@@ -215,7 +215,7 @@ const DetailWriteForm = () => {
     const imageFile = '';
     const fileRef = await ref(
       storage,
-      `authService.currentUser.uid/'imageName`,
+      `images/${auth.currentUser.uid}/${auth.currentUser.uid}/${imageFile}`,
     );
     const uploadFile = await uploadString(fileRef, attachment, 'data_url');
     console.log(imageFile, 'imageFile');
@@ -235,7 +235,7 @@ const DetailWriteForm = () => {
     });
     console.log('Document written with ID: ', docRef.id);
     console.log(content, 'content');
-    router.push('/');
+    // router.push('/');
   };
 
   return (
@@ -325,7 +325,7 @@ const DetailWriteLayout = styled.form`
   margin: 0 auto;
   margin-top: 9rem;
   width: 80%;
-  height: 100vh;
+  /* height: 100vh; */
   padding: 0.5rem;
 `;
 
