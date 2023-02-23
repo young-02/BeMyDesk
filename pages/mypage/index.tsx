@@ -20,6 +20,7 @@ import {
   where,
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { AiOutlineSetting } from 'react-icons/ai';
 
 type Props = {};
 
@@ -61,61 +62,43 @@ export default function MyPage({}: Props) {
           },
         );
         // 스크랩한 글 가져오기 (getdocs로 리팩토링 추천)
-        onSnapshot(
-          query(
-            collection(dbService, 'postData'),
-            where('__name__', 'in', fetchedProfile.scraps),
-          ),
-          (snapshot) => {
-            const fetchedScrapData = snapshot.docs.map((doc) => ({
-              ...doc.data(),
-            }));
-            setMyScrap(fetchedScrapData);
-            console.log('스크랩 데이터 불러오기 완료');
-          },
-        );
+        if (fetchedProfile.scraps && fetchedProfile.scraps.length > 0) {
+          onSnapshot(
+            query(
+              collection(dbService, 'postData'),
+              where('__name__', 'in', fetchedProfile.scraps),
+            ),
+            (snapshot) => {
+              const fetchedScrapData = snapshot.docs.map((doc) => ({
+                ...doc.data(),
+              }));
+              setMyScrap(fetchedScrapData);
+              console.log('스크랩 데이터 불러오기 완료');
+            },
+          );
+        }
         // 팔로우 유저 가져오기 (getdocs로 리팩토링 추천)
-        onSnapshot(
-          query(
-            collection(dbService, 'userInfo'),
-            where('__name__', 'in', fetchedProfile.following),
-          ),
-          (snapshot) => {
-            const fetchedFollowingData = snapshot.docs.map((doc) => ({
-              ...doc.data(),
-            }));
-            setMyFollow(fetchedFollowingData);
-            console.log('팔로우 유저 데이터 불러오기 완료');
-          },
-        );
+        if (fetchedProfile.following && fetchedProfile.following.length > 0) {
+          onSnapshot(
+            query(
+              collection(dbService, 'userInfo'),
+              where('__name__', 'in', fetchedProfile.following),
+            ),
+            (snapshot) => {
+              const fetchedFollowingData = snapshot.docs.map((doc) => ({
+                ...doc.data(),
+              }));
+              setMyFollow(fetchedFollowingData);
+              console.log('팔로우 유저 데이터 불러오기 완료');
+            },
+          );
+        }
       } else {
         console.log('No such document!');
       }
     };
 
     fetchUserDataHandler();
-    //스크랩한 글 정보 불러오기
-    // if (
-    //   profileData &&
-    //   Array.isArray(profileData.scraps) &&
-    //   profileData.scraps.length > 0
-    // ) {
-    //   onSnapshot(
-    //     query(
-    //       collection(dbService, 'postData'),
-    //       where('__name__', 'in', profileData.scraps),
-    //     ),
-    //     (snapshot) => {
-    //       const fetchedScrapData = snapshot.docs.map((doc) => ({
-    //         ...doc.data(),
-    //       }));
-    //       setMyScrap(fetchedScrapData);
-    //       console.log('스크랩 데이터 불러오기 완료');
-    //     },
-    //   );
-    // } else {
-    //   console.log('스크랩 데이터가 없습니다');
-    // }
   }, [auth.currentUser]);
 
   if (loading) {
@@ -128,48 +111,67 @@ export default function MyPage({}: Props) {
 
   if (user) {
     return (
-      <StyledDivOne>
-        <div>
-          <img
-            src={user.photoURL}
-            alt="ProfileImage"
-            width={202}
-            height={202}
-          />
-        </div>
-        <p>닉네임 {user.displayName} 님</p>
-        <p>{profileData.introduction}</p>
-        <p>UID: {auth.currentUser?.uid}</p>
-        <p>이메일: {user.email}</p>
-        <p>팔로워 100명</p>
-        <button onClick={() => auth.signOut()}>로그아웃</button>
-        <button onClick={() => console.log('유저정보', user)}>
-          유저정보 보기
-        </button>
-        <button
-          onClick={() => {
-            setProfileEditModalOpen(true);
-          }}
-        >
-          프로필수정 열기
-        </button>
-        <div>
-          {profileEditModalOpen && (
-            <ProfileEditModal
-              setProfileEditModalOpen={setProfileEditModalOpen}
-              user={user}
+      <StyledContainer>
+        {/* <div>
+          {' '}
+          <button onClick={() => auth.signOut()}>로그아웃</button>
+          <button onClick={() => console.log('유저정보', user)}>
+            유저정보 보기
+          </button>
+        </div> */}
+        <StyledDivProfile>
+          <div>
+            <img
+              className="profileImage"
+              src={user.photoURL}
+              alt="ProfileImage"
+              width={202}
+              height={202}
             />
-          )}
-        </div>
-        <StyledDivTwo>
-          <CategoryButton category={category} setCategory={setCategory} />
-        </StyledDivTwo>
-        <div>
-          {category === 'myPost' && <MyPost myPost={myPost} />}
-          {category === 'myScrap' && <MyScrap myScrap={myScrap} />}
-          {category === 'myFollow' && <MyFollow myFollow={myFollow} />}
-        </div>
-      </StyledDivOne>
+          </div>
+          <div className="firstLine">
+            <p className="userName">{user.displayName}</p>
+            <p className="nim">님</p>
+          </div>
+          <div className="secondLine">
+            <p className="introduction">{profileData.introduction}</p>
+          </div>
+          <div className="thirdLine">
+            <div className="followerDiv">
+              <p className="followerLetter">팔로워</p>
+              <p className="followerCount">212</p>
+            </div>
+            <div className="settingIcon">
+              <AiOutlineSetting
+                onClick={() => {
+                  setProfileEditModalOpen(true);
+                }}
+                size={24}
+              />
+            </div>
+          </div>
+
+          <div>
+            {profileEditModalOpen && (
+              <ProfileEditModal
+                setProfileEditModalOpen={setProfileEditModalOpen}
+                user={user}
+                profileData={profileData}
+              />
+            )}
+          </div>
+        </StyledDivProfile>
+        <StyledDivContents>
+          <div>
+            <CategoryButton category={category} setCategory={setCategory} />
+          </div>
+          <div>
+            {category === 'myPost' && <MyPost myPost={myPost} />}
+            {category === 'myScrap' && <MyScrap myScrap={myScrap} />}
+            {category === 'myFollow' && <MyFollow myFollow={myFollow} />}
+          </div>
+        </StyledDivContents>
+      </StyledContainer>
     );
   } else {
     alert('로그인이 필요한 서비스입니다.');
@@ -177,61 +179,103 @@ export default function MyPage({}: Props) {
     return null;
   }
 }
-const StyledDivOne = styled.div`
-  margin-top: 9.25rem;
+
+const StyledContainer = styled.div`
+  display: flex;
+
+  margin: 108px 360px 0 360px;
 `;
-const StyledDivTwo = styled.div`
-  margin-top: 20px;
-  margin-bottom: 15px;
 
-  button:nth-child(1) {
-    margin-left: 10px;
-    width: 110px;
-    height: 40px;
-    font-size: 15px;
-    background: #e37b58;
-    border-radius: 30px;
-    padding: 10px 30px;
-    border: none;
-    font-family: 'GmarketSans';
-    cursor: pointer;
-    &:hover {
-      color: white;
-      transition: 0.5s;
+const StyledDivProfile = styled.div`
+  width: 282px;
+  height: 424px;
+  padding: 40px 40px 0px 40px;
+
+  border: 1px solid #868e96;
+  border-radius: 10px;
+
+  .profileImage {
+    border-radius: 10px;
+    margin-bottom: 18px;
+  }
+  .firstLine {
+    display: flex;
+    align-items: center;
+
+    .userName {
+      /* Pretendard Bold 24 */
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 32px;
+      /* identical to box height, or 133% */
+
+      /* Gray 09 */
+
+      color: #17171c;
+    }
+    .nim {
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 20px;
+      margin-left: 4px;
     }
   }
 
-  button:nth-child(2) {
-    margin-left: 10px;
-    width: 110px;
-    height: 40px;
-    background: #ffffff;
-    border-radius: 30px;
-    padding: 10px 30px;
-    border: none;
-    font-size: 16px;
-    font-family: 'GmarketSans';
-    cursor: pointer;
-    &:hover {
-      color: white;
-      transition: 0.5s;
+  .secondLine {
+    .introduction {
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
     }
+    margin-bottom: 10px;
   }
 
-  button:nth-child(3) {
-    margin-left: 10px;
-    width: 110px;
-    height: 40px;
-    background: #ffffff;
-    border-radius: 30px;
-    padding: 10px 30px;
-    border: none;
-    font-size: 16px;
-    font-family: 'GmarketSans';
-    cursor: pointer;
-    &:hover {
-      color: white;
-      transition: 0.5s;
+  .thirdLine {
+    display: flex;
+    justify-content: space-between;
+    .followerDiv {
+      display: flex;
+      align-items: center;
+      .followerLetter {
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
+        /* identical to box height, or 125% */
+
+        /* Gray 05 */
+
+        color: #868e96;
+      }
+      .followerCount {
+        margin-left: 10px;
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 20px;
+        /* identical to box height, or 125% */
+
+        color: #000000;
+      }
+    }
+
+    .settingIcon {
+      display: flex;
+      align-items: center;
     }
   }
+`;
+
+const StyledDivContents = styled.div`
+  width: 894px;
+  flex-direction: column;
+  border: 1px solid red;
 `;

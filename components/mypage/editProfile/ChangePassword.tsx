@@ -6,22 +6,61 @@ import {
 } from 'firebase/auth';
 
 const ChangePassword = ({ user }: any) => {
-  const [newPassword, setNewPassword] = useState('');
+  // 비밀번호 인풋
   const [currentPassword, setCurrentPassword] = useState('');
-  const [newPasswordVerfyInput, setNewPasswordVerifyInput] = useState('');
-  const [errorNowPasswordEmpty, setErrorNowPasswordEmpty] = useState(false);
-  const [nowPasswordVerfy, setNowPasswordVerfy] = useState(false);
-  const [passwordVerfyValid, setPasswordVerfyValid] = useState(true);
+  const [newPassword, setNewPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+
+  // 현재 비밀번호 에러처리
+  const [errorCurrentPasswordEmpty, setErrorCurrentPasswordEmpty] =
+    useState(false);
+  const [errorCurrentPasswordVerify, setErrorCurrentPasswordVerify] =
+    useState(false);
+  // 변경할 비밀번호 에러처리
+  const [errorNewPasswordEmpty, setErrorNewPasswordEmpty] = useState(false);
+  const [errorNewPasswordVerify, setErrorNewPasswordVerify] = useState(false);
+  // 한번 더 입력해주세요 에러 처리
+  const [errorPasswordConfirmationEmpty, setErrorPasswordConfirmationEmpty] =
+    useState(false);
+  const [errorPasswordConfirmationVerify, setErrorPasswordConfirmationVerify] =
+    useState(false);
+
   const [allDone, setAllDone] = useState(false);
 
   // 비밀번호 변경 버튼
   const handlePasswordChange = async () => {
-    if (newPassword === newPasswordVerfyInput) {
+    const regex =
+      /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
+
+    // 빈칸검증
+    if (
+      currentPassword == '' &&
+      newPassword == '' &&
+      passwordConfirmation == ''
+    ) {
+      {
+        currentPassword == '' ? setErrorCurrentPasswordEmpty(true) : null;
+      }
+      {
+        newPassword == '' ? setErrorNewPasswordEmpty(true) : null;
+      }
+      {
+        passwordConfirmation == ''
+          ? setErrorPasswordConfirmationEmpty(true)
+          : null;
+      }
+      // 변경할 비밀번호 regex
+    } else if (!regex.test(newPassword)) {
+      setErrorNewPasswordVerify(true);
+      // new패스워드 == new패스워드컨펌부분
+    } else if (newPassword !== passwordConfirmation) {
+      setErrorPasswordConfirmationVerify(true);
+    } else {
+      // 현재 비밀번호 유효성 검사
       const credential = await EmailAuthProvider.credential(
         user.email,
         currentPassword,
       );
-      console.log(user);
 
       await reauthenticateWithCredential(user, credential)
         .then(() => {
@@ -33,15 +72,8 @@ const ChangePassword = ({ user }: any) => {
         })
         .catch((error: any) => {
           console.error(error);
-          console.log('현재 비밀번호를 확인하세요');
-          {
-            currentPassword === ''
-              ? setErrorNowPasswordEmpty(true)
-              : setNowPasswordVerfy(true);
-          }
+          setErrorCurrentPasswordVerify(true);
         });
-    } else {
-      setPasswordVerfyValid(false);
     }
   };
 
@@ -71,24 +103,53 @@ const ChangePassword = ({ user }: any) => {
         <input
           type="password"
           id="newPasswordVerify"
-          value={newPasswordVerfyInput}
+          value={passwordConfirmation}
           onChange={(event) => {
-            setNewPasswordVerifyInput(event.target.value);
+            setPasswordConfirmation(event.target.value);
           }}
         />
       </div>
       <div>
         <h3>에러메세지테스트</h3>
-        <p>
-          {passwordVerfyValid
-            ? null
-            : 'false 패스워드를확인해주세요(한번더 입력부분)'}
-        </p>
-        <p>{allDone ? '비밀번호 변경완료' : null}</p>
-        <p>{nowPasswordVerfy ? '현재 비밀번호를 확인해주세요' : null}</p>
-        <p>
-          {errorNowPasswordEmpty ? '(현재비밀번호)필수 입력 사항입니다' : null}
-        </p>
+        <div>
+          <p>
+            {errorCurrentPasswordEmpty
+              ? '(현재 비밀번호)필수입력사항입니다'
+              : null}
+          </p>
+          <p>
+            {errorNewPasswordEmpty
+              ? '(새로운 비밀번호)필수입력사항입니다'
+              : null}
+          </p>
+          <p>
+            {errorPasswordConfirmationEmpty
+              ? '(새로운 비밀번호 한번더 확인)필수입력사항입니다'
+              : null}
+          </p>
+        </div>
+        <div>
+          <p>
+            {errorNewPasswordVerify
+              ? '비밀번호 양식을 다시 확인해주세요'
+              : null}
+          </p>
+        </div>
+        <div>
+          <p>
+            {errorPasswordConfirmationVerify
+              ? '(새로운비밀번호+한번더확인)비밀번호가 다릅니다'
+              : null}
+          </p>
+        </div>
+        <div>
+          <p>
+            {errorCurrentPasswordVerify ? '현재 비밀번호를 확인해주세요' : null}
+          </p>
+        </div>
+        <div>
+          <p>{allDone ? '적용완료!' : null}</p>
+        </div>
       </div>
       <button onClick={handlePasswordChange}>적용</button>
     </div>

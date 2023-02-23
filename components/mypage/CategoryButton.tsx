@@ -1,16 +1,12 @@
 import React from 'react';
+import styled from 'styled-components';
 
 function CategoryButton({ category, setCategory }: any) {
   return (
-    <>
-      {' '}
+    <StyledButtonContainer>
       <button
         onClick={() => {
           setCategory('myPost');
-        }}
-        style={{
-          backgroundColor: category === 'myPost' ? 'blue' : 'lightgrey',
-          width: '110px',
         }}
       >
         게시물
@@ -19,10 +15,6 @@ function CategoryButton({ category, setCategory }: any) {
         onClick={() => {
           setCategory('myScrap');
         }}
-        style={{
-          backgroundColor: category === 'myScrap' ? 'blue' : 'lightgrey',
-          width: '110px',
-        }}
       >
         스크랩
       </button>
@@ -30,15 +22,19 @@ function CategoryButton({ category, setCategory }: any) {
         onClick={() => {
           setCategory('myFollow');
         }}
-        style={{
-          backgroundColor: category === 'myFollow' ? 'blue' : 'lightgrey',
-          width: '110px',
-        }}
       >
         팔로우
       </button>
-    </>
+    </StyledButtonContainer>
   );
 }
+const StyledButtonContainer = styled.div`
+  display: flex;
+  border: 1px solid black;
+  justify-content: center;
+  button {
+    border: 1px solid black;
+  }
+`;
 
 export default CategoryButton;
