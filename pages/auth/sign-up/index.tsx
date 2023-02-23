@@ -150,7 +150,7 @@ export default function SignUp({}: Props) {
       console.error(error);
     }
   };
-  console.log(emailValid);
+
   // const onClickConfirmButton = async () => {
   //   await createUserWithEmailAndPassword(auth, email, pw).then((data: any) => {
   //     const remainInfo = {

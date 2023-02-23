@@ -126,6 +126,7 @@ export default function SignIn({}: Props) {
             // kakao_account 유저정보
             const kakao_account = res.kakao_account;
             console.log('kakao.account', kakao_account);
+            router.push('/post-list');
           },
         });
       },
@@ -164,10 +165,11 @@ export default function SignIn({}: Props) {
         introduction: '안녕하세요!',
       };
 
-      await setDoc(collectionRef, payload).then(router.push('/post-list'));
+      await setDoc(collectionRef, payload);
     } catch (error) {
       console.error(error);
     }
+    router.push('/post-list');
   };
 
   //페이스북 로그인
@@ -195,6 +197,7 @@ export default function SignIn({}: Props) {
     } catch (error) {
       console.error(error);
     }
+    router.push('/post-list');
   };
 
   useEffect(() => {
