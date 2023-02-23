@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import gradient2 from '../../public/images/gradient2.png';
+import gradient from '../../public/images/gradient.png';
 import Image from 'next/image';
 import MainSlide from '../../components/MainSlide';
 
@@ -18,11 +18,10 @@ export default function MainPage() {
   return (
     <MainPageLayout>
       <MainSlide />
-
       <Background>
         <BackgroundGradient
           className="gradient"
-          src={gradient2}
+          src={gradient}
           alt="gradient-image"
           width={2000}
         />

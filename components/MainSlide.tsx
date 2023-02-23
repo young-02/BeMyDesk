@@ -3,18 +3,16 @@ import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
 import scrap from '../public/images/scrapIcon.png';
-import main1 from '../public/images/main1.png';
-import main2 from '../public/images/main2.png';
-import main3 from '../public/images/main3.png';
-import main4 from '../public/images/main4.png';
-import main5 from '../public/images/main5.png';
+import main1 from '../public/images/mainSlide/main1.png';
+import main2 from '../public/images/mainSlide/main2.png';
+import main3 from '../public/images/mainSlide/main3.png';
+import main4 from '../public/images/mainSlide/main4.png';
+import main5 from '../public/images/mainSlide/main5.png';
 import designer from '../public/images/category/designer.jpg';
 import developer from '../public/images/category/developer.jpg';
 import student from '../public/images/category/student.jpg';
 import gamer from '../public/images/category/gamer.jpg';
-import footer from '../public/images/footer.png';
 import { useRouter } from 'next/router';
-import Footer from '@/components/Footer';
 
 const text = {
   inactive: { opacity: 0, translateY: 120 },
@@ -228,7 +226,7 @@ const MainSlide = () => {
             <CardImage
               src={student}
               alt="designer"
-              width={800}
+              width={1200}
               style={{ borderRadius: '20px' }}
             />
           </CategoryCardBox>
@@ -243,7 +241,7 @@ const MainSlide = () => {
             <CardImage
               src={gamer}
               alt="designer"
-              width={800}
+              width={1200}
               style={{ borderRadius: '20px' }}
             />
           </CategoryCardBox>
@@ -309,6 +307,7 @@ const Slide = styled.div`
   align-items: center;
   scroll-snap-align: center;
   background-color: none;
+
   .background {
     z-index: -2;
     position: absolute;
@@ -511,7 +510,6 @@ const SlideContentBottom = styled.div`
   align-items: center;
   font-family: 'Pretendard Variable';
   overflow: hidden;
-  /* background-color: aqua; */
 
   > div {
     width: 1200px;
@@ -529,7 +527,7 @@ const SlideContentBottom = styled.div`
   }
 
   .slide {
-    background-image: url('/images/footer.png');
+    background-image: url('/images/mainSlide/footer.png');
     width: 151.5rem;
     height: 10.75rem;
     animation: slider 30s linear infinite;
