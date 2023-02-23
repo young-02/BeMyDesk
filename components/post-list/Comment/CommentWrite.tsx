@@ -62,7 +62,7 @@ export default function CommentWrite({ path }) {
         <CustomButton
           backgoundColor="#206EFB"
           fontColor="#fff"
-          fontSize="20"
+          fontSize="1"
           paddingRow="1.25"
           paddingColumns="0.4"
           onClick={addComment}
@@ -105,6 +105,6 @@ const CommentForm = styled.div`
     font-size: 0.875rem;
     margin-right: 0.625rem;
     border-radius: 0.4rem;
-    border:0.0625rem solid #868E96
+    border: 0.0625rem solid #868e96;
   }
 `;
