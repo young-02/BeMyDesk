@@ -1,17 +1,26 @@
+import Image from 'next/image';
 import React from 'react';
+import styled from 'styled-components';
 
 function MyFollow({ myFollow, followCount }: any) {
   if (followCount == '0') {
     return (
       <div>
-        <p>포스트가 없습니다</p>
+        <Image
+          src="/images/QuestionMark.png"
+          alt="QuestionMark"
+          width={48}
+          height={48}
+        />
+        <p> 팔로우한 유저가 없어요</p>
+        <p> 마음에 드는 유저를 팔로우 해보세요 </p>
       </div>
     );
   } else {
     return (
-      <div>
+      <>
         {myFollow.map((profile) => (
-          <div key={profile.documentName} style={{ border: '1px solid black' }}>
+          <div key={profile.id} style={{ border: '1px solid black' }}>
             <div>
               <img
                 src={profile.profileImage}
@@ -20,13 +29,20 @@ function MyFollow({ myFollow, followCount }: any) {
                 height={202}
               />
             </div>
-            <p>{profile.nickname}</p>
-            <p style={{ fontWeight: '700' }}>{profile.introduction}</p>
+            <p style={{ fontWeight: '700' }}>{profile.nickname}</p>
+            <p>{profile.introduction}</p>
             <p>{profile.userId}</p>
           </div>
         ))}
-      </div>
+      </>
     );
   }
 }
+
+const StyledContainer = styled.div`
+  display: flex;
+  width: 894px;
+  height: 197px;
+`;
+
 export default MyFollow;
