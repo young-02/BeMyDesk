@@ -25,15 +25,19 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
     if (currentUserId === undefined) {
       router.push('auth/sign-in');
     } else if (isLikesClicked === false) {
+      const updateLikes = post.likesCount + 1;
+      console.log('updateLikes +', updateLikes);
       await updateDoc(postRef, {
         likes: [...post.likes, currentUserId],
         likesCount: post.likesCount + 1,
       });
       setIsLikesClicked(true);
     } else {
+      const updateLikes = post.likesCount == 0 ? 0 : post.likesCount - 1;
+      console.log('updateLikes -', updateLikes);
       await updateDoc(postRef, {
         likes: post.likes.filter((id) => id !== currentUserId),
-        likesCount: post.likesCounts - 1,
+        likesCount: updateLikes,
       });
       setIsLikesClicked(false);
     }
