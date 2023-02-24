@@ -16,6 +16,7 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
   // currentUser 가 해당 포스트가 좋아요 눌렀는지 여부 확인
   const initialState = post.likes.includes(currentUserId) ? true : false;
   const [isLikesClicked, setIsLikesClicked] = useState(initialState);
+  const userProfileImg = post.userProfile ?? `images/defaultProfile.png`;
 
   // 좋아요 버튼을 클릭했을 때, firebase 의 likes & likesCount 수정 로직
   const updateLikes = async () => {
@@ -26,13 +27,13 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
     } else if (isLikesClicked === false) {
       await updateDoc(postRef, {
         likes: [...post.likes, currentUserId],
-        likesCount: post.likes.length + 1,
+        likesCount: post.likesCount + 1,
       });
       setIsLikesClicked(true);
     } else {
       await updateDoc(postRef, {
         likes: post.likes.filter((id) => id !== currentUserId),
-        likesCount: post.likes.length - 1,
+        likesCount: post.likesCounts - 1,
       });
       setIsLikesClicked(false);
     }
@@ -64,7 +65,7 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
         <div
           className="post-image"
           style={{
-            backgroundImage: `url(https://i.pinimg.com/564x/39/43/6c/39436c3a2f88447e3f87bb702368cf7a.jpg)`,
+            backgroundImage: `url(${post.postImage1})`,
           }}
         />
       </Link>
@@ -72,11 +73,11 @@ const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
         <div
           className="profile-image"
           style={{
-            backgroundImage: `url(https://i.pinimg.com/564x/78/c5/4d/78c54def60d50449183cb8161ff78983.jpg)`,
+            backgroundImage: `url(${userProfileImg} )`,
           }}
         />
         <div className="top">
-          <h4>{post.userId}</h4>
+          <h4>{post.userNickname ?? '닉네임'}</h4>
           <p>{nowDate}</p>
         </div>
         <Link href={`/detail/${post.id}`}>

@@ -9,14 +9,25 @@ import { useRouter } from 'next/router';
 
 export default function DetailViewUserInfor({ detail }) {
   const router = useRouter();
-  const { userProfile, userId, jobCategory, likesCount, id, likes } = detail;
+  const {
+    userProfile,
+    userId,
+    jobCategory,
+    likesCount,
+    id,
+    likes,
+    userNickname,
+  } = detail;
   const { isLogin, isUserObj, logOut } = useCheckLogin();
-  const like = likes.includes(isUserObj) ? true : false;
+
+  const initialState = likes.includes(isUserObj) ? true : false;
+  const [isLikesClicked, setIsLikesClicked] = useState(initialState);
   const { userInfor } = useGetReaction();
   const [following, setFollowing] = useState<[] | undefined>();
   const [scraps, setScraps] = useState<[] | undefined>();
   const scraper = scraps?.includes(id) ? true : false;
   const follower = following?.includes(userId) ? true : false;
+  const userProfileImg = userProfile ?? '/images/defaultProfile.png';
 
   useEffect(() => {
     userInfor?.map(
@@ -39,24 +50,23 @@ export default function DetailViewUserInfor({ detail }) {
     } else {
       router.push('/auth/sign-in');
     }
-   
   };
 
   const onclickLove = async (num: any) => {
     if (isLogin) {
-      if (likes.includes(isUserObj)) {
+      if (setIsLikesClicked === false) {
         likes.pop(isUserObj);
       } else {
         likes.push(isUserObj);
       }
+      setIsLikesClicked(true);
     } else {
       router.push('/auth/sign-in');
     }
 
-    const isLike = like;
     const likesCount = likes.length;
     const docRef = doc(dbService, 'postData', num);
-    const payload = { likesCount, likes, isLike };
+    const payload = { likesCount };
     await updateDoc(docRef, payload);
   };
 
@@ -73,15 +83,18 @@ export default function DetailViewUserInfor({ detail }) {
     } else {
       router.push('/auth/sign-in');
     }
-  
   };
 
   return (
     <DetailViewUserInforLayout>
       <UserProfile>
-        <img className="user-profile" src={userProfile} alt="userProfileImg" />
+        <img
+          className="user-profile"
+          src={userProfileImg}
+          alt="userProfileImg"
+        />
         <div className="user-information">
-          <p className="user-id">{userId}</p>
+          <p className="user-id">{userNickname ?? '닉네임'}</p>
           <p className="user-job">{jobCategory}</p>
         </div>
       </UserProfile>
@@ -95,10 +108,10 @@ export default function DetailViewUserInfor({ detail }) {
         </button>
         <>
           <button onClick={() => onclickLove(id)}>
-            {like ? (
-              <span className="love active">스크립</span>
+            {!isLikesClicked ? (
+              <span className="love active">좋아요</span>
             ) : (
-              <span className="love  ">스크립</span>
+              <span className="love  ">좋아요</span>
             )}
           </button>
           {likesCount}

@@ -150,7 +150,7 @@ export default function SignUp({}: Props) {
       console.error(error);
     }
   };
-  console.log(emailValid);
+
   // const onClickConfirmButton = async () => {
   //   await createUserWithEmailAndPassword(auth, email, pw).then((data: any) => {
   //     const remainInfo = {
@@ -213,7 +213,11 @@ export default function SignUp({}: Props) {
             <div className="inputWrap">
               <input
                 type="text"
-                className={!nicknameValid && nickname.length > 0 ? "input error" : 'input'}
+                className={
+                  !nicknameValid && nickname.length > 0
+                    ? 'input error'
+                    : 'input'
+                }
                 placeholder="닉네임을 작성해주세요."
                 value={nickname}
                 onChange={handleNickname}
@@ -258,7 +262,7 @@ export default function SignUp({}: Props) {
               >
                 <p
                   className={
-                    currentValue === '선택해주세요' && email.length > 0 
+                    currentValue === '선택해주세요' && email.length > 0
                       ? 'selectedText error'
                       : selectBox
                       ? 'selectedText active'
@@ -440,9 +444,10 @@ const StyledBackground = styled.div`
 const SignUpLayout = styled.div`
   max-width: 36.75rem;
   width: 100%;
-  padding: 3.375rem 2.5rem;
+  padding: 2.375rem 2.5rem;
   border-radius: 1.25rem;
   background: #fff;
+  margin-top: 40px;
 
   .title {
     text-align: center;
