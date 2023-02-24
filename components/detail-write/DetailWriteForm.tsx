@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, memo } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import DetailWriteSearch from './DetailWriteSearch';
 import DetailWriteProductCard from './DetailWriteProductCard';
@@ -11,6 +11,7 @@ import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Link from 'next/link';
 import { Quill } from 'react-quill';
 import { useRouter } from 'next/router';
+import { v4 } from 'uuid';
 axios.defaults.withCredentials = true;
 
 export interface DetailWriteSearchProps {
@@ -63,6 +64,7 @@ const DetailWriteForm = () => {
   /**
    * 인풋창에 작성할 때 딜레이가 안 되게끔 하는 함수
    */
+
   const inputSearchWord = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       // console.log('검색 인풋');
@@ -212,13 +214,13 @@ const DetailWriteForm = () => {
       };
     });
 
-    const imageFile = '';
     const fileRef = await ref(
       storage,
-      `authService.currentUser.uid/'imageName`,
+      `images/${auth.currentUser.uid}/${v4()}`,
     );
+    console.log(v4(), 'v4()2');
     const uploadFile = await uploadString(fileRef, attachment, 'data_url');
-    console.log(imageFile, 'imageFile');
+    console.log(v4(), 'v4()3');
     const fileURL = await getDownloadURL(uploadFile.ref);
 
     const docRef = await addDoc(collection(dbService, 'postData'), {
@@ -232,31 +234,33 @@ const DetailWriteForm = () => {
       likes: [],
       likesCount: [],
       products: products,
+      userNickname: auth.currentUser?.displayName,
+      userProfile: auth.currentUser?.photoURL,
     });
     console.log('Document written with ID: ', docRef.id);
     console.log(content, 'content');
-    router.push('/');
+    // router.push('/');
   };
 
   return (
     <>
-      <DetailWriteLayout onSubmit={submitPostForm}>
-        {isModalShow && (
-          <DetailWriteSearch
-            onClose={hideSearchModal}
-            list={list}
-            setList={setList}
-            searchWord={searchWord}
-            setSearchWord={setSearchWord}
-            data={data}
-            setData={setData}
-            inputSearchWord={inputSearchWord}
-            getNaverData={getNaverData}
-            selectProduct={selectProduct}
-            deleteProduct={deleteProduct}
-            onClick={selectedProducts}
-          />
-        )}
+      {isModalShow && (
+        <DetailWriteSearch
+          onClose={hideSearchModal}
+          list={list}
+          setList={setList}
+          searchWord={searchWord}
+          setSearchWord={setSearchWord}
+          data={data}
+          setData={setData}
+          inputSearchWord={inputSearchWord}
+          getNaverData={getNaverData}
+          selectProduct={selectProduct}
+          deleteProduct={deleteProduct}
+          onClick={selectedProducts}
+        />
+      )}
+      <DetailWriteLayout>
         <DetailWriteSelectBox>
           <select
             className="job_select"
@@ -269,7 +273,6 @@ const DetailWriteForm = () => {
             <option value="디자이너">디자이너</option>
             <option value="기획자">기획자</option>
             <option value="학생">학생</option>
-            <option value="기타">기타</option>
           </select>
           <p className="job_span">의 책상</p>
         </DetailWriteSelectBox>
@@ -283,32 +286,43 @@ const DetailWriteForm = () => {
         />
         <QuillEditor onChange={changeEditorText} value={content} />
         <DetailWriteBox>
-          <span className="title_span">테스크테리어 사진을 선택해주세요</span>
-          <div>
+          <span className="title_span">테스크테리어 사진을 추가해주세요</span>
+          <DeatailWritePhotoBox>
+            {attachment && (
+              <div>
+                <img
+                  src={attachment}
+                  style={{ width: '150px', height: '150px' }}
+                />
+              </div>
+            )}
+
+            <label className="deskImgLabel" htmlFor="deskImg">
+              {/* <img src={chooseImage.src} /> */}
+              <span>이미지를 추가해주세요</span>
+            </label>
             <input
               type="file"
               multiple
               accept="image/*"
+              id="deskImg"
+              name='id="deskImg"'
               onChange={onFileChange}
             />
-          </div>
-          {attachment && (
-            <div>
-              <img
-                src={attachment}
-                style={{ width: '300px', height: '300px' }}
-              />
-            </div>
-          )}
+          </DeatailWritePhotoBox>
         </DetailWriteBox>
         <DetailWriteBox>
-          <span className="title_span">사용하신 제품을 선택해주세요</span>
-          <button onClick={showSearchModal}>기기검색</button>
+          <div>
+            <span className="title_span">사용하신 제품을 선택해주세요</span>
+            <SearchItemBtn onClick={showSearchModal}>기기검색</SearchItemBtn>
+          </div>
           <DetailWriteProductCard key={selectList} selectList={selectList} />
         </DetailWriteBox>
         <DetailWriteButtonBox>
           <button className="btn">취소</button>
-          <button className="btn">완료</button>
+          <button className="btn" onClick={submitPostForm}>
+            완료
+          </button>
         </DetailWriteButtonBox>
       </DetailWriteLayout>
     </>
@@ -324,9 +338,11 @@ const DetailWriteLayout = styled.form`
   align-items: center;
   margin: 0 auto;
   margin-top: 9rem;
-  width: 80%;
-  height: 100vh;
-  padding: 0.5rem;
+  margin-bottom: 5rem;
+  width: 75%;
+  border: 1px solid black;
+  border-radius: 1.875rem;
+  padding: 5rem 6.375rem 5rem 6.375rem;
 `;
 
 const DetailWriteSelectBox = styled.div`
@@ -337,7 +353,7 @@ const DetailWriteSelectBox = styled.div`
 
   .job_select {
     width: 7.375rem;
-    height: 1.75rem;
+    height: 40px;
     border: 0.0625rem solid #868e96;
     border-radius: 0.625rem;
     padding: 0.25rem 0.5rem;
@@ -361,7 +377,7 @@ const DetailWriteTitleInput = styled.input`
   border: 0.125rem solid #868e96;
   border-radius: 0.625rem;
   padding: 0.875rem 1.25rem;
-  font-size: 1.375rem;
+  font-size: 1.25rem;
 `;
 
 const DetailWriteButtonBox = styled.div`
@@ -393,13 +409,49 @@ const DetailWriteBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 75rem;
-  height: 12.5rem;
-  margin: 2rem;
+  height: 18.75rem;
+  margin: 1rem;
 
   .title_span {
-    margin-bottom: 0.625rem;
+    margin-bottom: 1rem;
     font-weight: 700;
     font-size: 1.5rem;
     line-height: 2rem;
   }
+`;
+
+const DeatailWritePhotoBox = styled.div`
+  /* padding: 2rem 0; */
+
+  .deskImgLabel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 3rem;
+    border: 1px solid #868e96;
+    border-radius: 0.625rem;
+
+    &:hover {
+      background-color: #206efb;
+      color: #fff;
+    }
+  }
+
+  input {
+    display: none;
+  }
+
+  span {
+    font-weight: lighter;
+    font-size: 0.75rem;
+  }
+`;
+const SearchItemBtn = styled.button`
+  width: 6.25rem;
+  height: 2rem;
+  background-color: #206efb;
+  border-radius: 0.625rem;
+  color: #fff;
 `;
