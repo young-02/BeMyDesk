@@ -149,7 +149,7 @@ export default function MyPage({}: Props) {
             <div className="thirdLine">
               <div className="followerDiv">
                 <p className="followerLetter">팔로워</p>
-                <p className="followerCount">212</p>
+                <p className="followerCount">3</p>
               </div>
               <div className="settingIcon">
                 <AiOutlineSetting
@@ -301,5 +301,6 @@ const StyledDivProfile = styled.div`
 
 const StyledDivContents = styled.div`
   width: 894px;
+  min-height: 900px;
   flex-direction: column;
 `;

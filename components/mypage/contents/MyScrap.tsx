@@ -5,16 +5,17 @@ import { HiOutlineTrash } from 'react-icons/hi';
 function MyScrap({ myScrap, scrapCount }: any) {
   if (scrapCount == '0') {
     return (
-      <div>
+      <StyledErrorDiv>
         <Image
+          className="errorIcon"
           src="/images/QuestionMark.png"
           alt="QuestionMark"
           width={48}
           height={48}
         />
-        <p> 저장한 스크랩이 없어요</p>
-        <p> 마음에 드시는 공간을 저장해볼까요? </p>
-      </div>
+        <p className="errorFirstLine">저장한 스크랩이 없어요</p>
+        <p className="errorSecondLine">마음에 드시는 공간을 저장해 볼까요?</p>
+      </StyledErrorDiv>
     );
   } else {
     return (
@@ -31,7 +32,16 @@ function MyScrap({ myScrap, scrapCount }: any) {
                   style={{ cursor: 'pointer' }}
                   className="img"
                 />
-              ) : null}
+              ) : (
+                <img
+                  src="/images/noImage.png"
+                  alt="postImage1"
+                  width={282}
+                  height={197}
+                  style={{ cursor: 'pointer' }}
+                  className="img"
+                />
+              )}
             </StyledLeftDiv>
             <StyledRightDiv>
               <div className="firstLine">
@@ -47,9 +57,14 @@ function MyScrap({ myScrap, scrapCount }: any) {
                     alt="profileImage"
                     className="profileImage"
                   ></img>
-                  <p className="ProfileNickname">User Nickname</p>
+                  <p className="ProfileNickname">{post.userNickname}</p>
                 </div>
-                <HiOutlineTrash className="deleteButton" />
+                <img
+                  src="/images/BLUE_scrap.png"
+                  alt="bookmarkIcon"
+                  className="deleteButton"
+                ></img>
+                {/* <HiOutlineTrash className="deleteButton" /> */}
               </div>
             </StyledRightDiv>
           </StyledContainer>
@@ -59,6 +74,49 @@ function MyScrap({ myScrap, scrapCount }: any) {
   }
 }
 
+const StyledErrorDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 190px;
+  align-items: center;
+  .errorIcon {
+    width: 164px;
+    height: 164px;
+  }
+  .errorFirstLine {
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 48px;
+    /* or 150% */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 06 */
+
+    color: #495057;
+  }
+  .errorSecondLine {
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height, or 125% */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 05 */
+
+    color: #868e96;
+  }
+`;
 const StyledContainer = styled.div`
   display: flex;
   width: 894px;
@@ -156,7 +214,7 @@ const StyledRightDiv = styled.div`
     }
     .deleteButton {
       width: 20px;
-      height: 20px;
+      height: 25px;
     }
   }
 `;
