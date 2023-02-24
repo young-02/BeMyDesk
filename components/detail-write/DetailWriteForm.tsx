@@ -271,8 +271,8 @@ const DetailWriteForm = () => {
             <option className="optionOne">선택해주세요</option>
             <option value="개발자">개발자</option>
             <option value="디자이너">디자이너</option>
-            <option value="기획자">기획자</option>
             <option value="학생">학생</option>
+            <option value="게이머">게이머</option>
           </select>
           <p className="job_span">의 책상</p>
         </DetailWriteSelectBox>
