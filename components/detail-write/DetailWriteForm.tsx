@@ -232,7 +232,7 @@ const DetailWriteForm = () => {
       postImage1: fileURL,
       postImage2: null,
       likes: [],
-      likesCount: [],
+      likesCount: 0,
       products: products,
       userNickname: auth.currentUser?.displayName,
       userProfile: auth.currentUser?.photoURL,
