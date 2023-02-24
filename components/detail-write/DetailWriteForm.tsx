@@ -239,7 +239,7 @@ const DetailWriteForm = () => {
     });
     console.log('Document written with ID: ', docRef.id);
     console.log(content, 'content');
-    // router.push('/');
+    router.push('/post-list');
   };
 
   return (
@@ -260,7 +260,7 @@ const DetailWriteForm = () => {
           onClick={selectedProducts}
         />
       )}
-      <DetailWriteLayout onSubmit={submitPostForm}>
+      <DetailWriteLayout>
         <DetailWriteSelectBox>
           <select
             className="job_select"
@@ -320,7 +320,9 @@ const DetailWriteForm = () => {
         </DetailWriteBox>
         <DetailWriteButtonBox>
           <button className="btn">취소</button>
-          <button className="btn">완료</button>
+          <button className="btn" onClick={submitPostForm}>
+            완료
+          </button>
         </DetailWriteButtonBox>
       </DetailWriteLayout>
     </>
@@ -329,7 +331,7 @@ const DetailWriteForm = () => {
 
 export default DetailWriteForm;
 
-const DetailWriteLayout = styled.form`
+const DetailWriteLayout = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
