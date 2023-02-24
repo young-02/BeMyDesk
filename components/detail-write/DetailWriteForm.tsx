@@ -260,7 +260,7 @@ const DetailWriteForm = () => {
           onClick={selectedProducts}
         />
       )}
-      <DetailWriteLayout>
+      <DetailWriteLayout onSubmit={submitPostForm}>
         <DetailWriteSelectBox>
           <select
             className="job_select"
@@ -320,9 +320,7 @@ const DetailWriteForm = () => {
         </DetailWriteBox>
         <DetailWriteButtonBox>
           <button className="btn">취소</button>
-          <button className="btn" onClick={submitPostForm}>
-            완료
-          </button>
+          <button className="btn">완료</button>
         </DetailWriteButtonBox>
       </DetailWriteLayout>
     </>
