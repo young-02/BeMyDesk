@@ -49,9 +49,7 @@ function MyPost({ myPost, postCount }: any) {
               <div className="thirdLine">
                 <div className="LikesDiv">
                   <FcLike className="likeButton" />
-                  <p className="likeCount">
-                    {post.likesCount == false ? '0' : post.likesCount}
-                  </p>
+                  <p className="likeCount">{post.likesCount}</p>
                 </div>
                 <HiOutlineTrash className="deleteButton" />
               </div>
