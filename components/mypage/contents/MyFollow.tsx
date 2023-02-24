@@ -5,16 +5,17 @@ import styled from 'styled-components';
 function MyFollow({ myFollow, followCount }: any) {
   if (followCount == '0') {
     return (
-      <div>
+      <StyledErrorDiv>
         <Image
+          className="errorIcon"
           src="/images/QuestionMark.png"
           alt="QuestionMark"
           width={48}
           height={48}
         />
-        <p> 팔로우한 유저가 없어요</p>
-        <p> 마음에 드는 유저를 팔로우 해보세요 </p>
-      </div>
+        <p className="errorFirstLine">팔로우 리스트가 없어요</p>
+        <p className="errorSecondLine">다른 사람의 공간은 어떤지 찾아볼까요?</p>
+      </StyledErrorDiv>
     );
   } else {
     return (
@@ -25,13 +26,23 @@ function MyFollow({ myFollow, followCount }: any) {
             style={{ border: '1px solid black' }}
           >
             <StyledDivLeft>
-              <img
-                className="profileImage"
-                src={profile.profileImage}
-                alt="Image"
-                width={202}
-                height={202}
-              />
+              {profile.profileImage ? (
+                <img
+                  className="profileImage"
+                  src={profile.profileImage}
+                  alt="Image"
+                  width={202}
+                  height={202}
+                />
+              ) : (
+                <img
+                  className="profileImage"
+                  src="/images/defaultProfile.png"
+                  alt="Image"
+                  width={202}
+                  height={202}
+                />
+              )}
             </StyledDivLeft>
             <StyledDivRight>
               <div className="firstLine">
@@ -53,6 +64,49 @@ function MyFollow({ myFollow, followCount }: any) {
   }
 }
 
+const StyledErrorDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 190px;
+  align-items: center;
+  .errorIcon {
+    width: 164px;
+    height: 164px;
+  }
+  .errorFirstLine {
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 48px;
+    /* or 150% */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 06 */
+
+    color: #495057;
+  }
+  .errorSecondLine {
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height, or 125% */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 05 */
+
+    color: #868e96;
+  }
+`;
 const StyledContainer = styled.div`
   display: flex;
   width: 894px;
