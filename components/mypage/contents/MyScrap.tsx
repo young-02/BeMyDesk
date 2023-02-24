@@ -42,8 +42,12 @@ function MyScrap({ myScrap, scrapCount }: any) {
               </div>
               <div className="thirdLine">
                 <div className="ProfileDiv">
-                  <p className="ProfileLogo" />
-                  <p className="ProfileNickname">24</p>
+                  <img
+                    src="/images/defaultProfile.png"
+                    alt="profileImage"
+                    className="profileImage"
+                  ></img>
+                  <p className="ProfileNickname">User Nickname</p>
                 </div>
                 <HiOutlineTrash className="deleteButton" />
               </div>
@@ -80,7 +84,7 @@ const StyledRightDiv = styled.div`
   div {
   }
   .firstLine {
-    width: 572px;
+    width: 500px;
     height: 30px;
     margin-bottom: 20px;
     overflow: hidden;
@@ -119,31 +123,35 @@ const StyledRightDiv = styled.div`
   .thirdLine {
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
-    .LikesDiv {
+    align-items: center;
+    margin-top: 20px;
+
+    .ProfileDiv {
       display: flex;
       justify-content: center;
       align-items: center;
 
-      .likeButton {
-        width: 20px;
-        height: 20px;
-        padding-bottom: 5px;
+      .profileImage {
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+        margin-bottom: 3px;
       }
-      .likeCount {
+      .ProfileNickname {
         margin-left: 13px;
+        /* Pretendard Bold 12 */
+
         font-family: 'Pretendard';
         font-style: normal;
-        font-weight: 500;
-        font-size: 18px;
+        font-weight: 700;
+        font-size: 15px;
         line-height: 16px;
         /* identical to box height, or 133% */
 
-        text-align: center;
+        /* Gray 09 */
 
-        /* Gray 05 */
-
-        color: #868e96;
+        color: #17171c;
       }
     }
     .deleteButton {

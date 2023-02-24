@@ -40,6 +40,7 @@ function MyPost({ myPost, postCount }: any) {
             <StyledRightDiv>
               <div className="firstLine">
                 <p className="Title">{post.postTitle}</p>
+                <img src="" alt="" />
               </div>
 
               <div className="secondLine">
@@ -48,7 +49,9 @@ function MyPost({ myPost, postCount }: any) {
               <div className="thirdLine">
                 <div className="LikesDiv">
                   <FcLike className="likeButton" />
-                  <p className="likeCount">24</p>
+                  <p className="likeCount">
+                    {post.likesCount == false ? '0' : post.likesCount}
+                  </p>
                 </div>
                 <HiOutlineTrash className="deleteButton" />
               </div>
@@ -85,10 +88,11 @@ const StyledRightDiv = styled.div`
   div {
   }
   .firstLine {
-    width: 572px;
+    width: 500px;
     height: 30px;
     margin-bottom: 20px;
     overflow: hidden;
+
     .Title {
       /* Pretendard Bold 24 */
 
@@ -124,15 +128,17 @@ const StyledRightDiv = styled.div`
   .thirdLine {
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
+    align-items: center;
+    margin-top: 20px;
+
     .LikesDiv {
       display: flex;
       justify-content: center;
       align-items: center;
 
       .likeButton {
-        width: 20px;
-        height: 20px;
+        width: 30px;
+        height: 30px;
         padding-bottom: 5px;
       }
       .likeCount {
