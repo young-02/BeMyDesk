@@ -157,6 +157,7 @@ export default function SignIn({}: Props) {
 
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const payload = {
+        // 조건걸어서 해당값이 없을때마다 updatedoc으로 넣어주게 변경
         profileImage: '/images/defaultProfile.png',
         nickname: auth.currentUser?.displayName,
         userId: auth.currentUser?.uid,
@@ -185,6 +186,7 @@ export default function SignIn({}: Props) {
 
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const payload = {
+        // 조건걸어서 해당값이 없을때마다 updatedoc으로 넣어주게 변경
         profileImage: '/images/defaultProfile.png',
         nickname: auth.currentUser?.displayName,
         userId: auth.currentUser?.uid,
