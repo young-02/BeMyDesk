@@ -15,11 +15,11 @@ export default function DetailViewProducts({ detail }) {
           <div className="product-list" key={product.title}>
             <img
               className="product-img"
-              src={product.img}
+              src={product.images}
               alt={product.title}
             />
             <p className="product-title">{ReactHtmlParser(product.title)}</p>
-            <p className="product-hasTag">{product.hashTag}</p>
+            <p className="product-hasTag">#{product.hashTag}</p>
           </div>
         ))}
       </div>

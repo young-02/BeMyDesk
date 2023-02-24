@@ -126,6 +126,7 @@ export default function SignIn({}: Props) {
             // kakao_account 유저정보
             const kakao_account = res.kakao_account;
             console.log('kakao.account', kakao_account);
+            router.push('/post-list');
           },
         });
       },
@@ -164,10 +165,11 @@ export default function SignIn({}: Props) {
         introduction: '안녕하세요!',
       };
 
-      await setDoc(collectionRef, payload).then(router.push('/post-list'));
+      await setDoc(collectionRef, payload);
     } catch (error) {
       console.error(error);
     }
+    router.push('/post-list');
   };
 
   //페이스북 로그인
@@ -195,6 +197,7 @@ export default function SignIn({}: Props) {
     } catch (error) {
       console.error(error);
     }
+    router.push('/post-list');
   };
 
   useEffect(() => {
@@ -323,7 +326,7 @@ export default function SignIn({}: Props) {
             </div>
           </div>
         </div>
-        <StyledDivTest>
+        {/* <StyledDivTest>
           {user ? '환영합니다,' + user.displayName + '님' : ''}
           <button
             onClick={() => {
@@ -340,7 +343,7 @@ export default function SignIn({}: Props) {
           >
             로그인 유저 정보
           </button>
-        </StyledDivTest>
+        </StyledDivTest> */}
         <div className="LinkSignUp">
           <Link href="./sign-up" className="LinkSignUpMessage">
             아이디가 없으신가요?

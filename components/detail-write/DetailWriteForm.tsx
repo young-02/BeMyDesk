@@ -338,6 +338,7 @@ const DetailWriteLayout = styled.form`
   align-items: center;
   margin: 0 auto;
   margin-top: 9rem;
+
   margin-bottom: 5rem;
   width: 75%;
   border: 1px solid black;

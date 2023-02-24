@@ -20,9 +20,9 @@ export default function DetailViewSlide({ detail }) {
         <SwiperSlide>
           <img className="post-img" src={detail.postImage1} alt="postImage1" />
         </SwiperSlide>
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <img className="post-img" src={detail.postImage2} alt="postImage1" />
-        </SwiperSlide>
+        </SwiperSlide> */}
       </Swiper>
     </DetailViewSlideLayout>
   );
@@ -35,7 +35,7 @@ const DetailViewSlideLayout = styled.div`
   .post-img {
     display: block;
     width: 100%;
-    max-height: 37.25rem;
+   height: 37.25rem;
     object-fit: cover;
   }
 
@@ -55,6 +55,6 @@ const DetailViewSlideLayout = styled.div`
   }
   .swiper-button-next:after,
   .swiper-button-prev:after {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 `;
