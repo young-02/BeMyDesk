@@ -54,7 +54,7 @@ export default function DetailViewUserInfor({ detail }) {
 
   const onclickLove = async (num: any) => {
     if (isLogin) {
-      if (setIsLikesClicked === false) {
+      if (isLikesClicked === false) {
         likes.pop(isUserObj);
       } else {
         likes.push(isUserObj);
@@ -66,7 +66,7 @@ export default function DetailViewUserInfor({ detail }) {
 
     const likesCount = likes.length;
     const docRef = doc(dbService, 'postData', num);
-    const payload = { likesCount };
+    const payload = { likesCount, likes };
     await updateDoc(docRef, payload);
   };
 
