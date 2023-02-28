@@ -14,41 +14,74 @@ export default function SignUp({}: Props) {
   const [pw, setPw] = useState('');
   const [pwVerfy, setPwVerfy] = useState('');
   const [nickname, setNickname] = useState('');
-
   const [emailValid, setEmailValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [pwVerfyValid, setPwVerfyValid] = useState(false);
   const [nicknameValid, setNicknameValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
+  // 동의 버튼
   const [allCheck, setAllCheck] = useState(false);
   const [ageCheck, setAgeCheck] = useState(false);
   const [useCheck, setUseCheck] = useState(false);
   const [marketingCheck, setMarketingCheck] = useState(false);
+
+  // 이메일Regex
+  const FullEmailRegex =
+    /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+  const engNumRegex = /^[a-zA-Z0-9]+$/;
+
+  // useState 초기값으로 배열이 들어가있음.
   const [selected, setSelected] = useState({
+    // selectBox가 열려있는지 닫혀있는지 확인
     selectBox: false,
+    // 현재 선택값
     currentValue: '선택해주세요',
   });
+  // 직접 입력하기 입력값
   const [WriteValue, setWriteValue] = useState('');
-  console.log(WriteValue);
+
+  // 구조분해 할당으로 프로퍼티를 추출한것임
+  // const selectBox = selected.selectBox;
+  // const currentValue = selected.currentValue;
+  // 와 같은 의미
   const { selectBox, currentValue } = selected;
 
-  const selectTarget = (e) => {
+  // selectBox 하나를 셀렉트 했을때 실행되는것
+  const selectTarget = (e: any) => {
+    // innerText를 하면 HTML 엘레먼트를 text컨텐츠로 바꿔줌
+    // if you have an HTML element <p>Hello, <span>world</span>!</p>,
+    // then the innerText of the <p> element would be the string
+    // "Hello, world!".
+    // It is equivalent to
+    // const innerText = e.target.innerText.
     const { innerText } = e.target;
-
+    // selected in this context is an object destructured from the selected state variable using the destructuring assignment syntax of ES6.
+    // It contains two properties: selectBox and currentValue.
     setSelected((selected) => ({
       ...selected,
       currentValue: innerText,
     }));
+  };
 
-    // const regex =
-    //   /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-    if (currentValue) {
+  // 이메일 유효성검사 (직접입력x)
+  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setEmail(value);
+    if (engNumRegex.test(value)) {
       setEmailValid(true);
     } else {
       setEmailValid(false);
     }
   };
 
+  // 이메일 입력
+  const emailValue =
+    currentValue === '직접입력하기'
+      ? `${email}@${WriteValue}`
+      : `${email}@${currentValue}`;
+  console.log(emailValue);
+
+  // 전체동의 버튼
   const allBtnEvent = () => {
     if (allCheck === false) {
       setAllCheck(true);
@@ -62,7 +95,7 @@ export default function SignUp({}: Props) {
       setMarketingCheck(false);
     }
   };
-
+  // 만 14세 이상입니다 버튼
   const ageBtnEvent = () => {
     if (ageCheck === false) {
       setAgeCheck(true);
@@ -70,7 +103,7 @@ export default function SignUp({}: Props) {
       setAgeCheck(false);
     }
   };
-
+  // 개인정보 수집/이용에 동의합니다 버튼
   const useBtnEvent = () => {
     if (useCheck === false) {
       setUseCheck(true);
@@ -78,7 +111,7 @@ export default function SignUp({}: Props) {
       setUseCheck(false);
     }
   };
-
+  //서비스 이용약관에 동의합니다. 버튼
   const marketingBtnEvent = () => {
     if (marketingCheck === false) {
       setMarketingCheck(true);
@@ -87,9 +120,18 @@ export default function SignUp({}: Props) {
     }
   };
 
-  const handleEmail = function (event: any) {
-    setEmail(event.target.value);
+  // 닉네임 유효성검사
+  const handleNickname = function (event: any) {
+    setNickname(event.target.value);
+    const regex = /^[\w\W가-힣]{2,8}$/;
+    if (regex.test(event.target.value)) {
+      setNicknameValid(true);
+    } else {
+      setNicknameValid(false);
+    }
   };
+
+  //패스워드 유효성검사
   const handlePw = function (event: any) {
     setPw(event.target.value);
     const regex =
@@ -100,7 +142,7 @@ export default function SignUp({}: Props) {
       setPwValid(false);
     }
   };
-
+  //패스워드 확인 유효성검사
   const handleVerfyPw = function (event: any) {
     setPwVerfy(event.target.value);
     if (pw === event.target.value) {
@@ -110,20 +152,7 @@ export default function SignUp({}: Props) {
     }
   };
 
-  const handleNickname = function (event: any) {
-    setNickname(event.target.value);
-    const regex = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,8}$/;
-    if (regex.test(event.target.value)) {
-      setNicknameValid(true);
-    } else {
-      setNicknameValid(false);
-    }
-  };
-  const emailValue =
-    currentValue === '직접입력하기'
-      ? `${email}@${WriteValue}`
-      : `${email}@${currentValue}`;
-  console.log(emailValue);
+  // 회원가입 버튼
   const onClickConfirmButton = async () => {
     try {
       const data = await createUserWithEmailAndPassword(auth, emailValue, pw);
@@ -148,37 +177,14 @@ export default function SignUp({}: Props) {
       await setDoc(collectionRef, payload).then(router.push('/post-list'));
 
       alert('회원가입 성공');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      if (error.message.includes('auth/invalid-email')) {
+        alert('이메일을 확인해주세요');
+      }
     }
   };
-
-  // const onClickConfirmButton = async () => {
-  //   await createUserWithEmailAndPassword(auth, email, pw).then((data: any) => {
-  //     const remainInfo = {
-  //       email: email,
-  //       displayName: nickname,
-  //       photoURL: '/images/defaultProfile.png',
-  //     };
-
-  //     updateProfile(data.user, remainInfo);
-  //   });
-  //   const collectionRef = doc(dbService, `userInfo/${auth.currentUser.uid}`);
-  // const payload = {
-  //     userId: auth.currentUser.uid,
-  //     scraps: [],
-  //     following: [],
-  //     introduction: '안녕하세요!',
-  //   };
-
-  //   setDoc(collectionRef, payload).catch((error) => {
-  //     console.error(error);
-  //   });
-
-  //   alert('회원가입 성공');
-  //   // router("/");
-  // };
-
+  // 체크박스 확인 useEffect
   useEffect(() => {
     if (ageCheck === true && useCheck === true && marketingCheck === true) {
       setAllCheck(true);
@@ -186,21 +192,14 @@ export default function SignUp({}: Props) {
       setAllCheck(false);
     }
   }, [ageCheck, useCheck, marketingCheck]);
-
+  // 실시간 유효성검사 useEffect
   useEffect(() => {
-    if (
-      emailValid &&
-      pwValid &&
-      nicknameValid &&
-      pwVerfyValid &&
-      ageCheck &&
-      useCheck
-    ) {
+    if (emailValid && pwValid && nicknameValid && pwVerfyValid && allCheck) {
       setNotAllow(false);
     } else {
       setNotAllow(true);
     }
-  }, [emailValid, pwValid, nicknameValid, pwVerfyValid, ageCheck, useCheck]);
+  }, [emailValid, pwValid, nicknameValid, pwVerfyValid, allCheck]);
 
   return (
     <StyledBackground>
@@ -210,7 +209,7 @@ export default function SignUp({}: Props) {
           <div>
             <div className="inputTitleWrap">
               <p className="title">닉네임</p>
-              <p className="description">닉네임 8글자 이내</p>
+              <p className="description">2~8자리 / 특수문자 불가</p>
             </div>
             <div className="inputWrap">
               <input
@@ -243,14 +242,15 @@ export default function SignUp({}: Props) {
               <input
                 type="text"
                 className={
-                  !emailValid && email.length > 0 ? 'inpu error' : 'input'
+                  !emailValid && email.length > 0 ? 'input error' : 'input'
                 }
-                placeholder="test"
+                placeholder="이메일을 입력해주세요"
                 value={email}
-                autocomplete="off"
+                // autoComplete 어트리뷰트는 브라우저 자동완성 작동여부
+                autoComplete="off"
                 onChange={handleEmail}
               />
-              @
+              @{/* @ 뒷쪽 */}
               <SelectBox
                 onClick={() =>
                   setSelected((selected) => ({
@@ -265,7 +265,7 @@ export default function SignUp({}: Props) {
                 <p
                   className={
                     currentValue === '선택해주세요' && email.length > 0
-                      ? 'selectedText error'
+                      ? 'selectedText'
                       : selectBox
                       ? 'selectedText active'
                       : 'selectedText'
@@ -280,28 +280,15 @@ export default function SignUp({}: Props) {
                     <li onClick={selectTarget}>google.com</li>
                     <li onClick={selectTarget}>hanmail.net</li>
                     <li onClick={selectTarget}>daum.net</li>
+                    <li onClick={selectTarget}>kakao.com</li>
                     <li onClick={selectTarget}>nate.com</li>
-                    <li onClick={selectTarget}>직접입력하기</li>
+                    {/* <li onClick={selectTarget}>직접입력하기</li> */}
                   </ul>
                 )}
               </SelectBox>
             </div>
-            {currentValue === '직접입력하기' && (
-              <div className="inputWrap">
-                <input
-                  className="direct"
-                  placeholder={currentValue}
-                  onChange={(e) => {
-                    setWriteValue(e.target.value);
-                  }}
-                />
-              </div>
-            )}
-            <div className="error-text">
-              {currentValue === '선택해주세요' && email.length > 0 && (
-                <div className="errorMessageWrap">필수 입력 항목입니다.</div>
-              )}
-            </div>
+
+            <div className="error-text"></div>
           </div>
 
           <div>
@@ -341,7 +328,6 @@ export default function SignUp({}: Props) {
                 }
                 placeholder="비밀번호를 입력해주세요"
                 onChange={handleVerfyPw}
-                autocomplete="off"
               />
             </div>
             <div className="error-text">
@@ -374,7 +360,7 @@ export default function SignUp({}: Props) {
                 onChange={ageBtnEvent}
               />
               <span className="check-custorm" />만 14세 이상입니다
-              <span>(필수)</span>
+              <span className="check-custorm-right">(필수)</span>
             </label>
           </div>
           <div className="agree-input-wrap">
@@ -386,21 +372,11 @@ export default function SignUp({}: Props) {
                 onChange={useBtnEvent}
               />
               <span className="check-custorm" />
-              개인정보 수집/이용에 동의합니다. <span>(필수)</span>
+              개인정보 수집/이용에 동의합니다.{' '}
+              <span className="check-custorm-right">(필수)</span>
             </label>
           </div>
-          <div className="agree-input-wrap">
-            <label htmlFor="check3">
-              <input
-                type="checkbox"
-                id="check3"
-                checked={marketingCheck}
-                onChange={marketingBtnEvent}
-              />
-              <span className="check-custorm" />
-              개인정보 제3자 제공에 동의합니다.
-            </label>
-          </div>
+
           <div className="agree-input-wrap">
             <label htmlFor="check3">
               <input
@@ -411,6 +387,7 @@ export default function SignUp({}: Props) {
               />
               <span className="check-custorm" />
               서비스 이용약관에 동의합니다.
+              <span className="check-custorm-right">(필수)</span>
             </label>
           </div>
         </SignUpAgreeDiv>
@@ -451,20 +428,24 @@ const SignUpLayout = styled.div`
   background: #fff;
   margin-top: 40px;
 
+  // 개별항목 헤딩 + 맨위 '회원가입'
   .title {
     text-align: center;
     font-size: 2.125rem;
     font-weight: 700;
+    margin-left: 10px;
   }
-
+  // 인풋창 전체 묶기
   .contentWrap {
     display: flex;
     flex-direction: column;
-    gap: 26px;
-
+    gap: 10px;
+    margin-top: 45px;
+    // 개별항목 헤딩 Div
     .inputTitleWrap {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 0.875rem;
 
       > .title {
@@ -478,7 +459,7 @@ const SignUpLayout = styled.div`
         color: #adb5bd;
       }
     }
-
+    // 인풋창
     .inputWrap {
       display: flex;
       align-items: center;
@@ -488,17 +469,15 @@ const SignUpLayout = styled.div`
 
       > input {
         flex: 1;
-
         border-radius: 0.625rem;
         padding: 0.8125rem 1.25rem;
         border: 0.0625rem solid #adb5bd;
 
-        &.direct {
-          margin-top: 1rem;
-        }
-
         &.error {
           border: 1px solid red;
+        }
+        &:focus-within {
+          border: 1px solid #17171c;
         }
       }
     }
@@ -510,12 +489,19 @@ const SignUpLayout = styled.div`
 
     > button {
       width: 100%;
+
+      &:disabled {
+        background-color: #adb5bd;
+      }
     }
   }
+
   .error-text {
+    min-height: 12px;
     color: #f83e4b;
     font-size: 0.75rem;
     margin-top: 0.5rem;
+    margin-left: 5px;
     font-weight: 500;
   }
 `;
@@ -622,5 +608,9 @@ const SignUpAgreeDiv = styled.div`
       font-weight: 700;
       margin-bottom: 1.0625rem;
     }
+  }
+
+  .check-custorm-right {
+    margin-left: 2.5px;
   }
 `;

@@ -1,11 +1,9 @@
-import { app, auth, dbService } from '@/shared/firebase';
+import { auth, dbService } from '@/shared/firebase';
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
-  getAuth,
-  signInWithCustomToken,
   updateProfile,
 } from 'firebase/auth';
 import Image from 'next/image';
@@ -14,9 +12,8 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
-import { FcGoogle } from 'react-icons/fc';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import useGetReaction from '../../../components/Hooks/useGetReaction';
 type Props = {};
 
@@ -35,16 +32,13 @@ export default function SignIn({}: Props) {
 
   const [emailEmptyError, setEmailEmptyError] = useState(false);
   const [pwEmptyError, setPwEmptyError] = useState(false);
-  const [user, setUser] = useAuthState(auth);
   const [stayLoginisChecked, setStayLoginIsChecked] = useState(false);
 
-  const { follow, scrap } = useGetReaction();
-
+  // 로그인유지 버튼
   const handleRadioChange = (e: any) => {
-    console.log(e.target.checked);
     setStayLoginIsChecked(e.target.checked);
   };
-
+  // 이메일 유효성검사
   const handleEmail = function (event: any) {
     setEmail(event.target.value);
     const regex =
@@ -55,7 +49,7 @@ export default function SignIn({}: Props) {
       setEmailValid(false);
     }
   };
-
+  // 비밀번호 유효성검사
   const handlePw = function (event: any) {
     setPw(event.target.value);
     const regex =
@@ -67,16 +61,18 @@ export default function SignIn({}: Props) {
     }
   };
 
+  // 이메일 온포커스, 온블러 동작
   function handleEmailInputClick() {
     setEmailEmptyError(false);
     setEmailRegexError(false);
   }
-
+  // 비밀번호 온포커스, 온블러 동작
   function handlePwInputClick() {
     setPwEmptyError(false);
     setPwRegexError(false);
   }
 
+  //로그인 버튼동작
   const onClickLoginButton = () => {
     if (emailValid && pwValid) {
       signInWithEmailAndPassword(auth, email, pw)
@@ -102,11 +98,13 @@ export default function SignIn({}: Props) {
           email.length === 0
             ? setEmailEmptyError(true)
             : setEmailRegexError(true);
+          pw.length === 0 ? setPwEmptyError(true) : null;
           // emailRef.current?.focus();
         }
       } else if (pwValid === false) {
         {
           pw.length === 0 ? setPwEmptyError(true) : setPwRegexError(true);
+          email.length === 0 ? setEmailEmptyError(true) : null;
           // pwRef.current?.focus();
         }
       }
@@ -151,22 +149,26 @@ export default function SignIn({}: Props) {
     try {
       const result_google = await signInWithPopup(auth, googleAuth);
 
-      await updateProfile(result_google.user, {
-        photoURL: '/images/defaultProfile.png',
-      });
-
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
-      const payload = {
-        // 조건걸어서 해당값이 없을때마다 updatedoc으로 넣어주게 변경
-        profileImage: '/images/defaultProfile.png',
-        nickname: auth.currentUser?.displayName,
-        userId: auth.currentUser?.uid,
-        scraps: [...scrap],
-        following: [...follow],
-        introduction: '안녕하세요!',
-      };
+      const docSnap = await getDoc(collectionRef);
+      const isFirstLogin = !docSnap.exists();
 
-      await setDoc(collectionRef, payload);
+      if (isFirstLogin) {
+        await updateProfile(result_google.user, {
+          photoURL: '/images/defaultProfile.png',
+        });
+
+        const payload = {
+          profileImage: '/images/defaultProfile.png',
+          nickname: auth.currentUser?.displayName,
+          userId: auth.currentUser?.uid,
+          scraps: [],
+          following: [],
+          introduction: '안녕하세요!',
+        };
+
+        await setDoc(collectionRef, payload);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -174,28 +176,31 @@ export default function SignIn({}: Props) {
   };
 
   //페이스북 로그인
-
   const facebookAuth = new FacebookAuthProvider();
   const facebookLogin = async () => {
     try {
       const result_facebook = await signInWithPopup(auth, facebookAuth);
 
-      await updateProfile(result_facebook.user, {
-        photoURL: '/images/defaultProfile.png',
-      });
-
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
-      const payload = {
-        // 조건걸어서 해당값이 없을때마다 updatedoc으로 넣어주게 변경
-        profileImage: '/images/defaultProfile.png',
-        nickname: auth.currentUser?.displayName,
-        userId: auth.currentUser?.uid,
-        scraps: [...scrap],
-        following: [...follow],
-        introduction: '안녕하세요!',
-      };
+      const docSnap = await getDoc(collectionRef);
+      const isFirstLogin = !docSnap.exists();
 
-      await setDoc(collectionRef, payload).then(router.push('/post-list'));
+      if (isFirstLogin) {
+        await updateProfile(result_facebook.user, {
+          photoURL: '/images/defaultProfile.png',
+        });
+
+        const payload = {
+          profileImage: '/images/defaultProfile.png',
+          nickname: auth.currentUser?.displayName,
+          userId: auth.currentUser?.uid,
+          scraps: [],
+          following: [],
+          introduction: '안녕하세요!',
+        };
+
+        await setDoc(collectionRef, payload);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -212,12 +217,13 @@ export default function SignIn({}: Props) {
         <div className="titleWrap">로그인</div>
 
         <div className="inputDiv">
-          <div
+          <label
             id="loginInput"
             className={`inputWrap ${
               emailEmptyError || emailRegexError ? 'inputWrap-error' : ''
             }`}
-            onClick={handleEmailInputClick}
+            onFocus={handleEmailInputClick}
+            onBlur={handleEmailInputClick}
           >
             <span className="iconSpan">
               <AiOutlineMail className="inputIcon" />
@@ -229,7 +235,7 @@ export default function SignIn({}: Props) {
               value={email}
               onChange={handleEmail}
             />
-          </div>
+          </label>
           <div className="errorMessageWrapContainer">
             <div className="errorMessageWrap">
               {emailEmptyError && '필수 입력 항목입니다.'}
@@ -241,12 +247,13 @@ export default function SignIn({}: Props) {
         </div>
 
         <div className="inputDiv">
-          <div
+          <label
             id="pwInput"
             className={`inputWrap ${
               pwEmptyError || pwRegexError ? 'inputWrap-error' : ''
             }`}
-            onClick={handlePwInputClick}
+            onFocus={handlePwInputClick}
+            onBlur={handlePwInputClick}
           >
             <span className="iconSpan">
               <AiFillLock className="inputIcon" />
@@ -258,7 +265,7 @@ export default function SignIn({}: Props) {
               value={pw}
               onChange={handlePw}
             />
-          </div>
+          </label>
           <div className="errorMessageWrapContainer">
             <div className="errorMessageWrap">
               {pwEmptyError && '필수 입력 항목입니다.'}
@@ -281,7 +288,6 @@ export default function SignIn({}: Props) {
               className="stayLoginButton"
               type="checkbox"
               onChange={handleRadioChange}
-              // checked={stayLoginisChecked}
             />
             <p>로그인 유지</p>
           </label>
@@ -328,24 +334,7 @@ export default function SignIn({}: Props) {
             </div>
           </div>
         </div>
-        {/* <StyledDivTest>
-          {user ? '환영합니다,' + user.displayName + '님' : ''}
-          <button
-            onClick={() => {
-              console.log(user);
-              auth.signOut();
-            }}
-          >
-            로그아웃하기
-          </button>
-          <button
-            onClick={() => {
-              console.log(user);
-            }}
-          >
-            로그인 유저 정보
-          </button>
-        </StyledDivTest> */}
+
         <div className="LinkSignUp">
           <Link href="./sign-up" className="LinkSignUpMessage">
             아이디가 없으신가요?
@@ -384,9 +373,16 @@ const StyledDiv = styled.div`
     width: 100%;
     outline: none;
     border: none;
-    height: 48px;
-    font-size: 0.875rem;
-    font-weight: 400;
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height, or 111% */
+
+    /* Gray 09 */
+
+    color: #17171c;
   }
   .titleWrap {
     padding-top: 2.5rem;
@@ -405,12 +401,11 @@ const StyledDiv = styled.div`
   }
   .inputWrap {
     display: flex;
-    align-items: center;
-    padding: 2.4px 8px 2.4px 8px;
+    padding: 15px 8px 0 8px;
     border-bottom: 2px solid #adb5bd;
-
+    min-height: 60px;
     .iconSpan {
-      margin-right: 1.25rem;
+      margin-right: 1rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -427,7 +422,7 @@ const StyledDiv = styled.div`
     font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 20px;
     /* identical to box height, or 111% */
 
@@ -460,25 +455,18 @@ const StyledDiv = styled.div`
   }
 
   .inputWrap-error {
-    border: 0.0625rem solid red;
+    /* border: 0.0625rem solid red; */
+    border-color: red;
   }
   .errorMessageWrapContainer {
-    padding-top: 7px;
+    padding-top: 8px;
     padding-left: 5px;
-    height: 14.5px;
+    min-height: 25px;
   }
   .errorMessageWrap {
     color: #ef0000;
     font-size: 12px;
   }
-
-  /* .inputWrap:focus-within .input-error {
-    display: none;
-  }
-
-  .inputWrap:focus-within + .errorMessageWrap {
-    display: none;
-  } */
 
   .LoginButtonWrap {
     display: flex;
@@ -594,8 +582,4 @@ const StyledDiv = styled.div`
     color: #868e96;
     text-decoration: none;
   }
-`;
-
-const StyledDivTest = styled.div`
-  position: fixed;
 `;

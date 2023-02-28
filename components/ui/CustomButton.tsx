@@ -11,6 +11,7 @@ interface CustomButtonProps {
   fontColor?: string;
   onClick?: any;
   border?: string;
+  disabled?: boolean;
 }
 
 export default function CustomButton({
@@ -22,6 +23,7 @@ export default function CustomButton({
   fontColor,
   onClick,
   border,
+  disabled,
 }: CustomButtonProps) {
   return (
     <Button
@@ -32,6 +34,7 @@ export default function CustomButton({
       onClick={onClick}
       fontColor={fontColor}
       border={border}
+      disabled={disabled}
     >
       {children}
     </Button>
