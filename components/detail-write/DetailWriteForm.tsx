@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { Quill } from 'react-quill';
 import { useRouter } from 'next/router';
 import { v4 } from 'uuid';
+import Image from 'next/image';
 axios.defaults.withCredentials = true;
 
 export interface DetailWriteSearchProps {
@@ -216,7 +217,7 @@ const DetailWriteForm = () => {
 
     const fileRef = await ref(
       storage,
-      `images/${auth.currentUser.uid}/${v4()}`,
+      `images/${auth.currentUser?.uid}/${v4()}`,
     );
     console.log(v4(), 'v4()2');
     const uploadFile = await uploadString(fileRef, attachment, 'data_url');
@@ -289,16 +290,16 @@ const DetailWriteForm = () => {
           <span className="title_span">테스크테리어 사진을 추가해주세요</span>
           <DeatailWritePhotoBox>
             {attachment && (
-              <div>
-                <img
-                  src={attachment}
-                  style={{ width: '150px', height: '150px' }}
-                />
-              </div>
+              <Image
+                src={attachment}
+                width={150}
+                height={150}
+                alt="attachmentImg"
+              />
             )}
 
             <label className="deskImgLabel" htmlFor="deskImg">
-              {/* <img src={chooseImage.src} /> */}
+              {/* <Image src={chooseImage.src} /> */}
               <span>이미지를 추가해주세요</span>
             </label>
             <input

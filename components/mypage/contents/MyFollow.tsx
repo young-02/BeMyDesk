@@ -27,7 +27,7 @@ function MyFollow({ myFollow, followCount }: any) {
           >
             <StyledDivLeft>
               {profile.profileImage ? (
-                <img
+                <Image
                   className="profileImage"
                   src={profile.profileImage}
                   alt="Image"
@@ -35,7 +35,7 @@ function MyFollow({ myFollow, followCount }: any) {
                   height={202}
                 />
               ) : (
-                <img
+                <Image
                   className="profileImage"
                   src="/images/defaultProfile.png"
                   alt="Image"

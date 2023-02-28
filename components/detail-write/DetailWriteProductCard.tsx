@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
 import { DetailWriteSearchProps } from './DetailWriteForm';
@@ -30,12 +31,11 @@ const DetailWriteProductCard = ({ selectList }: any) => {
                 alignItems: 'center',
               }}
             >
-              <img
+              <Image
                 src={i.image}
-                style={{
-                  width: '150px',
-                  height: '150px',
-                }}
+                width={150}
+                height={150}
+                alt="selectListImg"
               />
               <div
                 style={{

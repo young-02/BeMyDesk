@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import ChangePassword from './editProfile/ChangePassword';
 import ChangeProfile from './editProfile/ChangeProfile';
 import { BiCamera } from 'react-icons/bi';
+import Image from 'next/image';
 
 export function ProfileEditModal({
   setProfileEditModalOpen,
@@ -71,12 +72,15 @@ export function ProfileEditModal({
               onClick={handleImageClick}
               className="modalProfileImageContainer"
             >
-              <img
+              <Image
                 src={profileImageUrl}
                 alt="ProfileImage"
-                onClick={handleImageClick}
+                // onClick={handleImageClick}
                 className="modalProfileImage"
+                width={202}
+                height={202}
               />
+
               <div className="modalProfileImageOverlay">
                 <BiCamera className="modalProfileImageOverlayIcon" />
                 <p className="modalProfileImageOverlayText">프로필 사진 변경</p>
@@ -193,8 +197,6 @@ const StyledEditProfileModalContainer = styled.div`
       .modalFirstLine {
         margin-top: 40px;
         .modalProfileImage {
-          width: 202px;
-          height: 202px;
           border-radius: 10px;
         }
         .modalProfileImageOverlay {

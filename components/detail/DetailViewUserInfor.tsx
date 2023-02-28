@@ -6,6 +6,7 @@ import useCheckLogin from '../Hooks/useCheckLogin';
 import useGetReaction from '../Hooks/useGetReaction';
 import CustomButton from '../ui/CustomButton';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 export default function DetailViewUserInfor({ detail }) {
   const router = useRouter();
@@ -88,11 +89,15 @@ export default function DetailViewUserInfor({ detail }) {
   return (
     <DetailViewUserInforLayout>
       <UserProfile>
-        <img
-          className="user-profile"
-          src={userProfileImg}
-          alt="userProfileImg"
-        />
+        <div className="user-profile">
+          <Image
+            src={userProfileImg}
+            alt="userProfileImg"
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
+
         <div className="user-information">
           <p className="user-id">{userNickname ?? '닉네임'}</p>
           <p className="user-job">{jobCategory}</p>
@@ -191,10 +196,11 @@ const UserProfile = styled.div`
   align-items: center;
 
   .user-profile {
+    position: relative;
     width: 4rem;
     height: 4rem;
     border-radius: 100%;
-    object-fit: cover;
+    overflow: hidden;
   }
   .user-information {
     margin-left: 2.5rem;

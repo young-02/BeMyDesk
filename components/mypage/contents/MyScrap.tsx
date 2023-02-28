@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
-import { HiOutlineTrash } from 'react-icons/hi';
+
 function MyScrap({ myScrap, scrapCount }: any) {
   if (scrapCount == '0') {
     return (
@@ -24,7 +24,7 @@ function MyScrap({ myScrap, scrapCount }: any) {
           <StyledContainer key={post.id}>
             <StyledLeftDiv>
               {post.postImage1 ? (
-                <img
+                <Image
                   src={post.postImage1}
                   alt="postImage1"
                   width={282}
@@ -33,7 +33,7 @@ function MyScrap({ myScrap, scrapCount }: any) {
                   className="img"
                 />
               ) : (
-                <img
+                <Image
                   src="/images/noImage.png"
                   alt="postImage1"
                   width={282}
@@ -52,18 +52,22 @@ function MyScrap({ myScrap, scrapCount }: any) {
               </div>
               <div className="thirdLine">
                 <div className="ProfileDiv">
-                  <img
-                    src="/images/defaultProfile.png"
-                    alt="profileImage"
-                    className="profileImage"
-                  ></img>
+                  <div className="profileImage">
+                    <Image
+                      src="/images/defaultProfile.png"
+                      alt="profileImage"
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
                   <p className="ProfileNickname">{post.userNickname}</p>
                 </div>
-                <img
+                <Image
                   src="/images/BLUE_scrap.png"
                   alt="bookmarkIcon"
-                  className="deleteButton"
-                ></img>
+                  width={20}
+                  height={25}
+                />
                 {/* <HiOutlineTrash className="deleteButton" /> */}
               </div>
             </StyledRightDiv>
@@ -190,12 +194,14 @@ const StyledRightDiv = styled.div`
       align-items: center;
 
       .profileImage {
+        position: relative;
         border-radius: 50%;
         width: 30px;
         height: 30px;
-        object-fit: cover;
+        overflow:hidden;
         margin-bottom: 3px;
       }
+
       .ProfileNickname {
         margin-left: 13px;
         /* Pretendard Bold 12 */
@@ -211,10 +217,6 @@ const StyledRightDiv = styled.div`
 
         color: #17171c;
       }
-    }
-    .deleteButton {
-      width: 20px;
-      height: 25px;
     }
   }
 `;
