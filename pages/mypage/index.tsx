@@ -295,6 +295,7 @@ const StyledDivProfile = styled.div`
     .settingIcon {
       display: flex;
       align-items: center;
+      cursor: pointer;
     }
   }
 `;

@@ -138,7 +138,7 @@ export default function SignUp({}: Props) {
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const payload = {
         profileImage: '/images/defaultProfile.png',
-        nickname: auth.currentUser?.displayName,
+        nickname: nickname,
         userId: auth.currentUser?.uid,
         scraps: [],
         following: [],
