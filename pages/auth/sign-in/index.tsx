@@ -157,7 +157,6 @@ export default function SignIn({}: Props) {
         await updateProfile(result_google.user, {
           photoURL: '/images/defaultProfile.png',
         });
-
         const payload = {
           profileImage: '/images/defaultProfile.png',
           nickname: auth.currentUser?.displayName,
