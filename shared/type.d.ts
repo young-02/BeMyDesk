@@ -52,3 +52,8 @@ declare interface userInforType {
   scraps?: string[];
   userId?: string;
 }
+
+declare interface RouterQuery {
+  order: string;
+  select: string;
+}
