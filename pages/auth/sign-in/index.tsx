@@ -203,8 +203,8 @@ export default function SignIn({}: Props) {
   };
 
   useEffect(() => {
-    console.log('userInfo', auth.currentUser);
-  }, [auth.currentUser]);
+    console.log('userInfo', auth?.currentUser);
+  }, [auth?.currentUser]);
 
   return (
     <StyledBackground>
