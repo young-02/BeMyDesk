@@ -28,7 +28,7 @@ function MyPost({ myPost, postCount }: any) {
           <StyledContainer key={post.id}>
             <StyledLeftDiv>
               {post.postImage1 ? (
-                <img
+                <Image
                   src={post.postImage1}
                   alt="postImage1"
                   width={282}
@@ -37,7 +37,7 @@ function MyPost({ myPost, postCount }: any) {
                   className="img"
                 />
               ) : (
-                <img
+                <Image
                   src="/images/noImage.png"
                   alt="postImage1"
                   width={282}
@@ -50,7 +50,7 @@ function MyPost({ myPost, postCount }: any) {
             <StyledRightDiv>
               <div className="firstLine">
                 <p className="Title">{post.postTitle}</p>
-                <img src="" alt="" />
+                <Image src="" alt="" />
               </div>
 
               <div className="secondLine">

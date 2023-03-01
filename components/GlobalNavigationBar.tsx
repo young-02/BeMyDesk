@@ -31,20 +31,32 @@ function GlobalNavigationBar() {
 
         {isLogin ? (
           <LoginGNBDiv>
-            <img
-              className="profile-img"
-              src={auth.currentUser.photoURL}
-              alt="profilImg"
-            />
+            <div className="profile-img">
+              <Image
+                src={auth.currentUser?.photoURL}
+                alt="profilImg"
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
             <div
               className="login-menu"
               onClick={() => setIsOpenMenu((prev) => !prev)}
             >
               {pathname === '/main' ? (
-                
-                <img src="/images/mainLoginGNB.png" alt="loginGNB" />
+                <Image
+                  src="/images/mainLoginGNB.png"
+                  alt="loginGNB"
+                  layout="fill"
+                  objectFit="contain"
+                />
               ) : (
-                <img src="/images/loginGNB.png" alt="loginGNB" />
+                <Image
+                  src="/images/loginGNB.png"
+                  alt="loginGNB"
+                  layout="fill"
+                  objectFit="contain"
+                />
               )}
               {isOpenMenu && (
                 <div className="login-sub-menu">
@@ -126,13 +138,17 @@ const LoginGNBDiv = styled.div`
   gap: 0.875rem;
 
   .profile-img {
+    position: relative;
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 100%;
+    overflow: hidden;
   }
   .login-menu {
     position: relative;
     cursor: pointer;
+    width: 1rem;
+    height: 1rem;
 
     .login-sub-menu {
       position: absolute;

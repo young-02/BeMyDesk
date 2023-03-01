@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import ReactHtmlParser from 'html-react-parser';
+import Image from 'next/image';
 type Props = {};
 
 export default function DetailViewProducts({ detail }) {
@@ -13,11 +14,14 @@ export default function DetailViewProducts({ detail }) {
       <div className="product-wrap">
         {products?.map((product) => (
           <div className="product-list" key={product.title}>
-            <img
-              className="product-img"
-              src={product.images}
-              alt={product.title}
-            />
+            <div className="product-img">
+              <Image
+                src={product.images}
+                alt={product.title}
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
             <p className="product-title">{ReactHtmlParser(product.title)}</p>
             <p className="product-hasTag">#{product.hashTag}</p>
           </div>
@@ -58,8 +62,9 @@ const DetailViewProductsLayout = styled.div`
     text-align: center;
 
     .product-img {
+      position: relative;
+      width: 100%;
       height: 105px;
-      object-fit: cover;
     }
 
     .product-title {

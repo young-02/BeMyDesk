@@ -5,6 +5,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper';
+import Image from 'next/image';
 
 type Props = {};
 
@@ -18,10 +19,16 @@ export default function DetailViewSlide({ detail }) {
         className="mySwiper"
       >
         <SwiperSlide>
-          <img className="post-img" src={detail.postImage1} alt="postImage1" />
+          <Image
+            src={detail.postImage1}
+            alt="postImage1"
+            layout="fill"
+            objectFit="cover"
+          />
         </SwiperSlide>
         {/* <SwiperSlide>
-          <img className="post-img" src={detail.postImage2} alt="postImage1" />
+          <Image className="post-img" src={detail.postImage2} alt="postImage1"  layout="fill"
+            objectFit="cover"/>
         </SwiperSlide> */}
       </Swiper>
     </DetailViewSlideLayout>
@@ -32,11 +39,10 @@ const DetailViewSlideLayout = styled.div`
   border-radius: 0.625rem;
   overflow: hidden;
 
-  .post-img {
-    display: block;
+  .swiper-wrapper {
+    position: relative;
     width: 100%;
-   height: 37.25rem;
-    object-fit: cover;
+    height: 37.25rem;
   }
 
   .swiper-pagination {

@@ -99,7 +99,7 @@ export default function MyPage({}: Props) {
     };
 
     fetchUserDataHandler();
-  }, [auth.currentUser]);
+  }, [auth?.currentUser]);
 
   if (loading) {
     return <div>로딩중입니다...</div>;
@@ -131,7 +131,7 @@ export default function MyPage({}: Props) {
         <StyledDivMain>
           <StyledDivProfile>
             <div>
-              <img
+              <Image
                 className="profileImage"
                 src={user.photoURL}
                 alt="ProfileImage"
