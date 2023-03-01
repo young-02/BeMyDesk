@@ -120,7 +120,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       e.preventDefault();
       setTitle(e.target.value);
     },
-    [title],
+    [], //title
   );
 
   // 직업선택 onChange 함수

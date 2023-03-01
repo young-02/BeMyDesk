@@ -37,9 +37,8 @@ export default function MyPage({}: Props) {
   const followCount = myFollow.length;
 
   const [profileData, setProfileData] = useState({});
-
+  const uid = auth.currentUser?.uid;
   useEffect(() => {
-    const uid = auth.currentUser?.uid;
     if (!uid) {
       return;
     }
@@ -99,7 +98,7 @@ export default function MyPage({}: Props) {
     };
 
     fetchUserDataHandler();
-  }, [auth?.currentUser]);
+  }, [uid]);
 
   if (loading) {
     return <div>로딩중입니다...</div>;

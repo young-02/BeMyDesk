@@ -6,7 +6,7 @@ import { dbService, auth } from '../../../../shared/firebase';
 
 type Props = {};
 
-const edit = (props: Props) => {
+const Edit = (props: Props) => {
   const [initialValues, setInitialValues] = useState();
   const router = useRouter();
   const { id } = router.query;
@@ -42,4 +42,4 @@ const edit = (props: Props) => {
   );
 };
 
-export default edit;
+export default Edit;
