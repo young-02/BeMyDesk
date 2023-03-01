@@ -6,20 +6,22 @@ import PostListCard from '../../components/PostListCard';
 import useFilter from '../../components/Hooks/useFilter';
 
 export default function PostList() {
-  // 현재 페이지의 query 값을 가져옵니다.
-  const router = useRouter();
-  const { query: currentQuery }: any = router;
-  const [postList] = useFilter(currentQuery);
-
   // 현재 로그인한 유저 정보 가져오기
   const auth = getAuth();
   const currentUserId = auth.currentUser?.uid;
+
+  // 현재 페이지의 query 값을 가져옵니다.
+  const router = useRouter();
+  const { query: currentQuery }: any = router;
+  const { isLoading, isError, data: postList, error } = useFilter(currentQuery);
 
   return (
     <PostListLayout>
       <Header>
         <PostListFilterBar />
       </Header>
+      {isLoading && <div>Loading...</div>}
+      {isError && <div>Error: {error.message}</div>}
       <PostListBox>
         {postList?.map((post) => (
           <PostListCard
@@ -54,7 +56,7 @@ const PostListBox = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   width: 75rem;
-  height: fit-content; //
+  height: fit-content;
   padding-bottom: 2rem;
   gap: 1rem;
   ::-webkit-scrollbar {

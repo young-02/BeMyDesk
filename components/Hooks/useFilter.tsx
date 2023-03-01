@@ -1,19 +1,12 @@
-import { useEffect, useState } from 'react';
-import {
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  where,
-} from 'firebase/firestore';
+import { collection, query, orderBy, where, getDocs } from 'firebase/firestore';
 import { dbService } from '../../shared/firebase';
+import { useQuery } from 'react-query';
 
 type JobCategoryProps = { [key: string]: string };
 type PostFiltersProps = { [key: string]: any };
 
-const useFilter = (currentQuery: RouterQuery) => {
-  const [postList, setPostList] = useState<PostType[]>();
-
+// READ post-list
+const getPost = async (currentQuery: RouterQuery) => {
   // 직업별 필터 내 카테고리
   const jobCategory: JobCategoryProps = {
     developer: '개발자',
@@ -52,19 +45,20 @@ const useFilter = (currentQuery: RouterQuery) => {
 
   const filter = postFilters[currentQuery.order] ?? defaultFilter;
 
-  // READ post-list
-  useEffect(() => {
-    onSnapshot(filter, (snapshot: any) => {
-      const postData: any = snapshot.docs.map((doc: any) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      console.log('snapshot', snapshot);
-      setPostList(postData);
-    });
-  }, [currentQuery]);
+  const querySnapshot = await getDocs(filter);
+  const dataArr: PostType[] = [];
+  querySnapshot.forEach((doc) => {
+    dataArr.push({ ...doc.data(), id: doc.id });
+  });
 
-  return [postList];
+  return dataArr;
 };
 
+export const useFilter = (currentQuery: RouterQuery) => {
+  return useQuery(['PostList', currentQuery], () => getPost(currentQuery), {
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+};
 export default useFilter;

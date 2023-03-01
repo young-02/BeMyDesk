@@ -7,6 +7,7 @@ import Top from '@/components/Search';
 import GlobalNavigationBar from '../components/GlobalNavigationBar';
 import styled from 'styled-components';
 import Footer from '@/components/Footer';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 declare global {
   interface Window {
@@ -35,6 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
       ></Script>
       <QueryClientProvider client={client}>
         <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
       <Footer />
     </>
