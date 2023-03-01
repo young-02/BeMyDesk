@@ -99,7 +99,7 @@ export default function MyPage({}: Props) {
     };
 
     fetchUserDataHandler();
-  }, [auth.currentUser]);
+  }, [auth?.currentUser]);
 
   if (loading) {
     return <div>로딩중입니다...</div>;
@@ -131,7 +131,7 @@ export default function MyPage({}: Props) {
         <StyledDivMain>
           <StyledDivProfile>
             <div>
-              <img
+              <Image
                 className="profileImage"
                 src={user.photoURL}
                 alt="ProfileImage"
@@ -264,6 +264,7 @@ const StyledDivProfile = styled.div`
   .thirdLine {
     display: flex;
     justify-content: space-between;
+
     .followerDiv {
       display: flex;
       align-items: center;
@@ -280,7 +281,7 @@ const StyledDivProfile = styled.div`
         color: #868e96;
       }
       .followerCount {
-        margin-left: 10px;
+        margin-left: 8px;
         font-family: 'Pretendard';
         font-style: normal;
         font-weight: 700;
@@ -293,8 +294,7 @@ const StyledDivProfile = styled.div`
     }
 
     .settingIcon {
-      display: flex;
-      align-items: center;
+      cursor: pointer;
     }
   }
 `;

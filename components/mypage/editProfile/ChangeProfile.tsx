@@ -6,7 +6,9 @@ import styled from 'styled-components';
 
 function ChangeProfile({ user, profileData }: any) {
   //자기소개
-  const [countCharacters, setCountCharacters] = useState(0);
+  const [countCharacters, setCountCharacters] = useState(
+    profileData?.introduction.length,
+  );
   const [Characters, setCharacters] = useState(profileData?.introduction);
   //닉네임
   const [nickNameEdit, setNickNameEdit] = useState('');
@@ -45,10 +47,21 @@ function ChangeProfile({ user, profileData }: any) {
   const handleDivClick = () => {
     setNicknameInputEnable(true);
   };
+  // 닉네임 인풋 포커스
+  const handleNicknameInputFocus = () => {
+    setErrorNickNameEmpty(false);
+    setErrorNickNameRegex(false);
+    setProfileChangeDone(false);
+  };
+  // 자기소개 인풋 포커스
 
+  const handleIntroductionInputFocus = () => {
+    setErrorIntroductionEmpty(false);
+    setProfileChangeDone(false);
+  };
   // 적용 버튼
   const profileChangeConfirmButtonHandler = function () {
-    const regex = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,8}$/;
+    const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$/;
     const collectionRef = doc(dbService, `userInfo/${user.uid}`);
 
     // 1. 닉네임 활성화 여부
@@ -120,76 +133,257 @@ function ChangeProfile({ user, profileData }: any) {
       inputRef.current?.focus();
     }
   }, [nicknameInputEnable, inputRef]);
+
   return (
     <ProfileEdit>
-      <div>닉네임</div>
-      <div onClick={handleDivClick}>
-        <input
-          className="inputNickname"
-          type="text"
-          placeholder={
-            !nicknameInputEnable ? user.displayName : '닉네임을 입력하세요'
-          }
-          disabled={!nicknameInputEnable}
-          onChange={nickNameEditonChangeHandler}
-          ref={inputRef}
-        />
+      <div className="ProfileEditFirstLine">
+        <p className="ProfileEditHeadTitle">닉네임</p>
+        <div onClick={handleDivClick}>
+          <input
+            className={`inputNickname ${
+              errorNickNameRegex || errorNickNameEmpty ? 'error' : ''
+            }`}
+            type="text"
+            placeholder={
+              !nicknameInputEnable ? user.displayName : '닉네임을 입력하세요'
+            }
+            disabled={!nicknameInputEnable}
+            onChange={nickNameEditonChangeHandler}
+            ref={inputRef}
+            onBlur={() => {
+              setErrorNickNameEmpty(false);
+              setErrorNickNameRegex(false);
+            }}
+            onFocus={handleNicknameInputFocus}
+          />
+          <div className="errorDiv">
+            <p className="errorMessage">
+              {errorNickNameRegex ? '닉네임 양식을 확인해주세요 2~8자' : null}
+            </p>
+            <p className="errorMessage">
+              {errorNickNameEmpty ? '필수 입력사항입니다' : null}
+            </p>
+          </div>
+        </div>
       </div>
 
-      <br />
-      <br />
-      <div>프로필소개</div>
+      <div className="ProfileEditSecondLine">
+        <p className="ProfileEditHeadTitle">프로필소개</p>
+        <textarea
+          className={`ProfileEditIntroductionInput ${
+            errorIntroductionEmpty ? 'error' : ''
+          }`}
+          onChange={countOnChangeHandler}
+          value={Characters}
+          onBlur={() => {
+            setErrorIntroductionEmpty(false);
+          }}
+          onFocus={handleIntroductionInputFocus}
+        />
+        <div className="bottomProfileDiv">
+          <p className="errorMessage">
+            {errorIntroductionEmpty ? '필수 입력사항입니다.' : null}
+          </p>
+          <p className="ProfileEditIntroductionCount">{countCharacters}/50</p>
+        </div>
+      </div>
 
-      <textarea
-        onChange={countOnChangeHandler}
-        value={Characters}
-        style={{ height: '3em' }}
-        rows={3}
-      />
-      <p>{countCharacters}/50</p>
-      <div>
-        <div>
-          <h3>에러메세지</h3>
-          <p>
+      <div className="ProfileEditThirdLine">
+        <div className="profileChangeDoneMessageDiv">
+          <p className="profileChangeDoneMessage">
             {profileChangeDone
               ? '프로필 정보를 성공적으로 변경하였습니다.'
               : null}
           </p>
-          <p>
-            {errorNickNameRegex ? '닉네임 양식을 확인해주세요 2~8자' : null}
-          </p>
-          <p>{errorNickNameEmpty ? '(닉네임)필수 입력사항입니다' : null}</p>
-          <p>{errorIntroductionEmpty ? '자기소개를 입력해주세요' : null}</p>
         </div>
-        <button onClick={profileChangeConfirmButtonHandler}>
-          프로필 정보변경 적용하기
-        </button>
+        <div className="ProfileEditThirdLineApplyButtonDiv">
+          <button
+            className="ProfileEditThirdLineApplyButton"
+            onClick={profileChangeConfirmButtonHandler}
+          >
+            변경하기
+          </button>
+        </div>
       </div>
     </ProfileEdit>
   );
 }
 
 const ProfileEdit = styled.div`
-  .inputNickname {
-    /* Pretendard Medium 18 */
+  textarea {
+    border: none;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+    resize: none; /*remove the resize handle on the bottom right*/
+  }
+
+  display: flex;
+  flex-direction: column;
+  .ProfileEditHeadTitle {
+    /* Pretendard Bold 20 */
 
     font-family: 'Pretendard';
     font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
+    font-weight: 700;
+    font-size: 20px;
     line-height: 20px;
-    /* identical to box height, or 111% */
+    /* identical to box height, or 100% */
 
     /* Gray 09 */
 
     color: #17171c;
+    margin-bottom: 10px;
   }
 
-  .inputNickname:focus-within {
-    border-bottom: 5px solid #206efb;
-    .inputIcon {
+  .ProfileEditFirstLine {
+    .inputNickname {
+      width: 87%;
+      height: 42px;
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 20px;
+      /* or 111% */
+
+      /* Gray 09 */
+
+      color: #17171c;
+      border-radius: 0.625rem;
+      border: 0.0625rem solid #adb5bd;
+      padding: 0 20px;
+    }
+    .inputNickname:focus-within {
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 20px;
+      /* or 111% */
+
+      display: flex;
+      align-items: center;
+      /* Gray 09 */
+      padding: 0 20px;
+      color: #17171c;
+      border: 1px solid #17171c;
+      border-radius: 10px;
+    }
+    .errorDiv {
+      min-height: 35px;
+    }
+  }
+
+  .ProfileEditSecondLine {
+    .ProfileEditIntroductionInput {
+      width: 87%;
+      height: 60px;
+
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      /* or 125% */
+
+      /* Gray 09 */
+
+      color: #17171c;
+      border-radius: 0.625rem;
+      border: 0.0625rem solid #adb5bd;
+      padding: 20px;
+    }
+    .ProfileEditIntroductionInput:focus-within {
+      color: #17171c;
+      border: 1px solid #17171c;
+    }
+
+    .bottomProfileDiv {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      min-height: 35px;
+    }
+    .ProfileEditIntroductionCount {
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 10px;
+      line-height: 12px;
+      /* identical to box height, or 120% */
+
+      text-align: right;
+      padding-right: 35px;
+      padding-top: 5px;
+      /* Primary 01 */
+
       color: #206efb;
     }
+  }
+  .ProfileEditThirdLine {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    min-height: 80px;
+    margin: 120px 0 0 0;
+
+    .profileChangeDoneMessageDiv {
+      .profileChangeDoneMessage {
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 16px;
+        color: #206efb;
+        margin-right: 5px;
+      }
+    }
+    .ProfileEditThirdLineApplyButtonDiv {
+      .ProfileEditThirdLineApplyButton {
+        width: 132px;
+        height: 48px;
+        background: #206efb;
+        border-radius: 10px;
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 20px;
+        text-align: center;
+        color: #ffffff;
+        margin-top: 5px;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .errorMessage {
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+
+    display: flex;
+    align-items: center;
+
+    /* Point Red */
+
+    color: #f83e4b;
+    margin-left: 5px;
+    margin-top: 3px;
+  }
+
+  .inputNickname.error,
+  .ProfileEditIntroductionInput.error {
+    border-color: #f83e4b;
   }
 `;
 

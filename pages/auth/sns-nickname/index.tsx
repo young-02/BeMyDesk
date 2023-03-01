@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function FindPassword() {
+function SnsNickname() {
   return (
     <StyledBackground>
-      <StyledDiv>sadas</StyledDiv>
+      <StyledDiv></StyledDiv>
     </StyledBackground>
   );
 }
@@ -33,5 +33,4 @@ const StyledDiv = styled.div`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
 `;
-
-export default FindPassword;
+export default SnsNickname;

@@ -3,6 +3,7 @@ import DetailWriteSearchModal from './DetailWriteSearchModal';
 import styled from 'styled-components';
 import axios from 'axios';
 import close from 'public/images/close.png';
+import Image from 'next/image';
 
 const parse = require('html-react-parser');
 
@@ -48,7 +49,13 @@ const DetailWriteSearch = ({
               {/* <span className="search">직접 등록하기</span> */}
             </div>
             <button className="closeBtn" onClick={onClose}>
-              <img className="closeBtnImage" src={close.src} />
+              <Image
+                className="closeBtnImage"
+                src={close.src}
+                width={24}
+                height={24}
+                alt="closeBtnImage"
+              />
             </button>
           </DetailWriteSearchBox>
           <p className="search_products">제품을 검색해주세요</p>
@@ -90,15 +97,21 @@ const DetailWriteSearch = ({
         </div>
         <DetailWriteSearchBoxBottom>
           {list?.map((item: any) => (
-            <PickProductsBox>
-              <div key={item.productId} className="pickProducts">
-                {parse(item.title)}
-              </div>
-              <div>
-                <button onClick={() => deleteProduct(item)}>
-                  <img className="closeBtn" src={close.src} />
-                </button>
-              </div>
+            <PickProductsBox key={item.productId}>
+              <div className="pickProducts">{parse(item.title)}</div>
+
+              <button
+                onClick={() => deleteProduct(item)}
+                className="closeBtnImage"
+              >
+                <Image
+                  className="closeBtn"
+                  src={close.src}
+                  alt="closeBtn"
+                  width={24}
+                  height={24}
+                />
+              </button>
             </PickProductsBox>
           ))}
           <ButtonBox>
