@@ -21,8 +21,9 @@ export default function useGetReaction() {
         (auth.currentUser?.uid == item.id && setFollow(item.following)) ||
         (auth.currentUser?.uid == item.id && setScrap(item.scraps)),
     );
-  }, [follow, scrap]);
+  }, [userInfor, follow, scrap]);
   // userInfor.map((item) =>  setGetUser(item));
   // console.log('getUser',getUser)
+
   return { userInfor, follow, scrap };
 }

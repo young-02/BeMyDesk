@@ -31,7 +31,7 @@ const DetailWriteProductCard = ({ selectList }: any) => {
                 <CardBox>
                   <div className="card">
                     <Image
-                      src={i.image}
+                      src={i.images}
                       width={150}
                       height={150}
                       alt="selectListImg"
