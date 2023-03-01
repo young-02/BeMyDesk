@@ -202,9 +202,9 @@ export default function SignIn({}: Props) {
     router.push('/post-list');
   };
 
-  useEffect(() => {
-    console.log('userInfo', auth?.currentUser);
-  }, [auth?.currentUser]);
+  // useEffect(() => {
+  //   console.log('userInfo', auth?.currentUser);
+  // }, [auth?.currentUser]);
 
   return (
     <StyledBackground>

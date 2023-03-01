@@ -17,10 +17,11 @@ export default function useGetReaction() {
     );
 
     userInfor?.map(
-      (item) => auth.currentUser?.uid == item.id && setFollow(item.following)|| auth.currentUser?.uid == item.id && setScrap(item.scraps),
+      (item) =>
+        (auth.currentUser?.uid == item.id && setFollow(item.following)) ||
+        (auth.currentUser?.uid == item.id && setScrap(item.scraps)),
     );
-  }, [auth.currentUser?.uid, follow,scrap]);
-  // userInfor.map((item) =>  setGetUser(item));
-  // console.log('getUser',getUser)
-  return { userInfor, follow ,scrap};
+  }, [follow, scrap]);
+
+  return { userInfor, follow, scrap };
 }

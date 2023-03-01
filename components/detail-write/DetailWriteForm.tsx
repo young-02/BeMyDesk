@@ -120,14 +120,12 @@ const DetailWriteForm = () => {
   };
 
   // 글쓰기 폼 제목 입력
-  const inputTitle = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      setTitle(e.target.value);
-      console.log('제목 인풋');
-    },
-    [title],
-  );
+  const inputTitle = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setTitle(e.target.value);
+    console.log('제목 인풋');
+  }, []); // title;
+ 
 
   // 직업선택 onChange 함수
   const getJob = (e: any) => {
