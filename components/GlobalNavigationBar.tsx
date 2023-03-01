@@ -12,6 +12,8 @@ function GlobalNavigationBar() {
   const { pathname } = router;
   const { isLogin, logOut } = useCheckLogin();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const userProfilImg =
+    auth.currentUser?.photoURL ?? '/images/Padeeffillortu.png';
 
   return (
     <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>
@@ -39,7 +41,7 @@ function GlobalNavigationBar() {
           <LoginGNBDiv>
             <div className="profile-img">
               <Image
-                src={auth.currentUser?.photoURL}
+                src={userProfilImg}
                 alt="profilImg"
                 layout="fill"
                 objectFit="cover"
