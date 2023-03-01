@@ -6,7 +6,17 @@ type Props = {};
 export default function DetailWrite({}: Props) {
   return (
     <>
-      <DetailWriteForm />
+      <DetailWriteForm
+        initialValues={{
+          title: '',
+          content: '',
+          selectJob: '',
+          attachment: '',
+          list: [],
+          selectList: [],
+        }}
+        mode={'create'}
+      />
     </>
   );
 }

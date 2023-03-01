@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import Comment from '../post-list/Comment/Comment';
 import DetailViewProducts from './DetailViewProducts';
-import { doc, deleteDoc } from 'firebase/firestore';
+import { doc, deleteDoc, getDoc } from 'firebase/firestore';
 import { dbService, auth } from '../../shared/firebase';
 
 type Props = {};
@@ -20,7 +20,17 @@ export default function DetailView({}) {
   const deletePost = async () => {
     alert('삭제?');
     await deleteDoc(doc(dbService, 'postData', router.query.id));
-    router.push('/');
+    router.push('/post-list');
+  };
+
+  const updatePost = async () => {
+    // getDoc(doc(dbService, 'postData', router.query.id)).then((doc) => {
+    //   const data = doc.data();
+    //   // console.log(data, 'data');
+    //   // setInitialValues(data as any);
+    // });
+    alert('수정?');
+    router.push(`/detail/write/${router.query.id}/edit`);
   };
 
   return (
@@ -33,7 +43,7 @@ export default function DetailView({}) {
                 {auth.currentUser?.uid === detail.userId && (
                   <>
                     <button onClick={deletePost}>삭제</button>
-                    <button>수정</button>
+                    <button onClick={updatePost}>수정</button>
                   </>
                 )}
 
