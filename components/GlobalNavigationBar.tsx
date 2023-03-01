@@ -22,9 +22,15 @@ function GlobalNavigationBar() {
         <Link href="/post-list" className="button">
           포스트
         </Link>
-        <Link href="/detail/write" className="button">
-          글쓰기
-        </Link>
+        {isLogin ? (
+          <Link href="/detail/write" className="button">
+            글쓰기
+          </Link>
+        ) : (
+          <Link href="/auth/sign-in" className="button">
+            글쓰기
+          </Link>
+        )}
       </div>
       <div>
         <Search pathname={pathname} />

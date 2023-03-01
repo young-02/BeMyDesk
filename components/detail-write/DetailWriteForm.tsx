@@ -2,32 +2,26 @@ import React, { useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import DetailWriteSearch from './DetailWriteSearch';
 import DetailWriteProductCard from './DetailWriteProductCard';
-import { listProps } from './DetailWriteSearch';
 import axios from 'axios';
 import QuillEditor from './DetailWriteFormEditor';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { dbService, auth, storage } from '../../shared/firebase';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import Link from 'next/link';
-import { Quill } from 'react-quill';
 import { useRouter } from 'next/router';
 import { v4 } from 'uuid';
+import CustomButton from '../ui/CustomButton';
+
 import Image from 'next/image';
 axios.defaults.withCredentials = true;
 
-export interface DetailWriteSearchProps {
-  item?: listProps;
-  list?: any[];
-}
-
 // 글쓰기 페이지 폼 함수입니다
-const DetailWriteForm = () => {
+const DetailWriteForm = ({ initialValues, mode }: any) => {
   const router = useRouter();
-  // console.log('form 자체');
 
   // 모달 관리 State
   const [isModalShow, setIsModalShow] = useState(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(initialValues?.title);
 
   // 검색어 state
   const [searchWord, setSearchWord] = useState('');
@@ -36,28 +30,30 @@ const DetailWriteForm = () => {
   const [data, setData] = useState<any[]>([]);
 
   // 검색해서 선택한 제품 state
-  const [list, setList] = useState<any[]>([]);
+  const [list, setList] = useState<any[]>(initialValues?.list);
 
   // 검색해서 선택한 제품들을 넣는 state
-  const [selectList, setSelectList] = useState<any[]>([]);
+  const [selectList, setSelectList] = useState<any[]>(
+    initialValues?.selectList,
+  );
+  console.log(selectList, 'selectList');
 
   // 직업 선택 state
-  const [selectJob, setSelectJob] = useState('');
+  const [selectJob, setSelectJob] = useState(initialValues?.selectJob);
 
   // 에디터 내의 content 관리 state
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(initialValues?.content);
 
-  const [attachment, setAttachment] = useState('');
+  // 이미지 프리뷰 state
+  const [attachment, setAttachment] = useState(initialValues?.attachment);
+
+  // 직접입력 state
+  const [enterYourself, setEnterYourself] = useState([]);
 
   // 에디터 텍스트 onchange함수
   const changeEditorText = (value: string) => {
-    // const extractTextPattern = /(<([^>]+)>)/gi;
-    // const newValue = value.replace(extractTextPattern, '');
     setContent(value);
-    console.log(value, 'value');
   };
-
-  // const [imageFile, setImageFile] = useState([]);
 
   const jobRef = useRef<any>();
   const titleRef = useRef<any>();
@@ -88,12 +84,11 @@ const DetailWriteForm = () => {
       .catch((Error) => console.log(Error));
   };
 
-  // console.log(data);
-
   // 모달창에서 검색한 제품 선택하기
   const selectProduct = (item: any) => {
     const newList = [...list, item];
     setList(newList);
+    // console.log('list', list);
   };
 
   // 모달창에서 선택한 제품 삭제하기
@@ -116,7 +111,7 @@ const DetailWriteForm = () => {
   const selectedProducts = (e: any) => {
     setSelectList(list);
     hideSearchModal();
-    console.log(list, '들어옴');
+    console.log(list, 'list');
   };
 
   // 글쓰기 폼 제목 입력
@@ -124,7 +119,6 @@ const DetailWriteForm = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
       setTitle(e.target.value);
-      console.log('제목 인풋');
     },
     [title],
   );
@@ -133,6 +127,10 @@ const DetailWriteForm = () => {
   const getJob = (e: any) => {
     setSelectJob(e.target.value);
   };
+
+  // const enterYourselfInput = (e: any) => {
+  //   setEnterYourself(e.target.value);
+  // };
 
   // const fileUpload = (event: any) => {
   //   const imageUpload = event.target.files;
@@ -176,7 +174,7 @@ const DetailWriteForm = () => {
     reader.readAsDataURL(theFile);
   };
 
-  // 글쓰기 폼에서 최종적으로 등록하기 버튼을 누를 때 파이어베이스에 저장되는 놈
+  // 글쓰기 폼에서 최종적으로 등록하기 버튼을 누를 때 파이어베이스에 addDoc 되는 놈
   const submitPostForm = async (e: any) => {
     e.preventDefault();
 
@@ -190,16 +188,6 @@ const DetailWriteForm = () => {
       alert('제목을 입력해주세요');
       titleRef.current.focus();
     }
-
-    // if (!text) {
-    //   alert('내용을 입력해주세요');
-    //   textRef.current.focus();
-    // }
-
-    // if ((text.length < 15, text.length > 0)) {
-    //   alert('15자 이상 입력해주세요');
-    //   textRef.current.focus();
-    // }
 
     if (!attachment) {
       alert('데스크테리어 사진을 선택해주세요');
@@ -219,9 +207,7 @@ const DetailWriteForm = () => {
       storage,
       `images/${auth.currentUser?.uid}/${v4()}`,
     );
-    console.log(v4(), 'v4()2');
     const uploadFile = await uploadString(fileRef, attachment, 'data_url');
-    console.log(v4(), 'v4()3');
     const fileURL = await getDownloadURL(uploadFile.ref);
 
     const docRef = await addDoc(collection(dbService, 'postData'), {
@@ -238,8 +224,38 @@ const DetailWriteForm = () => {
       userNickname: auth.currentUser?.displayName,
       userProfile: auth.currentUser?.photoURL,
     });
-    console.log('Document written with ID: ', docRef.id);
-    console.log(content, 'content');
+    alert('글이 저장되었습니다');
+    router.push('/post-list');
+  };
+
+  // 수정 페이지에서 등록하기를 누르면 파이어베이스에 updateDoc 되는 놈
+  const updatePost = async (selectList: any) => {
+    console.log('selectListttt', selectList);
+    const updateRef = doc(dbService, 'postData', router.query.id);
+    const updateProducts =
+      // selectList.map((item: any) => {
+      // console.log('item', item);
+      // return
+      {
+        productId: selectList?.productId,
+        images: selectList?.image,
+        title: selectList.title,
+        url: selectList?.link,
+        hashTag: selectList?.category2,
+      };
+    // });
+    console.log('updateProducts', updateProducts);
+    // const arr = [...selectList, updateProducts];
+    // console.log(arr, 'arr');
+    await updateDoc(updateRef, {
+      postTitle: title,
+      postText: content,
+      jobCategory: selectJob,
+      postImage1: attachment,
+      products: selectList,
+    });
+
+    alert('글이 수정되었습니다');
     router.push('/post-list');
   };
 
@@ -258,11 +274,14 @@ const DetailWriteForm = () => {
           getNaverData={getNaverData}
           selectProduct={selectProduct}
           deleteProduct={deleteProduct}
+          // value={enterYourself}
+          setEnterYourself={setEnterYourself}
+          // onChange={enterYourselfInput}
           onClick={selectedProducts}
         />
       )}
       <DetailWriteLayout>
-        <DetailWriteSelectBox>
+        <JobSelectBox>
           <select
             className="job_select"
             onChange={getJob}
@@ -275,9 +294,9 @@ const DetailWriteForm = () => {
             <option value="학생">학생</option>
             <option value="게이머">게이머</option>
           </select>
-          <p className="job_span">의 책상</p>
-        </DetailWriteSelectBox>
-        <DetailWriteTitleInput
+          <p className="job_span"> 의 책상</p>
+        </JobSelectBox>
+        <TitleInput
           type="text"
           placeholder="제목을 입력해주세요"
           maxLength={30}
@@ -288,7 +307,7 @@ const DetailWriteForm = () => {
         <QuillEditor onChange={changeEditorText} value={content} />
         <DetailWriteBox>
           <span className="title_span">테스크테리어 사진을 추가해주세요</span>
-          <DeatailWritePhotoBox>
+          <DeskPhotoBox>
             {attachment && (
               <Image
                 src={attachment}
@@ -307,23 +326,63 @@ const DetailWriteForm = () => {
               multiple
               accept="image/*"
               id="deskImg"
-              name='id="deskImg"'
+              name="deskImg"
               onChange={onFileChange}
             />
-          </DeatailWritePhotoBox>
+          </DeskPhotoBox>
         </DetailWriteBox>
         <DetailWriteBox>
           <div>
             <span className="title_span">사용하신 제품을 선택해주세요</span>
-            <SearchItemBtn onClick={showSearchModal}>기기검색</SearchItemBtn>
+            <CustomButton
+              onClick={showSearchModal}
+              backgroundColor="#206efb"
+              border="1"
+              paddingColumns="1"
+              paddingRow="1"
+              fontColor="#fff"
+              borderRadius="1.25"
+              fontWeight="700"
+              // fontSize="1"
+            >
+              기기검색
+            </CustomButton>
           </div>
-          <DetailWriteProductCard key={selectList} selectList={selectList} />
+
+          <DetailWriteProductCardBox>
+            <DetailWriteProductCard key={selectList} selectList={selectList} />
+          </DetailWriteProductCardBox>
         </DetailWriteBox>
         <DetailWriteButtonBox>
-          <button className="btn">취소</button>
-          <button className="btn" onClick={submitPostForm}>
+          <CustomButton
+            backgroundColor="#206efb"
+            fontColor="#fff"
+            borderRadius="1.25"
+            width="10"
+            margin="0 1.5"
+            fontWeight="700"
+            fontSize="1.25"
+            onClick={
+              mode === 'update'
+                ? () => router.push(`/detail/${router.query.id}`)
+                : () => router.push('/post-list')
+            }
+          >
+            취소
+          </CustomButton>
+          <CustomButton
+            backgroundColor="#206efb"
+            fontColor="#fff"
+            borderRadius="1.25"
+            width="10"
+            fontWeight="700"
+            fontSize="1.25"
+            onClick={
+              mode === 'update' ? () => updatePost(selectList) : submitPostForm
+            }
+          >
             완료
-          </button>
+          </CustomButton>
         </DetailWriteButtonBox>
       </DetailWriteLayout>
     </>
@@ -339,15 +398,15 @@ const DetailWriteLayout = styled.div`
   align-items: center;
   margin: 0 auto;
   margin-top: 9rem;
-
-  margin-bottom: 5rem;
+  margin-bottom: 4rem;
   width: 75%;
   border: 1px solid black;
   border-radius: 1.875rem;
-  padding: 5rem 6.375rem 5rem 6.375rem;
+  padding: 5rem 6.25rem;
+  box-sizing: border-box;
 `;
 
-const DetailWriteSelectBox = styled.div`
+const JobSelectBox = styled.div`
   display: flex;
   align-items: center;
   width: 75rem;
@@ -371,7 +430,7 @@ const DetailWriteSelectBox = styled.div`
   }
 `;
 
-const DetailWriteTitleInput = styled.input`
+const TitleInput = styled.input`
   display: flex;
   width: 75rem;
   height: 3.25rem;
@@ -387,6 +446,7 @@ const DetailWriteButtonBox = styled.div`
   justify-content: end;
   width: 75rem;
   height: 3.25rem;
+  margin-top: 7rem;
 
   .btn {
     background-color: #206efb;
@@ -419,13 +479,12 @@ const DetailWriteBox = styled.div`
     font-weight: 700;
     font-size: 1.5rem;
     line-height: 2rem;
+    margin-right: 1rem;
   }
 `;
 
-const DeatailWritePhotoBox = styled.div`
-  /* padding: 2rem 0; */
-
-  .deskImgLabel {
+const DeskPhotoBox = styled.div`
+  .deskterior_label {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -447,13 +506,10 @@ const DeatailWritePhotoBox = styled.div`
 
   span {
     font-weight: lighter;
-    font-size: 0.75rem;
+    font-size: 1rem;
   }
 `;
-const SearchItemBtn = styled.button`
-  width: 6.25rem;
-  height: 2rem;
-  background-color: #206efb;
-  border-radius: 0.625rem;
-  color: #fff;
+const DetailWriteProductCardBox = styled.div`
+  display: flex;
+  justify-content: center;
 `;

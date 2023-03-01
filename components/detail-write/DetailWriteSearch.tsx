@@ -3,27 +3,11 @@ import DetailWriteSearchModal from './DetailWriteSearchModal';
 import styled from 'styled-components';
 import axios from 'axios';
 import close from 'public/images/close.png';
+import CustomButton from '../ui/CustomButton';
 import Image from 'next/image';
 
 const parse = require('html-react-parser');
-
 axios.defaults.withCredentials = true;
-
-interface DetailWriteSearchProductBox {
-  productClick?: boolean;
-  display?: string;
-  overflow?: string;
-  isActive?: boolean;
-}
-
-export interface listProps {
-  title: string;
-  category: string;
-  image: string;
-  productId?: string;
-}
-
-type Props = { item: listProps[] };
 
 const DetailWriteSearch = ({
   searchWord,
@@ -32,6 +16,7 @@ const DetailWriteSearch = ({
   setData,
   list,
   setList,
+  select,
   inputSearchWord,
   getNaverData,
   selectProduct,
@@ -68,14 +53,13 @@ const DetailWriteSearch = ({
               value={searchWord}
               onChange={inputSearchWord}
             />
-            <button onClick={getNaverData}>검색</button>
+            <CustomButton onClick={getNaverData}>검색</CustomButton>
           </SearchInputBox>
         </DetailWriteSearchBoxTop>
         <div style={{ padding: '1rem' }}>
           {data?.map((item: any) => (
             <DetailWriteSearchProductBox
               key={item.productId}
-              productClick={false}
               onClick={() => selectProduct(item)}
             >
               <div className="searchProduct">
@@ -115,8 +99,8 @@ const DetailWriteSearch = ({
             </PickProductsBox>
           ))}
           <ButtonBox>
-            <button onClick={onClose}>닫기</button>
-            <button onClick={onClick}>등록하기</button>
+            <CustomButton onClick={onClose}>닫기</CustomButton>
+            <CustomButton onClick={onClick}>등록하기</CustomButton>
           </ButtonBox>
         </DetailWriteSearchBoxBottom>
       </DetailWriteSearchLayout>
@@ -166,7 +150,7 @@ const DetailWriteSearchBox = styled.div`
   }
 `;
 
-const DetailWriteSearchProductBox = styled.div<DetailWriteSearchProductBox>`
+const DetailWriteSearchProductBox = styled.div`
   display: flex;
 
   .searchProduct {
