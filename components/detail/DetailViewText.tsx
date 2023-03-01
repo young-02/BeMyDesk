@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FacebookShareButton } from 'react-share';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useGetKakao } from '../Hooks/useGetKakao';
+import { useGetKakao } from '../../Hooks/useGetKakao';
 import ReactHtmlParser from 'html-react-parser';
 type Props = {};
 

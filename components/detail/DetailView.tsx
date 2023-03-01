@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DetailViewSlide from './DetailViewSlide';
 import DetailViewText from './DetailViewText';
 import DetailViewUserInfor from './DetailViewUserInfor';
-import useGetPosts from '../Hooks/useGetPosts';
+import useGetPosts from '../../Hooks/useGetPosts';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import Comment from '../post-list/Comment/Comment';

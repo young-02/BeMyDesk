@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import PostListFilterBar from '../../components/PostListFilterBar';
 import PostListCard from '../../components/PostListCard';
-import useFilter from '../../components/Hooks/useFilter';
+import useFilter from '../../Hooks/useFilter';
 
 export default function PostList() {
   // 현재 로그인한 유저 정보 가져오기

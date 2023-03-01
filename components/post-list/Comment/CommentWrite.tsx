@@ -4,7 +4,7 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ProfileImg, WriteInformationDiv } from './CommentList';
-import useCheckLogin from '../../Hooks/useCheckLogin';
+import useCheckLogin from '../../../Hooks/useCheckLogin';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 type Props = {};
 
 export default function useCheckLogin() {
-  const [isLogin, setisLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
   const [isUserObj, setIsUserObj] = useState(null);
 
   const logOut = async () => {
@@ -15,10 +15,10 @@ export default function useCheckLogin() {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        setisLogin(true);
+        setIsLogin(true);
         setIsUserObj(auth.currentUser?.displayName);
       } else {
-        setisLogin(false);
+        setIsLogin(false);
       }
     });
   }, []);

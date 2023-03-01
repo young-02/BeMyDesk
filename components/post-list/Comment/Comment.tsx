@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CommentList from './CommentList';
 import CommentWrite from './CommentWrite';
-import useGetPosts from '../../Hooks/useGetPosts';
+import useGetPosts from '../../../Hooks/useGetPosts';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { dbService } from '@/shared/firebase';
 

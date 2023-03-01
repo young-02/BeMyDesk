@@ -1,5 +1,5 @@
 import { collection, query, orderBy, where, getDocs } from 'firebase/firestore';
-import { dbService } from '../../shared/firebase';
+import { dbService } from '../shared/firebase';
 import { useQuery } from 'react-query';
 
 type JobCategoryProps = { [key: string]: string };
