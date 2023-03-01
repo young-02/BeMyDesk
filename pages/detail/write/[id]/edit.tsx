@@ -9,17 +9,17 @@ type Props = {};
 const Edit = (props: Props) => {
   const [initialValues, setInitialValues] = useState();
   const router = useRouter();
-  // const { id } = router.query;
+  const { id } = router.query;
 
   useEffect(() => {
-    if (router.query) {
+    if (id) {
       getDoc(doc(dbService, 'postData', router.query.id)).then((doc) => {
         const data = doc.data();
         // console.log(data, 'data');
         setInitialValues(data as any);
       });
     }
-  }, []);
+  }, [id]);
 
   console.log(initialValues, 'initialValues');
   return (
