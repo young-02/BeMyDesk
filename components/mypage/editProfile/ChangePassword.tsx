@@ -257,7 +257,7 @@ const PasswordChange = styled.div`
     }
   }
   .errorDiv {
-    min-height: 35px;
+    min-height: 40px;
     > p {
       font-family: 'Pretendard';
       font-style: normal;

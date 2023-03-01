@@ -264,6 +264,7 @@ const StyledDivProfile = styled.div`
   .thirdLine {
     display: flex;
     justify-content: space-between;
+
     .followerDiv {
       display: flex;
       align-items: center;
@@ -280,7 +281,7 @@ const StyledDivProfile = styled.div`
         color: #868e96;
       }
       .followerCount {
-        margin-left: 10px;
+        margin-left: 8px;
         font-family: 'Pretendard';
         font-style: normal;
         font-weight: 700;
@@ -293,8 +294,6 @@ const StyledDivProfile = styled.div`
     }
 
     .settingIcon {
-      display: flex;
-      align-items: center;
       cursor: pointer;
     }
   }

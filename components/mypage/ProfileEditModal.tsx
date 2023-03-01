@@ -323,5 +323,20 @@ const StyledEditProfileModalContainer = styled.div`
       cursor: pointer;
     }
   }
+
+  .modalThirdLineButton2Warning {
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+
+    display: flex;
+    justify-content: center;
+    /* Gray 04 */
+
+    color: #adb5bd;
+  }
 `;
 export default ProfileEditModal;
