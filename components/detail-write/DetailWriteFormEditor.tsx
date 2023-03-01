@@ -38,11 +38,7 @@ const formats = [
   'link',
 ];
 
-export default function DetailWriteFormEditor({
-  value,
-  onChange,
-  onLoad,
-}: any) {
+export default function DetailWriteFormEditor({ value, onChange }: any) {
   return (
     <div>
       <EditorStyle
