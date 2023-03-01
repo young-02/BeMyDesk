@@ -22,7 +22,7 @@ export default function useCheckLogin() {
         setisLogin(false);
       }
     });
-  }, []);
+  }, [userNickName]);
 
   return { isLogin, isUserObj, logOut };
 }
