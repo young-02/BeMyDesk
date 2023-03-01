@@ -46,9 +46,14 @@ declare interface CustomModalType {
 declare interface userInforType {
   id?: string;
   following?: string[];
-  introduction?: sgring;
+  introduction?: string;
   nickname?: string;
   profileImage?: string;
   scraps?: string[];
   userId?: string;
+}
+
+declare interface RouterQuery {
+  order: string;
+  select: string;
 }

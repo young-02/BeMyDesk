@@ -8,7 +8,7 @@ import { dbService } from '../shared/firebase';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-type PostListCardProps = { post: PostType; currentUserId: string };
+type PostListCardProps = { post: PostType; currentUserId?: string };
 
 const PostListCard = ({ post, currentUserId }: PostListCardProps) => {
   const router = useRouter();

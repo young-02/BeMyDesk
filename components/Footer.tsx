@@ -20,7 +20,6 @@ function Footer({}: Props) {
     } else {
       setIsActive(true);
     }
-    console.log('푸터');
   }, [pathname]);
 
   return (
