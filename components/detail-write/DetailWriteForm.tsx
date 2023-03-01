@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { v4 } from 'uuid';
 import CustomButton from '../ui/CustomButton';
 
+import Image from 'next/image';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
@@ -204,7 +205,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
     const fileRef = await ref(
       storage,
-      `images/${auth.currentUser.uid}/${v4()}`,
+      `images/${auth.currentUser?.uid}/${v4()}`,
     );
     const uploadFile = await uploadString(fileRef, attachment, 'data_url');
     const fileURL = await getDownloadURL(uploadFile.ref);
@@ -308,19 +309,16 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           <span className="title_span">테스크테리어 사진을 추가해주세요</span>
           <DeskPhotoBox>
             {attachment && (
-              <div>
-                <img
-                  src={attachment}
-                  alt="deskteriorPhoto"
-                  width="200"
-                  height="200"
-                  // layout="fixed"
-                />
-              </div>
+              <Image
+                src={attachment}
+                width={150}
+                height={150}
+                alt="attachmentImg"
+              />
             )}
 
-            <label className="deskterior_label" htmlFor="deskImg">
-              {/* <img src={chooseImage.src} /> */}
+            <label className="deskImgLabel" htmlFor="deskImg">
+              {/* <Image src={chooseImage.src} /> */}
               <span>이미지를 추가해주세요</span>
             </label>
             <input

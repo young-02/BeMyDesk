@@ -16,6 +16,7 @@ interface CustomButtonProps {
   height?: string;
   margin?: string;
   fontWeight?: string;
+  disabled?: boolean;
 }
 
 export default function CustomButton({
@@ -32,6 +33,7 @@ export default function CustomButton({
   height,
   margin,
   fontWeight,
+  disabled,
 }: CustomButtonProps) {
   return (
     <Button
@@ -47,6 +49,7 @@ export default function CustomButton({
       height={height}
       margin={margin}
       fontWeight={fontWeight}
+      disabled={disabled}
     >
       {children}
     </Button>

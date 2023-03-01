@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import 'swiper/css';
@@ -29,14 +30,11 @@ const DetailWriteProductCard = ({ selectList }: any) => {
               <DetailWriteCardBox key={i.productId}>
                 <CardBox>
                   <div className="card">
-                    <img
+                    <Image
                       src={i.image}
-                      style={{
-                        width: '200px',
-                        height: '200px',
-                        display: 'block',
-                        objectFit: 'cover',
-                      }}
+                      width={150}
+                      height={150}
+                      alt="selectListImg"
                     />
                     <div className="card">
                       <p className="product_title">{parse(i.title)}</p>
