@@ -9,7 +9,7 @@ type Props = {};
 const Edit = (props: Props) => {
   const [initialValues, setInitialValues] = useState();
   const router = useRouter();
-  const { id } = router.query;
+  // const { id } = router.query;
 
   useEffect(() => {
     if (router.query) {
