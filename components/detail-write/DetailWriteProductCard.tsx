@@ -13,43 +13,65 @@ const parse = require('html-react-parser');
 const DetailWriteProductCard = ({ selectList }: any) => {
   return (
     <DetailWriteCardLayout>
-      <Swiper
-        slidesPerView={2}
-        centeredSlides={true}
-        spaceBetween={-65}
-        pagination={{
-          type: 'fraction',
-        }}
-        navigation={true}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {selectList?.map((i: any) => (
-          <SwiperSlide key={i.productId}>
-            {
-              <DetailWriteCardBox>
-                <CardBox>
-                  <div className="card">
-                    <Image
-                      src={i.images}
-                      width={150}
-                      height={150}
-                      alt="selectListImg"
-                    />
+      {selectList.length < 3 ? (
+        selectList.map((i: any) => (
+          <DetailWriteCardBox key={i.productId}>
+            <CardBox>
+              <div className="card">
+                <Image
+                  src={i.images}
+                  width={150}
+                  height={150}
+                  alt="selectListImg"
+                />
+                <div className="card">
+                  <p className="product_title">{parse(i.title)}</p>
+                  <p className="product_hashTag">#{i.category2}</p>
+                </div>
+              </div>
+            </CardBox>
+          </DetailWriteCardBox>
+        ))
+      ) : (
+        <Swiper
+          slidesPerView={2}
+          centeredSlides={true}
+          spaceBetween={-100}
+          pagination={{
+            type: 'fraction',
+          }}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          className="mySwiper"
+        >
+          {selectList?.map((i: any) => (
+            <SwiperSlide>
+              {
+                <DetailWriteCardBox key={i.productId}>
+                  <CardBox>
                     <div className="card">
-                      <p className="product_title">{parse(i.title)}</p>
-                      <p className="product_hashTag">#{i.category2}</p>
+                      <Image
+                        src={i.images}
+                        width={150}
+                        height={150}
+                        alt="selectListImg"
+                      />
+                      <div className="card">
+                        <p className="product_title">{parse(i.title)}</p>
+                        <p className="product_hashTag">#{i.category2}</p>
+                      </div>
                     </div>
-                  </div>
-                </CardBox>
-              </DetailWriteCardBox>
-            }
-          </SwiperSlide>
-        ))}
-      </Swiper>
+                  </CardBox>
+                </DetailWriteCardBox>
+              }
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
     </DetailWriteCardLayout>
   );
 };
+//pr위한 주석...
 
 const DetailWriteCardLayout = styled.div`
   display: flex;
@@ -90,7 +112,6 @@ const CardBox = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
-    justify-content: center;
   }
 
   .product_title {

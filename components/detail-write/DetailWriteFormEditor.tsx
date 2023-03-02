@@ -40,25 +40,22 @@ const formats = [
 
 export default function DetailWriteFormEditor({ value, onChange }: any) {
   return (
-    <div>
-      <EditorStyle
-        theme="snow"
-        modules={modules}
-        formats={formats}
-        placeholder="내용을 입력해주세요"
-        value={value}
-        onChange={onChange}
-      />
-    </div>
+    <EditorStyle
+      theme="snow"
+      modules={modules}
+      formats={formats}
+      placeholder="내용을 입력해주세요"
+      value={value}
+      onChange={onChange}
+    />
   );
 }
 
 const EditorStyle = styled(Editor)`
-  width: 77rem;
+  width: 100%;
   height: 37.5rem;
   box-sizing: border-box;
-  padding: 1rem;
-  margin-bottom: 1.875rem;
+  margin-bottom: 3.75rem;
 
   .ql-toolbar.ql-snow + .ql-container.ql-snow {
     border: 0.125rem solid #868e96;
