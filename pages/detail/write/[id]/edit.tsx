@@ -19,7 +19,7 @@ const Edit = (props: Props) => {
         setInitialValues(data as any);
       });
     }
-  }, [id]);
+  }, [router.query.id]);
 
   console.log(initialValues, 'initialValues');
   return (
