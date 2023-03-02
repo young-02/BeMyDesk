@@ -153,9 +153,9 @@ export default function SignIn({}: Props) {
       const isFirstLogin = !docSnap.exists();
 
       if (isFirstLogin) {
-        // await updateProfile(result_google.user, {
-        //   photoURL: '/images/defaultProfile.png',
-        // });
+        await updateProfile(result_google.user, {
+          photoURL: '/images/defaultProfile.png',
+        });
         // const payload = {
         //   profileImage: '/images/defaultProfile.png',
         //   nickname: auth.currentUser?.displayName,
@@ -185,9 +185,9 @@ export default function SignIn({}: Props) {
       const isFirstLogin = !docSnap.exists();
 
       if (isFirstLogin) {
-        // await updateProfile(result_facebook.user, {
-        //   photoURL: '/images/defaultProfile.png',
-        // });
+        await updateProfile(result_facebook.user, {
+          photoURL: '/images/defaultProfile.png',
+        });
 
         // const payload = {
         //   profileImage: '/images/defaultProfile.png',
@@ -299,7 +299,7 @@ export default function SignIn({}: Props) {
         <div className="SNSWrap">
           <p> SNS로 시작하기</p>
           <div className="SNSLoginContainer">
-            <div onClick={kakaoLogin}>
+            {/* <div onClick={kakaoLogin}>
               {' '}
               <Image
                 src="/images/kakaoLogo.png"
@@ -307,7 +307,7 @@ export default function SignIn({}: Props) {
                 width={48}
                 height={48}
               />
-            </div>
+            </div> */}
             <div onClick={googleLogin}>
               <Image
                 src="/images/googleLogo.png"
@@ -316,14 +316,14 @@ export default function SignIn({}: Props) {
                 height={48}
               />
             </div>
-            <div>
+            {/* <div>
               <Image
                 src="/images/naverLogo.png"
                 alt="NaverLogin"
                 width={48}
                 height={48}
               />
-            </div>
+            </div> */}
             <div onClick={facebookLogin}>
               {' '}
               <Image
