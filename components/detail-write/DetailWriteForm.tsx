@@ -75,7 +75,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
    */
   const getNaverData = async () => {
     const response = await axios
-      .get('http://localhost:3000/api/naverData', {
+      .get('https://be-my-desk-git-dev-young-02.vercel.app/api/naverData', {
         params: {
           query: searchWord,
         },
@@ -193,10 +193,10 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     const products = list.map((item) => {
       return {
         productId: item.productId,
-        images: item.image,
+        image: item.image,
         title: item.title,
-        url: item.link,
-        hashTag: item.category2,
+        link: item.link,
+        category2: item.category2,
       };
     });
 
@@ -230,15 +230,15 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     console.log('selectListttt', selectList);
     const updateRef = doc(dbService, 'postData', router.query.id);
     const updateProducts = selectList.map((item: any) => {
-      console.log('item', item);
       return {
-        productId: selectList?.productId,
-        images: selectList?.image,
-        title: selectList.title,
-        url: selectList?.link,
-        hashTag: selectList?.category2,
+        productId: item.productId,
+        image: item.image,
+        title: item.title,
+        link: item.link,
+        category2: item.category2,
       };
     });
+
     console.log('updateProducts', updateProducts);
     // const arr = [...selectList, updateProducts];
     // console.log(arr, 'arr');

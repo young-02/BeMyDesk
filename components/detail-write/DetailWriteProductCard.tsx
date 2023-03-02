@@ -19,7 +19,7 @@ const DetailWriteProductCard = ({ selectList }: any) => {
             <CardBox>
               <div className="card">
                 <Image
-                  src={i.images}
+                  src={i.image}
                   width={150}
                   height={150}
                   alt="selectListImg"
@@ -36,7 +36,7 @@ const DetailWriteProductCard = ({ selectList }: any) => {
         <Swiper
           slidesPerView={2}
           centeredSlides={true}
-          spaceBetween={-100}
+          spaceBetween={-65}
           pagination={{
             type: 'fraction',
           }}
@@ -45,13 +45,13 @@ const DetailWriteProductCard = ({ selectList }: any) => {
           className="mySwiper"
         >
           {selectList?.map((i: any) => (
-            <SwiperSlide>
+            <SwiperSlide key={i.productId}>
               {
-                <DetailWriteCardBox key={i.productId}>
+                <DetailWriteCardBox>
                   <CardBox>
                     <div className="card">
                       <Image
-                        src={i.images}
+                        src={i.image}
                         width={150}
                         height={150}
                         alt="selectListImg"

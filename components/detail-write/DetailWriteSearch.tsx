@@ -74,8 +74,8 @@ const DetailWriteSearch = ({
         <DetailWriteSearchBoxBottom>
           <PickProductListBox>
             {list?.map((item: any) => (
-              <PickProductsBox>
-                <div className="pickProducts" key={item.productId}>
+              <PickProductsBox key={item.productId}>
+                <div className="pickProducts" >
                   {parse(item.title)}
                 </div>
 
