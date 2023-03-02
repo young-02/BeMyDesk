@@ -19,9 +19,9 @@ const Edit = (props: Props) => {
         setInitialValues(data as any);
       });
     }
-  }, [router.query.id]);
+  }, [id, router.query.id]);
 
-  console.log(initialValues, 'initialValues');
+
   return (
     <>
       {initialValues && (
