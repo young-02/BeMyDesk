@@ -12,14 +12,14 @@ const Edit = (props: Props) => {
   const { id } = router.query;
 
   useEffect(() => {
-    if (router.query) {
+    if (id) {
       getDoc(doc(dbService, 'postData', router.query.id)).then((doc) => {
         const data = doc.data();
         // console.log(data, 'data');
         setInitialValues(data as any);
       });
     }
-  }, []);
+  }, [router.query.id]);
 
   console.log(initialValues, 'initialValues');
   return (

@@ -6,7 +6,8 @@ type Props = {};
 
 export default function useCheckLogin() {
   const [isLogin, setisLogin] = useState(false);
-  const [isUserObj, setIsUserObj] = useState(null);
+  const [isUserObj, setIsUserObj] = useState<string>('');
+  const userNickName = auth.currentUser?.displayName ?? 'nick-name';
 
   const logOut = async () => {
     await signOut(auth);
@@ -16,12 +17,12 @@ export default function useCheckLogin() {
     auth.onAuthStateChanged((user) => {
       if (user) {
         setisLogin(true);
-        setIsUserObj(auth.currentUser?.displayName);
+        setIsUserObj(userNickName);
       } else {
         setisLogin(false);
       }
     });
-  }, []);
+  }, [userNickName]);
 
   return { isLogin, isUserObj, logOut };
 }
