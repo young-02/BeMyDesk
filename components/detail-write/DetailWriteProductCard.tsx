@@ -71,6 +71,7 @@ const DetailWriteProductCard = ({ selectList }: any) => {
     </DetailWriteCardLayout>
   );
 };
+//pr위한 주석...
 
 const DetailWriteCardLayout = styled.div`
   display: flex;
