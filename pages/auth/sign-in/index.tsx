@@ -153,24 +153,26 @@ export default function SignIn({}: Props) {
       const isFirstLogin = !docSnap.exists();
 
       if (isFirstLogin) {
-        await updateProfile(result_google.user, {
-          photoURL: '/images/defaultProfile.png',
-        });
-        const payload = {
-          profileImage: '/images/defaultProfile.png',
-          nickname: auth.currentUser?.displayName,
-          userId: auth.currentUser?.uid,
-          scraps: [],
-          following: [],
-          introduction: '안녕하세요!',
-        };
+        // await updateProfile(result_google.user, {
+        //   photoURL: '/images/defaultProfile.png',
+        // });
+        // const payload = {
+        //   profileImage: '/images/defaultProfile.png',
+        //   nickname: auth.currentUser?.displayName,
+        //   userId: auth.currentUser?.uid,
+        //   scraps: [],
+        //   following: [],
+        //   introduction: '안녕하세요!',
+        // };
 
-        await setDoc(collectionRef, payload);
+        // await setDoc(collectionRef, payload);
+        router.push('/auth/sns-nickname');
+      } else {
+        router.push('/post-list');
       }
     } catch (error) {
       console.error(error);
     }
-    router.push('/post-list');
   };
 
   //페이스북 로그인
@@ -183,25 +185,27 @@ export default function SignIn({}: Props) {
       const isFirstLogin = !docSnap.exists();
 
       if (isFirstLogin) {
-        await updateProfile(result_facebook.user, {
-          photoURL: '/images/defaultProfile.png',
-        });
+        // await updateProfile(result_facebook.user, {
+        //   photoURL: '/images/defaultProfile.png',
+        // });
 
-        const payload = {
-          profileImage: '/images/defaultProfile.png',
-          nickname: auth.currentUser?.displayName,
-          userId: auth.currentUser?.uid,
-          scraps: [],
-          following: [],
-          introduction: '안녕하세요!',
-        };
+        // const payload = {
+        //   profileImage: '/images/defaultProfile.png',
+        //   nickname: auth.currentUser?.displayName,
+        //   userId: auth.currentUser?.uid,
+        //   scraps: [],
+        //   following: [],
+        //   introduction: '안녕하세요!',
+        // };
 
-        await setDoc(collectionRef, payload);
+        // await setDoc(collectionRef, payload);
+        router.push('/auth/sns-nickname');
+      } else {
+        router.push('/post-list');
       }
     } catch (error) {
       console.error(error);
     }
-    router.push('/post-list');
   };
 
   // useEffect(() => {

@@ -1,6 +1,13 @@
 import { auth, dbService } from '@/shared/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -18,6 +25,8 @@ export default function SignUp({}: Props) {
   const [pwValid, setPwValid] = useState(false);
   const [pwVerfyValid, setPwVerfyValid] = useState(false);
   const [nicknameValid, setNicknameValid] = useState(false);
+  const [errorNicknameDuplication, setErrorNicknameDuplication] =
+    useState(false);
   const [notAllow, setNotAllow] = useState(true);
   // 동의 버튼
   const [allCheck, setAllCheck] = useState(false);
@@ -154,37 +163,48 @@ export default function SignUp({}: Props) {
 
   // 회원가입 버튼
   const onClickConfirmButton = async () => {
-    try {
-      const data = await createUserWithEmailAndPassword(auth, emailValue, pw);
-      const remainInfo = {
-        email: emailValue,
-        displayName: nickname,
-        photoURL: '/images/defaultProfile.png',
-      };
+    // 닉네임 중복검사
+    const nicknameRef = collection(dbService, 'userInfo');
+    const nicknameQuery = query(nicknameRef, where('nickname', '==', nickname));
+    const nicknameDocs = await getDocs(nicknameQuery);
+    if (!nicknameDocs.empty) {
+      setErrorNicknameDuplication(true);
+    } else {
+      try {
+        const data = await createUserWithEmailAndPassword(auth, emailValue, pw);
+        const remainInfo = {
+          email: emailValue,
+          displayName: nickname,
+          photoURL: '/images/defaultProfile.png',
+        };
 
-      await updateProfile(data.user, remainInfo);
+        await updateProfile(data.user, remainInfo);
 
-      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
-      const payload = {
-        profileImage: '/images/defaultProfile.png',
-        nickname: nickname,
-        userId: auth.currentUser?.uid,
-        scraps: [],
-        following: [],
-        introduction: '안녕하세요!',
-      };
+        const collectionRef = doc(
+          dbService,
+          `userInfo/${auth.currentUser?.uid}`,
+        );
+        const payload = {
+          profileImage: '/images/defaultProfile.png',
+          nickname: nickname,
+          userId: auth.currentUser?.uid,
+          scraps: [],
+          following: [],
+          introduction: '안녕하세요!',
+        };
 
-      await setDoc(collectionRef, payload).then(router.push('/post-list'));
+        await setDoc(collectionRef, payload).then(router.push('/post-list'));
 
-      alert('회원가입 성공');
-    } catch (error: any) {
-      console.error(error);
-      if (error.message.includes('auth/invalid-email')) {
-        alert('이메일을 확인해주세요');
+        alert('회원가입 성공');
+      } catch (error: any) {
+        console.error(error);
+        if (error.message.includes('auth/invalid-email')) {
+          alert('이메일을 확인해주세요');
+        }
       }
     }
   };
-  // 체크박스 확인 useEffect
+  // 동의 체크박스 확인 useEffect
   useEffect(() => {
     if (ageCheck === true && useCheck === true && marketingCheck === true) {
       setAllCheck(true);
@@ -222,6 +242,7 @@ export default function SignUp({}: Props) {
                 placeholder="닉네임을 작성해주세요."
                 value={nickname}
                 onChange={handleNickname}
+                onFocus={() => setErrorNicknameDuplication(false)}
               />
             </div>
             <div className="error-text">
@@ -231,6 +252,9 @@ export default function SignUp({}: Props) {
                   이하이어야합니다.
                 </div>
               )}
+              {errorNicknameDuplication ? (
+                <div className="errorMessageWrap">중복된 닉네임 입니다.</div>
+              ) : null}
             </div>
           </div>
 
