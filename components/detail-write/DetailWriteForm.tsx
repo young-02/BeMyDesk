@@ -402,14 +402,14 @@ const DetailWriteLayout = styled.div`
   width: 75%;
   border: 1px solid black;
   border-radius: 1.875rem;
-  padding: 5rem 6.25rem;
+  padding: 2.5rem;
   box-sizing: border-box;
 `;
 
 const JobSelectBox = styled.div`
   display: flex;
   align-items: center;
-  width: 75rem;
+  width: 100%;
   height: 3.25rem;
 
   .job_select {
@@ -432,7 +432,7 @@ const JobSelectBox = styled.div`
 
 const TitleInput = styled.input`
   display: flex;
-  width: 75rem;
+  width: 100%;
   height: 3.25rem;
   box-sizing: border-box;
   border: 0.125rem solid #868e96;
@@ -444,7 +444,7 @@ const TitleInput = styled.input`
 const DetailWriteButtonBox = styled.div`
   display: flex;
   justify-content: end;
-  width: 75rem;
+  width: 100%;
   height: 3.25rem;
   margin-top: 7rem;
 
@@ -470,9 +470,9 @@ const DetailWriteButtonBox = styled.div`
 const DetailWriteBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 75rem;
+  width: 100%;
   height: 18.75rem;
-  margin: 1rem;
+  margin-top: 1rem;
 
   .title_span {
     margin-bottom: 1rem;
@@ -504,9 +504,16 @@ const DeskPhotoBox = styled.div`
     display: none;
   }
 
-  span {
-    font-weight: lighter;
+  .deskImgLabel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #868e96;
+    border-radius: 0.625rem;
     font-size: 1rem;
+    font-weight: 700;
+    padding: 1rem;
+    width: 100%;
   }
 `;
 const DetailWriteProductCardBox = styled.div`
