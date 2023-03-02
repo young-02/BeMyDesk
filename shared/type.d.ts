@@ -1,9 +1,7 @@
 declare interface ThemeProp {
   theme: string;
 }
-
-declare interface PostType {
-  id?: string;
+declare interface PostDataType {
   createdAt?: object;
   userId?: string;
   jobCategory?: string[];
@@ -15,6 +13,14 @@ declare interface PostType {
   likesCount?: number;
   products?: string[];
   userProfile?: string;
+}
+declare interface PostDocType {
+  id?: string;
+  data?: () => PostDataType;
+}
+
+declare interface PostType extends PostDataType {
+  id?: string;
 }
 
 declare interface GetPostType {
