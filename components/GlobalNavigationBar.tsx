@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Search from './Search';
 import { auth } from '@/shared/firebase';
-import useCheckLogin from './Hooks/useCheckLogin';
+import useCheckLogin from '../Hooks/useCheckLogin';
 
 function GlobalNavigationBar() {
   const router = useRouter();

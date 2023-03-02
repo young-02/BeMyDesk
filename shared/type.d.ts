@@ -1,18 +1,21 @@
 declare interface ThemeProp {
   theme: string;
 }
-declare interface PostDataType {
-  createdAt?: object;
-  userId?: string;
-  jobCategory?: string[];
-  postTitle?: string;
-  postText?: string;
-  postImage1?: string;
-  postImage2?: string;
-  likes?: string[];
-  likesCount?: number;
-  products?: string[];
-  userProfile?: string;
+
+declare interface PostType {
+  id: string;
+  createdAt: number;
+  userId: string;
+  userNickname: string;
+  jobCategory: string[];
+  postTitle: string;
+  postText: string;
+  postImage1: string;
+  postImage2: string;
+  likes: string[];
+  likesCount: number;
+  products: string[];
+  userProfile: string;
 }
 declare interface PostDocType {
   id?: string;

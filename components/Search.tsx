@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import useSearch from './Hooks/useSearch';
+import useSearch from '../Hooks/useSearch';
 import PostListItem from './post-list/PostListItem';
 // import useSearch from '../hook/useSearch'
 import styled from 'styled-components';

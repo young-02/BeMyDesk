@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import useGetReaction from '../../../components/Hooks/useGetReaction';
+import useGetReaction from '../../../Hooks/useGetReaction';
 type Props = {};
 
 export default function SignIn({}: Props) {

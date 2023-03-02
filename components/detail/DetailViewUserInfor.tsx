@@ -2,11 +2,13 @@ import { auth, dbService } from '@/shared/firebase';
 import { doc, setDoc, updateDoc, addDoc } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import useCheckLogin from '../Hooks/useCheckLogin';
-import useGetReaction from '../Hooks/useGetReaction';
+import useCheckLogin from '../../Hooks/useCheckLogin';
+import useGetReaction from '../../Hooks/useGetReaction';
 import CustomButton from '../ui/CustomButton';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import activeLikes from '../../public/images/activeLikes.png';
+import inactiveLikes from '../../public/images/inactiveLikes.png';
 
 export default function DetailViewUserInfor({ detail }) {
   const router = useRouter();
@@ -111,7 +113,15 @@ export default function DetailViewUserInfor({ detail }) {
             <span className="follow ">스크립</span>
           )}
         </button>
-        <>
+        {/* <div onClick={updateLikes}> */}
+        <Image
+          src={isLikesClicked ? activeLikes : inactiveLikes}
+          alt="likes-icon"
+          width={24}
+        />
+        <p className={isLikesClicked ? 'active' : 'inactive'}>{likesCount}</p>
+      </div>
+      {/* <>
           <button onClick={() => onclickLove(id)}>
             {!isLikesClicked ? (
               <span className="love active">좋아요</span>
@@ -120,31 +130,30 @@ export default function DetailViewUserInfor({ detail }) {
             )}
           </button>
           {likesCount}
-        </>
+        </> */}
 
-        <div>
-          {!follower ? (
-            <CustomButton
-              backgoundColor="#206EFB"
-              fontColor="#fff"
-              paddingColumns="0.5"
-              paddingRow="1"
-              onClick={() => onclickFollow(auth.currentUser?.uid)}
-            >
-              팔로우
-            </CustomButton>
-          ) : (
-            <CustomButton
-              border="1px solid #206EFB"
-              fontColor="#206EFB"
-              paddingColumns="0.5"
-              paddingRow="1"
-              onClick={() => onclickFollow(auth.currentUser?.uid)}
-            >
-              팔로잉
-            </CustomButton>
-          )}
-        </div>
+      <div>
+        {!follower ? (
+          <CustomButton
+            backgoundColor="#206EFB"
+            fontColor="#fff"
+            paddingColumns="0.5"
+            paddingRow="1"
+            onClick={() => onclickFollow(auth.currentUser?.uid)}
+          >
+            팔로우
+          </CustomButton>
+        ) : (
+          <CustomButton
+            border="1px solid #206EFB"
+            fontColor="#206EFB"
+            paddingColumns="0.5"
+            paddingRow="1"
+            onClick={() => onclickFollow(auth.currentUser?.uid)}
+          >
+            팔로잉
+          </CustomButton>
+        )}
       </div>
     </DetailViewUserInforLayout>
   );

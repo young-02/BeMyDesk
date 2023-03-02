@@ -1,12 +1,5 @@
-import {
-  collection,
-  query,
-  orderBy,
-  where,
-  getDocs,
-  QueryDocumentSnapshot,
-} from 'firebase/firestore';
-import { dbService } from '../../shared/firebase';
+import { collection, query, orderBy, where, getDocs } from 'firebase/firestore';
+import { dbService } from '../shared/firebase';
 import { useQuery } from 'react-query';
 
 type JobCategoryProps = { [key: string]: string };
@@ -54,7 +47,7 @@ const getPost = async (currentQuery: RouterQuery) => {
 
   const querySnapshot = await getDocs(filter);
   const dataArr: PostType[] = [];
-  querySnapshot.forEach((doc :any) => {
+  querySnapshot.forEach((doc) => {
     dataArr.push({ ...doc.data(), id: doc.id });
   });
 
@@ -62,7 +55,7 @@ const getPost = async (currentQuery: RouterQuery) => {
 };
 
 export const useFilter = (currentQuery: RouterQuery) => {
-  return useQuery(['PostList', currentQuery], () => getPost(currentQuery), {
+  return useQuery(['post-list', currentQuery], () => getPost(currentQuery), {
     staleTime: Infinity,
     cacheTime: Infinity,
     refetchOnWindowFocus: false,
