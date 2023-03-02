@@ -55,7 +55,7 @@ const getPost = async (currentQuery: RouterQuery) => {
 };
 
 export const useFilter = (currentQuery: RouterQuery) => {
-  return useQuery(['PostList', currentQuery], () => getPost(currentQuery), {
+  return useQuery(['post-list', currentQuery], () => getPost(currentQuery), {
     staleTime: Infinity,
     cacheTime: Infinity,
     refetchOnWindowFocus: false,

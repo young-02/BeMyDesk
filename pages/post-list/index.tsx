@@ -1,4 +1,3 @@
-import { getAuth } from 'firebase/auth';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import PostListFilterBar from '../../components/PostListFilterBar';
@@ -6,10 +5,6 @@ import PostListCard from '../../components/PostListCard';
 import useFilter from '../../Hooks/useFilter';
 
 export default function PostList() {
-  // 현재 로그인한 유저 정보 가져오기
-  const auth = getAuth();
-  const currentUserId = auth.currentUser?.uid;
-
   // 현재 페이지의 query 값을 가져옵니다.
   const router = useRouter();
   const { query: currentQuery }: any = router;
@@ -24,11 +19,7 @@ export default function PostList() {
       {isError && <div>Error: {error.message}</div>}
       <PostListBox>
         {postList?.map((post) => (
-          <PostListCard
-            key={post.id}
-            post={post}
-            currentUserId={currentUserId}
-          />
+          <PostListCard key={post.id} post={post} />
         ))}
       </PostListBox>
     </PostListLayout>
