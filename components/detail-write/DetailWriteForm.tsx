@@ -115,13 +115,10 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   };
 
   // 글쓰기 폼 제목 입력
-  const inputTitle = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      setTitle(e.target.value);
-    },
-    [], //title
-  );
+  const inputTitle = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setTitle(e.target.value);
+  }, []);
 
   // 직업선택 onChange 함수
   const getJob = (e: any) => {
@@ -232,18 +229,16 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   const updatePost = async (selectList: any) => {
     console.log('selectListttt', selectList);
     const updateRef = doc(dbService, 'postData', router.query.id);
-    const updateProducts =
-      // selectList.map((item: any) => {
-      // console.log('item', item);
-      // return
-      {
+    const updateProducts = selectList.map((item: any) => {
+      console.log('item', item);
+      return {
         productId: selectList?.productId,
         images: selectList?.image,
         title: selectList.title,
         url: selectList?.link,
         hashTag: selectList?.category2,
       };
-    // });
+    });
     console.log('updateProducts', updateProducts);
     // const arr = [...selectList, updateProducts];
     // console.log(arr, 'arr');
@@ -252,7 +247,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       postText: content,
       jobCategory: selectJob,
       postImage1: attachment,
-      products: selectList,
+      products: updateProducts,
     });
 
     alert('글이 수정되었습니다');
