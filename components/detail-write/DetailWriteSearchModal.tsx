@@ -56,11 +56,10 @@ const ModalOverlays = styled.div`
   top: 15vh;
   left: 25%;
   width: 50rem;
-  height: 40rem;
+  height: 45rem;
   background-color: white;
-  /* padding: 1rem; */
   border-radius: 10px;
   z-index: 20;
-  overflow: scroll;
+  overflow-y: scroll;
 `;
 export default DetailWriteSearchModal;

@@ -56,7 +56,7 @@ const DetailWriteSearch = ({
             <CustomButton onClick={getNaverData}>검색</CustomButton>
           </SearchInputBox>
         </DetailWriteSearchBoxTop>
-        <div style={{ padding: '1rem' }}>
+        <SelectProductBox>
           {data?.map((item: any) => (
             <DetailWriteSearchProductBox
               key={item.productId}
@@ -66,38 +66,31 @@ const DetailWriteSearch = ({
                 <div style={{ width: '600px' }}>
                   {item.title.split('<b>').join('').split('</b>').join('')}
                 </div>
-                <div
-                  style={{
-                    width: '80px',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {item.category2}
-                </div>
+                <div className="search_category">{item.category2}</div>
               </div>
             </DetailWriteSearchProductBox>
           ))}
-        </div>
+        </SelectProductBox>
         <DetailWriteSearchBoxBottom>
-          {list?.map((item: any) => (
-            <PickProductsBox key={item.productId}>
-              <div className="pickProducts">{parse(item.title)}</div>
+          <PickProductListBox>
+            {list?.map((item: any) => (
+              <PickProductsBox>
+                <div className="pickProducts" key={item.productId}>
+                  {parse(item.title)}
+                </div>
 
-              <button
-                onClick={() => deleteProduct(item)}
-                className="closeBtnImage"
-              >
                 <Image
-                  className="closeBtn"
+                  className="closeBtnImage"
                   src={close.src}
                   alt="closeBtn"
                   width={24}
                   height={24}
+                  onClick={() => deleteProduct(item)}
+                  style={{ alignContent: 'center', justifyContent: 'center' }}
                 />
-              </button>
-            </PickProductsBox>
-          ))}
+              </PickProductsBox>
+            ))}
+          </PickProductListBox>
           <ButtonBox>
             <CustomButton onClick={onClose}>닫기</CustomButton>
             <CustomButton onClick={onClick}>등록하기</CustomButton>
@@ -109,7 +102,7 @@ const DetailWriteSearch = ({
 };
 
 const DetailWriteSearchLayout = styled.div`
-  display: flex;
+  display: block;
   flex-direction: column;
 `;
 
@@ -152,6 +145,7 @@ const DetailWriteSearchBox = styled.div`
 
 const DetailWriteSearchProductBox = styled.div`
   display: flex;
+  overflow: hidden;
 
   .searchProduct {
     display: flex;
@@ -172,14 +166,24 @@ const DetailWriteSearchProductBox = styled.div`
   &:hover {
     color: #206efb;
   }
+
+  .search_category {
+    width: 3.125rem;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 const DetailWriteSearchBoxTop = styled.div`
   position: sticky;
   top: 0;
   background-color: #fff;
+  overflow: hidden;
+  /* overflow-y: hidden; */
+  z-index: 30;
 
   .search_products {
+    display: flex;
     font-size: 22px;
     font-weight: 700;
     line-height: 3rem;
@@ -191,19 +195,15 @@ const DetailWriteSearchBoxTop = styled.div`
 const DetailWriteSearchBoxBottom = styled.div`
   position: sticky;
   bottom: 0;
-  height: 130px;
   width: 100%;
   background-color: #fff;
+  overflow: hidden;
+  z-index: 30;
+  /* flex-wrap: wrap; */
+  /* width: fit-content; */
+  /* align-items: flex-start; */
 
   .pickProducts {
-    color: #fff;
-    background-color: #206efb;
-    width: 200px;
-    height: 2.25rem;
-    margin: 0.625rem;
-    border-radius: 1.875rem;
-    padding: 0.5rem 1.25rem;
-    font-size: 1rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -214,15 +214,19 @@ const SearchInputBox = styled.div`
   display: flex;
   justify-content: space-around;
   margin-bottom: 0.625rem;
+  padding: 0 0.5rem;
 
   > input {
-    width: 37.5rem;
+    width: 34.375rem;
     height: 2.8125rem;
     border-radius: 0.625rem;
     border: 2px solid #868e96;
-    padding: 0 1rem;
+    padding: 0 2.3rem;
     font-size: 1rem;
     line-height: 0.75rem;
+    background-image: url('/images/Search.png');
+    background-repeat: no-repeat;
+    background-position: 1% center;
 
     &:focus {
       border-color: #206efb;
@@ -244,18 +248,29 @@ const SearchInputBox = styled.div`
 const PickProductsBox = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  background-color: #206efb;
+  width: 23.125rem;
+  height: 2.25rem;
+  margin: 0.625rem;
+  border-radius: 1.875rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 1rem;
 
-  .closeBtn {
-    width: 10px;
-    height: 10px;
+  .closeBtnImage {
+    width: 0.625rem;
+    height: 0.625rem;
+    padding: 0;
   }
 `;
 
 const ButtonBox = styled.div`
-  display: flex;
+  display: fixed;
   justify-content: end;
-  /* background-color: #f1f3f5; */
-  /* width: 100%; */
+  background-color: #f1f3f5;
+  padding: 0.5rem 0.5rem;
 
   > button {
     border: none;
@@ -268,4 +283,38 @@ const ButtonBox = styled.div`
   }
 `;
 
+const SelectProductBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow-y: auto;
+  height: 120vh;
+  z-index: 25;
+  /* position: relative; */
+  /* bottom: 0; */
+`;
+
+const PickProductListBox = styled.div`
+  background-color: #fff;
+  display: flex;
+  overflow-x: scroll;
+  height: 9.375rem;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: fit-content;
+  width: 100%;
+  align-items: flex-start;
+`;
+
+const TestBox = styled.div`
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  overflow: hidden;
+  z-index: 30;
+  /* flex-wrap: wrap; */
+  /* width: fit-content; */
+  /* align-items: flex-start; */
+`;
 export default memo(DetailWriteSearch);
