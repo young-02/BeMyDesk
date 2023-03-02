@@ -25,13 +25,13 @@ const DetailWriteProductCard = ({ selectList }: any) => {
         className="mySwiper"
       >
         {selectList?.map((i: any) => (
-          <SwiperSlide>
+          <SwiperSlide key={i.productId}>
             {
-              <DetailWriteCardBox key={i.productId}>
+              <DetailWriteCardBox>
                 <CardBox>
                   <div className="card">
                     <Image
-                      src={i.image}
+                      src={i.images}
                       width={150}
                       height={150}
                       alt="selectListImg"
