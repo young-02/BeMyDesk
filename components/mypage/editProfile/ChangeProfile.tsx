@@ -190,8 +190,11 @@ function ChangeProfile({ user, profileData }: any) {
           />
           <div className="errorDiv">
             <p className="errorMessage">
-              {errorNickNameRegex ? '닉네임 양식을 확인해주세요 2~8자' : null}
+              {errorNickNameRegex
+                ? '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자이하이어야합니다.'
+                : null}
             </p>
+
             <p className="errorMessage">
               {errorNickNameEmpty ? '필수 입력사항입니다' : null}
             </p>
