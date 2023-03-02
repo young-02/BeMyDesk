@@ -2,7 +2,11 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ['firebasestorage.googleapis.com', 'shopping-phinf.pstatic.net'],
+    domains: [
+      'firebasestorage.googleapis.com',
+      'shopping-phinf.pstatic.net',
+      'lh3.googleusercontent.com',
+    ],
   },
   typescript: {
     // !! WARN !!

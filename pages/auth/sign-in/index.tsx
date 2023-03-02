@@ -156,21 +156,23 @@ export default function SignIn({}: Props) {
         await updateProfile(result_google.user, {
           photoURL: '/images/defaultProfile.png',
         });
-        const payload = {
-          profileImage: '/images/defaultProfile.png',
-          nickname: auth.currentUser?.displayName,
-          userId: auth.currentUser?.uid,
-          scraps: [],
-          following: [],
-          introduction: '안녕하세요!',
-        };
+        // const payload = {
+        //   profileImage: '/images/defaultProfile.png',
+        //   nickname: auth.currentUser?.displayName,
+        //   userId: auth.currentUser?.uid,
+        //   scraps: [],
+        //   following: [],
+        //   introduction: '안녕하세요!',
+        // };
 
-        await setDoc(collectionRef, payload);
+        // await setDoc(collectionRef, payload);
+        router.push('/auth/sns-nickname');
+      } else {
+        router.push('/post-list');
       }
     } catch (error) {
       console.error(error);
     }
-    router.push('/post-list');
   };
 
   //페이스북 로그인
@@ -187,21 +189,23 @@ export default function SignIn({}: Props) {
           photoURL: '/images/defaultProfile.png',
         });
 
-        const payload = {
-          profileImage: '/images/defaultProfile.png',
-          nickname: auth.currentUser?.displayName,
-          userId: auth.currentUser?.uid,
-          scraps: [],
-          following: [],
-          introduction: '안녕하세요!',
-        };
+        // const payload = {
+        //   profileImage: '/images/defaultProfile.png',
+        //   nickname: auth.currentUser?.displayName,
+        //   userId: auth.currentUser?.uid,
+        //   scraps: [],
+        //   following: [],
+        //   introduction: '안녕하세요!',
+        // };
 
-        await setDoc(collectionRef, payload);
+        // await setDoc(collectionRef, payload);
+        router.push('/auth/sns-nickname');
+      } else {
+        router.push('/post-list');
       }
     } catch (error) {
       console.error(error);
     }
-    router.push('/post-list');
   };
 
   // useEffect(() => {
@@ -295,7 +299,7 @@ export default function SignIn({}: Props) {
         <div className="SNSWrap">
           <p> SNS로 시작하기</p>
           <div className="SNSLoginContainer">
-            <div onClick={kakaoLogin}>
+            {/* <div onClick={kakaoLogin}>
               {' '}
               <Image
                 src="/images/kakaoLogo.png"
@@ -303,7 +307,7 @@ export default function SignIn({}: Props) {
                 width={48}
                 height={48}
               />
-            </div>
+            </div> */}
             <div onClick={googleLogin}>
               <Image
                 src="/images/googleLogo.png"
@@ -312,14 +316,14 @@ export default function SignIn({}: Props) {
                 height={48}
               />
             </div>
-            <div>
+            {/* <div>
               <Image
                 src="/images/naverLogo.png"
                 alt="NaverLogin"
                 width={48}
                 height={48}
               />
-            </div>
+            </div> */}
             <div onClick={facebookLogin}>
               {' '}
               <Image
