@@ -13,7 +13,7 @@ const parse = require('html-react-parser');
 const DetailWriteProductCard = ({ selectList }: any) => {
   return (
     <DetailWriteCardLayout>
-      {selectList.length < 2 ? (
+      {selectList.length < 3 ? (
         selectList.map((i: any) => (
           <DetailWriteCardBox key={i.productId}>
             <CardBox>
@@ -36,7 +36,7 @@ const DetailWriteProductCard = ({ selectList }: any) => {
         <Swiper
           slidesPerView={2}
           centeredSlides={true}
-          spaceBetween={-10}
+          spaceBetween={-100}
           pagination={{
             type: 'fraction',
           }}
