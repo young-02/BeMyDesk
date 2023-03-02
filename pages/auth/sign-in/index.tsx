@@ -148,7 +148,6 @@ export default function SignIn({}: Props) {
   const googleLogin = async () => {
     try {
       const result_google = await signInWithPopup(auth, googleAuth);
-
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const docSnap = await getDoc(collectionRef);
       const isFirstLogin = !docSnap.exists();
@@ -179,7 +178,6 @@ export default function SignIn({}: Props) {
   const facebookLogin = async () => {
     try {
       const result_facebook = await signInWithPopup(auth, facebookAuth);
-
       const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const docSnap = await getDoc(collectionRef);
       const isFirstLogin = !docSnap.exists();

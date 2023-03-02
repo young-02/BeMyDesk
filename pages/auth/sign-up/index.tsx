@@ -123,7 +123,7 @@ export default function SignUp({}: Props) {
   // 닉네임 유효성검사
   const handleNickname = function (event: any) {
     setNickname(event.target.value);
-    const regex = /^[\w\W가-힣]{2,8}$/;
+    const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$/;
     if (regex.test(event.target.value)) {
       setNicknameValid(true);
     } else {
@@ -288,7 +288,13 @@ export default function SignUp({}: Props) {
               </SelectBox>
             </div>
 
-            <div className="error-text"></div>
+            <div className="error-text">
+              {!emailValid && email.length > 0 && (
+                <div className="errorMessageWrap">
+                  이메일 양식을 확인해주세요.
+                </div>
+              )}
+            </div>
           </div>
 
           <div>
@@ -394,7 +400,7 @@ export default function SignUp({}: Props) {
 
         <div className="buttonWrap">
           <CustomButton
-            backgoundColor="#206EFB"
+            backgroundColor="#206EFB"
             fontColor="#fff"
             paddingColumns="0.875"
             paddingRow="0.875"
