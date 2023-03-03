@@ -21,8 +21,7 @@ export default function useGetReaction() {
         (auth.currentUser?.uid == item.id && setScrap(item.scraps)),
     );
   }, [follow, scrap]);
-  // userInfor.map((item) =>  setGetUser(item));
-  // console.log('getUser',getUser)
+  // 의존성 userInfor 제거
 
   return { userInfor, follow, scrap };
 }

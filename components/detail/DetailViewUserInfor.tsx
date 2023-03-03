@@ -32,13 +32,16 @@ export default function DetailViewUserInfor({ detail }) {
   const follower = following?.includes(userId) ? true : false;
   const userProfileImg = userProfile ?? '/images/defaultProfile.png';
 
+  const { query: currentQuery }: any = router;
   useEffect(() => {
     userInfor?.map(
       (item) =>
         (auth.currentUser?.uid === item.id && setFollowing(item.following)) ||
         (auth.currentUser?.uid == item.id && setScraps(item.scraps)),
     );
-  }, [userInfor, following, scraps]);
+  }, [userInfor]);
+
+  // userInfor, following, scraps
 
   const onclickScrap = async (num: any) => {
     if (isLogin) {
