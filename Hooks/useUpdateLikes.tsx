@@ -28,14 +28,14 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
   if (isLikesClicked === false) {
     newLikes = {
       likes: [...post.likes, currentUserId],
-      likesCount: post.likesCount + 1,
+      likesCount: postLikesCount + 1,
     };
   }
   // 좋아요 -1
   if (isLikesClicked === true) {
     newLikes = {
       likes: post.likes.filter((id) => id !== currentUserId),
-      likesCount: post.likesCount - 1,
+      likesCount: postLikesCount - 1,
     };
   }
 
