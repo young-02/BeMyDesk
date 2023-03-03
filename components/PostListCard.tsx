@@ -21,7 +21,6 @@ const PostListCard = ({ post }: { post: PostType }) => {
     postTitle,
     postText,
     jobCategory,
-    likes,
     likesCount,
     postImage1,
     userProfile,
@@ -39,7 +38,7 @@ const PostListCard = ({ post }: { post: PostType }) => {
     if (currentUserId === undefined) {
       router.push('auth/sign-in');
     } else {
-      updateLikes();
+      updateLikes(id);
     }
   };
 

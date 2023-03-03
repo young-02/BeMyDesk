@@ -15,13 +15,12 @@ export default function useGetReaction() {
         snapshot.docs.map((doc: any) => ({ ...doc.data(), id: doc.id })),
       ),
     );
-
     userInfor?.map(
       (item) =>
         (auth.currentUser?.uid == item.id && setFollow(item.following)) ||
         (auth.currentUser?.uid == item.id && setScrap(item.scraps)),
     );
-  }, [userInfor, follow, scrap]);
+  }, [follow, scrap]);
   // userInfor.map((item) =>  setGetUser(item));
   // console.log('getUser',getUser)
 
