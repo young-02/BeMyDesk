@@ -1,5 +1,10 @@
 import { auth, dbService } from '@/shared/firebase';
-import { deleteUser } from 'firebase/auth';
+import {
+  deleteUser,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  GoogleAuthProvider,
+} from 'firebase/auth';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -42,17 +47,24 @@ function DeleteAccount() {
     if (user?.email !== email) {
       setErrorEmailValid(true);
     } else {
-      await deleteDoc(doc(dbService, 'userInfo', 'user'));
+      // 아이디 비번으로 재인증 하게 해야함
+      // const credential = EmailAuthProvider.credential(
+      //   user.email,
+      //   email,
+      // );
+      // await reauthenticateWithCredential(user, credential);
 
-      deleteUser(user)
-        .then(() => {
-          alert('계정 삭제가 완료되었습니다');
-          router.push('/');
-        })
-        .catch((error) => {
-          console.log('error', error);
-          alert('잘못된 접근입니다.');
+      try {
+        await deleteUser(user).then(() => {
+          deleteDoc(doc(dbService, 'userInfo', user.uid));
         });
+        alert('계정 삭제가 완료되었습니다. 이용해주셔서 감사합니다.');
+        router.push('/main');
+      } catch (error) {
+        console.log('error', error);
+        alert('세션이 만료되었습니다. 다시 로그인 한 후 진행해주세요');
+        router.push('/auth/sign-in');
+      }
     }
   };
 
@@ -72,6 +84,8 @@ function DeleteAccount() {
           type="text"
           placeholder="가입하신 이메일을 적어주세요."
           onChange={handleEmail}
+          onFocus={() => setErrorEmailValid(false)}
+          className={errorEmailValid ? 'error' : null}
         />
         <div className="errorMessageDiv">
           {errorEmailValid ? (
@@ -202,7 +216,7 @@ const DeleteAccountContainer = styled.div`
       height: 48px;
       color: #ffffff;
       /* Gray 03 */
-      background: #206efb;
+      background: #ac3939;
       border: 1px solid #ced4da;
       border-radius: 10px;
       font-family: 'Pretendard';
@@ -255,7 +269,7 @@ const DeleteAccountContainer = styled.div`
     border-radius: 0.625rem;
     padding: 0.8125rem 1.25rem;
     border: 0.0625rem solid #adb5bd;
-    width: 90%;
+    width: 86%;
     font-size: 18px;
     &.error {
       border: 1px solid red;

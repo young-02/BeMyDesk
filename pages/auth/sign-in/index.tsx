@@ -15,9 +15,13 @@ import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import useGetReaction from '../../../Hooks/useGetReaction';
+import useCheckUser from '@/Hooks/useCheckUser';
 type Props = {};
 
 export default function SignIn({}: Props) {
+  // 유저 상태 체크
+  useCheckUser();
+
   const router = useRouter();
   // const emailRef = useRef<HTMLInputElement>(null);
   // const pwRef = useRef<HTMLInputElement>(null);
@@ -207,10 +211,6 @@ export default function SignIn({}: Props) {
       console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //   console.log('userInfo', auth?.currentUser);
-  // }, [auth?.currentUser]);
 
   return (
     <StyledBackground>

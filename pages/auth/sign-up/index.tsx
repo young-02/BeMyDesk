@@ -1,3 +1,4 @@
+import useCheckUser from '@/Hooks/useCheckUser';
 import { auth, dbService } from '@/shared/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import {
@@ -16,6 +17,9 @@ import CustomButton from '../../../components/ui/CustomButton';
 type Props = {};
 
 export default function SignUp({}: Props) {
+  // 유저 상태 체크
+  useCheckUser();
+
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
