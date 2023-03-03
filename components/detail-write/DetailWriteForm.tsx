@@ -31,7 +31,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
   // 검색해서 선택한 제품 state
   const [list, setList] = useState<any[]>(initialValues?.list);
-
+  // console.log(list, 'list');
   // 검색해서 선택한 제품들을 넣는 state
   const [selectList, setSelectList] = useState<any[]>(
     initialValues?.selectList,
@@ -48,7 +48,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   const [attachment, setAttachment] = useState(initialValues?.attachment);
 
   // 직접입력 state
-  const [enterYourself, setEnterYourself] = useState([]);
+  const [isNotData, setIsNotData] = useState(false);
 
   // 에디터 텍스트 onchange함수
   const changeEditorText = (value: string) => {
@@ -79,7 +79,8 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         params: {
           query: searchWord,
         },
-      )
+      })
+
       .then((response) => setData(response.data))
       .catch((Error) => console.log(Error));
   };
@@ -128,6 +129,14 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   // const enterYourselfInput = (e: any) => {
   //   setEnterYourself(e.target.value);
   // };
+
+  const leftToggle = () => {
+    setIsNotData(false);
+  };
+
+  const rightToggle = () => {
+    setIsNotData(true);
+  };
 
   // const fileUpload = (event: any) => {
   //   const imageUpload = event.target.files;
@@ -269,9 +278,11 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           getNaverData={getNaverData}
           selectProduct={selectProduct}
           deleteProduct={deleteProduct}
-          // value={enterYourself}
-          setEnterYourself={setEnterYourself}
-          // onChange={enterYourselfInput}
+          isNotData={isNotData}
+          leftToggle={leftToggle}
+          rightToggle={rightToggle}
+          setIsNotData={setIsNotData}
+          // enterYourselfInput={enterYourselfInput}
           onClick={selectedProducts}
         />
       )}
@@ -301,41 +312,62 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         />
         <QuillEditor onChange={changeEditorText} value={content} />
         <DetailWriteBox>
-          <span className="title_span">테스크테리어 사진을 추가해주세요</span>
+          <div className="title_span_a">테스크테리어 이미지를 추가해주세요</div>
           <DeskPhotoBox>
-            {attachment && (
-              <Image
-                src={attachment}
-                width={150}
-                height={150}
-                alt="attachmentImg"
-              />
-            )}
-
-            <label className="deskImgLabel" htmlFor="deskImg">
-              {/* <Image src={chooseImage.src} /> */}
-              <span>이미지를 추가해주세요</span>
-            </label>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              id="deskImg"
-              name="deskImg"
-              onChange={onFileChange}
-            />
+            <DeskPhotoWrap>
+              <label className="deskImgLabel" htmlFor="deskImg_one">
+                <Image
+                  src={'/images/previewImg.png'}
+                  alt="preview"
+                  width={50}
+                  height={50}
+                />
+                <span>이미지를 업로드해주세요</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="deskImg_one"
+                  name="deskImg_one"
+                  onChange={onFileChange}
+                />
+                {attachment && (
+                  <div className="preview-div">
+                    <Image src={attachment} layout="fill" alt="preview" />
+                  </div>
+                )}
+              </label>
+            </DeskPhotoWrap>
+            {/* <DeskPhotoWrap>
+              <label className="deskImgLabel" htmlFor="deskImg_one">
+                <Image
+                  src={'/images/previewImg.png'}
+                  alt="preview"
+                  width={50}
+                  height={50}
+                />
+                <span>이미지를 업로드해주세요</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="deskImg_one"
+                  name="deskImg_one"
+                  onChange={onFileChange}
+                />
+              </label>
+            </DeskPhotoWrap> */}
           </DeskPhotoBox>
         </DetailWriteBox>
         <DetailWriteBox>
-          <div>
-            <span className="title_span">사용하신 제품을 선택해주세요</span>
+          <div className="title_span_box">
+            <div className="title_span_b">사용하신 제품을 선택해주세요</div>
             <CustomButton
               onClick={showSearchModal}
-              backgroundColor="#206efb"
+              color="#206efb"
               border="1"
               paddingColumns="1"
               paddingRow="1"
               fontColor="#fff"
+              fontSize="1"
               borderRadius="1.25"
               fontWeight="700"
               // fontSize="1"
@@ -343,6 +375,20 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
               기기검색
             </CustomButton>
           </div>
+          {selectList.length === 0 && (
+            <NoPreviewImageBox>
+              <div className="laptop_box">
+                <Image
+                  src={'/images/laptop.png'}
+                  alt="isYourProduct"
+                  width={600}
+                  height={600}
+                  className="laptop"
+                />
+                <div className="check_text">등록하신 제품이 없어요</div>
+              </div>
+            </NoPreviewImageBox>
+          )}
 
           <DetailWriteProductCardBox>
             <DetailWriteProductCard key={selectList} selectList={selectList} />
@@ -350,8 +396,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         </DetailWriteBox>
         <DetailWriteButtonBox>
           <CustomButton
-            backgroundColor="#206efb"
-            fontColor="#fff"
+            fontColor="#000"
             borderRadius="1.25"
             width="10"
             margin="0 1.5"
@@ -395,8 +440,6 @@ const DetailWriteLayout = styled.div`
   margin-top: 9rem;
   margin-bottom: 4rem;
   width: 75%;
-  border: 1px solid black;
-  border-radius: 1.875rem;
   padding: 2.5rem;
   box-sizing: border-box;
 `;
@@ -422,6 +465,7 @@ const JobSelectBox = styled.div`
   .job_span {
     font-size: 1.125rem;
     line-height: 1.25rem;
+    margin: 0 0.5rem;
   }
 `;
 
@@ -430,9 +474,8 @@ const TitleInput = styled.input`
   width: 100%;
   height: 3.25rem;
   box-sizing: border-box;
-  border: 0.125rem solid #868e96;
-  border-radius: 0.625rem;
-  padding: 0.875rem 1.25rem;
+  border: 1px solid #0000;
+  border-bottom: 1px solid #868e96;
   font-size: 1.25rem;
 `;
 
@@ -441,7 +484,7 @@ const DetailWriteButtonBox = styled.div`
   justify-content: end;
   width: 100%;
   height: 3.25rem;
-  margin-top: 7rem;
+  margin-top: 3rem;
 
   .btn {
     background-color: #206efb;
@@ -466,34 +509,44 @@ const DetailWriteBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 18.75rem;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
 
-  .title_span {
+  .title_span_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    margin-top: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .title_span_a {
     margin-bottom: 1rem;
     font-weight: 700;
     font-size: 1.5rem;
+    color: #17171c;
     line-height: 2rem;
     margin-right: 1rem;
+    margin-top: 3rem;
+    align-content: center;
+  }
+
+  .title_span_b {
+    /* margin-bottom: 1rem; */
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #17171c;
+    line-height: 2rem;
+    /* margin-right: 1rem; */
+    /* margin-top: 3rem; */
+    align-content: center;
   }
 `;
 
 const DeskPhotoBox = styled.div`
-  .deskterior_label {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 3rem;
-    border: 1px solid #868e96;
-    border-radius: 0.625rem;
-
-    &:hover {
-      background-color: #206efb;
-      color: #fff;
-    }
-  }
+  display: flex;
+  width: 100%;
+  gap: 1rem;
 
   input {
     display: none;
@@ -501,17 +554,122 @@ const DeskPhotoBox = styled.div`
 
   .deskImgLabel {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid #868e96;
-    border-radius: 0.625rem;
     font-size: 1rem;
     font-weight: 700;
     padding: 1rem;
-    width: 100%;
+    width: 45%;
+    height: 15rem;
+
+    :nth-child(1) {
+      margin: 0 1.25rem 0 0;
+    }
+  }
+
+  span {
+    margin-top: 1rem;
+  }
+
+  .preview_image {
+    border-radius: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .no_preview_image {
+    border-radius: 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #868e96;
   }
 `;
 const DetailWriteProductCardBox = styled.div`
   display: flex;
   justify-content: center;
 `;
+
+const NoPreviewImageBox = styled.div`
+  display: flex;
+  width: 100%;
+
+  .laptop_box {
+    position: relative;
+    width: 35%;
+    height: 15rem;
+    border: 1px solid #868e96;
+    border-radius: 1.25rem;
+
+    &:hover {
+      border: 1px solid #206efb;
+    }
+  }
+
+  .laptop {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    vertical-align: middle;
+    opacity: 0.2;
+    transform: rotate(14.85deg);
+    padding-left: 3rem;
+  }
+
+  .check_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 3rem;
+    color: #868e96;
+
+    &:hover {
+      color: #206efb;
+    }
+  }
+`;
+
+const DeskPhotoWrap = styled.div`
+  position: relative;
+  width: 35%;
+  height: 15rem;
+  border: 1px solid #868e96;
+  border-radius: 0.625rem;
+  overflow: hidden;
+
+  .deskImgLabel {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 1rem;
+  }
+
+  .preview-div {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    > img {
+      object-fit: cover;
+    }
+  }
+`;
+
+// const PreviewBox = styled.div`
+/* background-size: 10rem 10rem;
+  background-image: url('/images/previewImage.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+`; */
