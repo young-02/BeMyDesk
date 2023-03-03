@@ -383,6 +383,9 @@ const ProfileEdit = styled.div`
       }
     }
     .ProfileEditThirdLineApplyButtonDiv {
+      :hover {
+        opacity: 90%;
+      }
       .ProfileEditThirdLineApplyButton {
         width: 132px;
         height: 48px;

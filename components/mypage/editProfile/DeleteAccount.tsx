@@ -194,13 +194,15 @@ const DeleteAccountContainer = styled.div`
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-end;
-
+    :hover {
+      opacity: 90%;
+    }
     > button {
       width: 132px;
       height: 48px;
-      background: #ffffff;
+      color: #ffffff;
       /* Gray 03 */
-
+      background: #206efb;
       border: 1px solid #ced4da;
       border-radius: 10px;
       font-family: 'Pretendard';
@@ -214,7 +216,6 @@ const DeleteAccountContainer = styled.div`
 
       /* Gray 09 */
 
-      color: #17171c;
       margin-top: 5px;
       margin-right: 10px;
       &:disabled {
