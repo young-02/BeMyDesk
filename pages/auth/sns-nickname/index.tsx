@@ -349,6 +349,9 @@ const StyledDiv = styled.div`
     margin-top: 2.5rem;
     > button {
       width: 100%;
+      :hover {
+        opacity: 90%;
+      }
     }
   }
 

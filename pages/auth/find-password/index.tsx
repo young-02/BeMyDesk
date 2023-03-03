@@ -168,6 +168,9 @@ const StyledDiv = styled.div`
     padding: 0px 60px 0 60px;
     > button {
       width: 100%;
+      :hover {
+        opacity: 90%;
+      }
     }
   }
 
@@ -176,7 +179,9 @@ const StyledDiv = styled.div`
     justify-content: center;
     padding-top: 17px;
     cursor: pointer;
-
+    :hover {
+      opacity: 70%;
+    }
     p {
       font-family: 'Pretendard';
       font-style: normal;
@@ -192,10 +197,6 @@ const StyledDiv = styled.div`
       color: #868e96;
       border-bottom: 1.5px solid #868e96;
       padding-bottom: 2px;
-      :hover {
-        font-weight: 700;
-        border-bottom: 1.8px solid #868e96;
-      }
     }
   }
 
@@ -234,6 +235,10 @@ const StyledDiv = styled.div`
     padding: 15px 8px 0 8px;
     border-bottom: 2px solid #adb5bd;
     min-height: 60px;
+
+    :hover {
+      border-bottom: 2px solid #6d7379;
+    }
 
     &.error {
       border-color: red;

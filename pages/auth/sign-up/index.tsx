@@ -451,12 +451,24 @@ const StyledBackground = styled.div`
 `;
 
 const SignUpLayout = styled.div`
-  max-width: 36.75rem;
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  width: 36.75rem;
+  height: 45.5rem;
+  background: #ffffff;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
+  border-radius: 20px;
+  padding: 2.375rem 2.5rem;
+
+  /* max-width: 36.75rem;
   width: 100%;
+
   padding: 2.375rem 2.5rem;
   border-radius: 1.25rem;
   background: #fff;
   margin-top: 40px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29); */
 
   // 개별항목 헤딩 + 맨위 '회원가입'
   .title {
@@ -470,13 +482,13 @@ const SignUpLayout = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 45px;
+    margin-top: 40px;
     // 개별항목 헤딩 Div
     .inputTitleWrap {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.875rem;
+      margin-bottom: 0.5rem;
 
       > .title {
         font-size: 1.25rem;
@@ -519,7 +531,9 @@ const SignUpLayout = styled.div`
 
     > button {
       width: 100%;
-
+      :hover {
+        opacity: 90%;
+      }
       &:disabled {
         background-color: #adb5bd;
       }
@@ -593,10 +607,10 @@ const SelectBox = styled.div`
   }
 `;
 const SignUpAgreeDiv = styled.div`
-  margin-top: 1.75rem;
+  margin-top: 1rem;
 
   .agree-input-wrap {
-    margin-bottom: 0.625rem;
+    margin-bottom: 0.5rem;
 
     &:last-child {
       margin-bottom: 0;
@@ -636,7 +650,7 @@ const SignUpAgreeDiv = styled.div`
     .agree-title {
       font-size: 0.875rem;
       font-weight: 700;
-      margin-bottom: 1.0625rem;
+      margin-bottom: 0.6rem;
     }
   }
 

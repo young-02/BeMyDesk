@@ -294,6 +294,9 @@ const StyledDivProfile = styled.div`
 
     .settingIcon {
       cursor: pointer;
+      :hover {
+        opacity: 50%;
+      }
     }
   }
 `;
