@@ -17,6 +17,7 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
   // 좋아요 상태값을 관리합니다.
   const initialState = post.likes.includes(currentUserId) ? true : false;
   const [isLikesClicked, setIsLikesClicked] = useState(initialState);
+  const [postLikesCount, setPostLikesCount] = useState(post.likesCount);
   // url path로 좋아요 업데이트가 어떤 페이지에서 일어났는지 파악합니다.
   const router = useRouter();
   const { query: currentQuery }: any = router;
@@ -48,31 +49,16 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
           queryKey: ['post-list', currentQuery],
         });
 
-        // 기존 데이터를 snapshot 찍습니다.
-        const previousPost = queryClient.getQueryData([
-          'post-list',
-          currentQuery,
-        ]);
-
-        // 성공을 가정하고 새로운 값으로 UI를 업데이트합니다.
-        // post-list 일 때,
-        queryClient.setQueryData(['post-list', currentQuery], (old: any) =>
-          old.map((doc: PostType) => {
-            if (doc.id === postId) {
-              return {
-                ...doc,
-                ...newLikes,
-              };
-            }
-            return doc;
-          }),
-        );
+        // 좋아요 갯수값을 변경합니다.
+        if (isLikesClicked === false) {
+          setPostLikesCount(postLikesCount + 1);
+        }
+        if (isLikesClicked === true) {
+          setPostLikesCount(postLikesCount - 1);
+        }
 
         // 좋아요 체크 상태값을 변경합니다.
         setIsLikesClicked(!isLikesClicked);
-
-        // 기존값과 새로 업데이트 된 값을 context 내부 값으로 반환합니다.
-        return { previousPost };
       },
 
       onError: (err, newTodo, context) => {
@@ -91,5 +77,5 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
     },
   );
 
-  return { isLikesClicked, postListMutate };
+  return { postLikesCount, isLikesClicked, postListMutate };
 };

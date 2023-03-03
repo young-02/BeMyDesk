@@ -21,7 +21,6 @@ const PostListCard = ({ post }: { post: PostType }) => {
     postTitle,
     postText,
     jobCategory,
-    likesCount,
     postImage1,
     userProfile,
   } = post;
@@ -29,10 +28,11 @@ const PostListCard = ({ post }: { post: PostType }) => {
   // 현재 로그인한 유저 정보 가져오기
   const currentUserId: any = auth.currentUser?.uid;
 
-  const { isLikesClicked, postListMutate: updateLikes } = useUpdateLikes(
-    currentUserId,
-    post,
-  );
+  const {
+    postLikesCount,
+    isLikesClicked,
+    postListMutate: updateLikes,
+  } = useUpdateLikes(currentUserId, post);
 
   const handleUpdateLikes = async () => {
     if (currentUserId === undefined) {
@@ -83,7 +83,7 @@ const PostListCard = ({ post }: { post: PostType }) => {
               width={24}
             />
             <p className={isLikesClicked ? 'active' : 'inactive'}>
-              {likesCount}
+              {postLikesCount}
             </p>
           </div>
         </div>
