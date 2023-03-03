@@ -6,8 +6,10 @@ import { useRouter } from 'next/router';
 import { auth, dbService } from '@/shared/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import useCheckUser from '@/Hooks/useCheckUser';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 function FindPassword() {
+  // 유저 상태 체크
   useCheckUser();
 
   const router = useRouter();
@@ -20,7 +22,9 @@ function FindPassword() {
   const [errorEmailSnsUser, setErrorEmailSnsUser] = useState(false);
   //완료 메세지
   const [sendDone, setSendDone] = useState(false);
-
+  //이메일regex
+  const emailRegex =
+    /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
   // 이메일 온포커스
   const emailOnfocus = () => {
     setErrorEmailEmpty(false);
@@ -31,26 +35,22 @@ function FindPassword() {
   const ButtonClickHandler = () => {
     if (email == '') {
       setErrorEmailEmpty(true);
+      return;
     }
+    // else if (!emailRegex.test(email)) {
+    //   setErrorEmailInvalid(true);
+    //   return;
+    // }
+    else
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          setSendDone(true);
+        })
+        .catch((error) => {
+          setErrorEmailInvalid(true);
+          console.log(error);
+        });
   };
-
-  // useEffect(() => {
-  //   const checkUser = async () => {
-  //     if (auth.currentUser?.uid) {
-  //       const uid = auth.currentUser.uid;
-  //       const docRef = doc(dbService, 'userInfo', uid);
-  //       const docSnap = await getDoc(docRef);
-  //       if (!docSnap.exists()) {
-  //         alert('유저 정보를 설정하세요');
-  //         router.push('/auth/sns-nickname');
-  //       }
-  //     } else {
-  //       alert('잘못된 접근입니다.');
-  //       router.push('/main');
-  //     }
-  //   };
-  //   checkUser();
-  // }, []);
 
   return (
     <StyledBackground>
