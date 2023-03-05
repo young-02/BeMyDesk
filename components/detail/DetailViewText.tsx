@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { FacebookShareButton } from 'react-share';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useGetKakao } from '../../Hooks/useGetKakao';
 import ReactHtmlParser from 'html-react-parser';
+import { useGetKakao } from '@/Hooks/useGetKakao';
 type Props = {};
 
-export default function DetailViewText({ detail }) {
+export default function DetailViewText({ post }) {
   const [socialSharing, setSocialSharing] = useState(false);
 
   const clickToShare = () => {
@@ -33,10 +33,8 @@ export default function DetailViewText({ detail }) {
   return (
     <>
       <DetailViewTextLayout>
-        <div className="detail-view-title">{detail.postTitle}</div>
-        <div className="detail-view-text">
-          {ReactHtmlParser(detail.postText)}
-        </div>
+        <div className="detail-view-title">{post.postTitle}</div>
+        <div className="detail-view-text">{ReactHtmlParser(post.postText)}</div>
       </DetailViewTextLayout>
       <ShareLayout>
         <div className="share" onClick={clickToShare}>

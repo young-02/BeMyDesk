@@ -10,7 +10,7 @@ import Image from 'next/image';
 import activeLikes from '../../public/images/activeLikes.png';
 import inactiveLikes from '../../public/images/inactiveLikes.png';
 
-export default function DetailViewUserInfor({ detail }) {
+export default function DetailViewUserInfor({ post }) {
   const router = useRouter();
   const {
     userProfile,
@@ -20,7 +20,7 @@ export default function DetailViewUserInfor({ detail }) {
     id,
     likes,
     userNickname,
-  } = detail;
+  } = post;
   const { isLogin, isUserObj, logOut } = useCheckLogin();
 
   const initialState = likes.includes(isUserObj) ? true : false;
