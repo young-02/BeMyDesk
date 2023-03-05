@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from 'react-query';
+import { QueryCache, useMutation, useQueryClient } from 'react-query';
 import { auth, dbService } from '@/shared/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
@@ -14,6 +14,7 @@ const updateLikes = async ({ post, newLikes }: UpdateLikesProps) => {
 
 export const useUpdateLikes = (currentUserId: any, post: PostType) => {
   const queryClient = useQueryClient();
+
   // 좋아요 상태값을 관리합니다.
   const initialState = post.likes.includes(currentUserId) ? true : false;
   const [isLikesClicked, setIsLikesClicked] = useState(initialState);
@@ -39,7 +40,7 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
     };
   }
 
-  // Optimistic Updates 함수
+  // ❤️포스트 리스트 페이지 좋아요 업데이트
   const { mutate: postListMutate } = useMutation(
     () => updateLikes({ post, newLikes }),
     {
@@ -138,5 +139,43 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
     },
   );
 
-  return { isLikesClicked, postListMutate };
+  // 💙디데일뷰 페이지 좋아요 업데이트
+  const { mutate: postMutate } = useMutation(
+    () => updateLikes({ post, newLikes }),
+    {
+      onMutate: async (postId: string) => {
+        // 진행되는 모든 리패치들을 취소합니다.
+        await queryClient.cancelQueries({
+          queryKey: ['post', postId],
+        });
+
+        // 기존 데이터를 snapshot 찍습니다.
+        const prevPost = queryClient.getQueryData(['post', postId]);
+
+        // Optimistically update to the new value
+        queryClient.setQueryData(['post', postId], (old: any) => {
+          return {
+            ...old,
+            ...newLikes,
+          };
+        });
+
+        // 좋아요 체크 상태값을 변경합니다.
+        setIsLikesClicked(!isLikesClicked);
+
+        return { prevPost };
+      },
+
+      onError: (err, newTodo, context) => {
+        // 에러시 기존 데이터를 반환합니다.
+        queryClient.setQueryData(['post', postId], context.prevPost);
+      },
+
+      onSettled: () => {
+        queryClient.removeQueries('post-list');
+      },
+    },
+  );
+
+  return { isLikesClicked, postListMutate, postMutate };
 };

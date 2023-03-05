@@ -14,13 +14,10 @@ import { usePost } from '../../Hooks/usePost';
 type Props = {};
 
 export default function DetailView({}) {
-  const { posts } = useGetPosts();
   const router = useRouter();
-  const { id } = router.query;
   const postId = router.query.id;
 
   const { isLoading, isError, data: post, error } = usePost(postId);
-  console.log('post', post);
 
   const deletePost = async () => {
     alert('삭제?');
@@ -29,11 +26,6 @@ export default function DetailView({}) {
   };
 
   const updatePost = async () => {
-    // getDoc(doc(dbService, 'postData', router.query.id)).then((doc) => {
-    //   const data = doc.data();
-    //   // console.log(data, 'data');
-    //   // setInitialValues(data as any);
-    // });
     alert('수정?');
     router.push(`/detail/write/${postId}/edit`);
   };

@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import activeLikes from '../../public/images/activeLikes.png';
 import inactiveLikes from '../../public/images/inactiveLikes.png';
+import { useUpdateLikes } from '@/Hooks/useUpdateLikes';
 
 export default function DetailViewUserInfor({ post }) {
   const router = useRouter();
@@ -21,10 +22,12 @@ export default function DetailViewUserInfor({ post }) {
     likes,
     userNickname,
   } = post;
-  const { isLogin, isUserObj, logOut } = useCheckLogin();
 
+  // 현재 로그인한 유저 정보 가져오기
+  const currentUserId: any = auth.currentUser?.uid;
+
+  const { isLogin, isUserObj, logOut } = useCheckLogin();
   const initialState = likes.includes(isUserObj) ? true : false;
-  const [isLikesClicked, setIsLikesClicked] = useState(initialState);
   const { userInfor } = useGetReaction();
   const [following, setFollowing] = useState<[] | undefined>();
   const [scraps, setScraps] = useState<[] | undefined>();
@@ -36,12 +39,10 @@ export default function DetailViewUserInfor({ post }) {
   useEffect(() => {
     userInfor?.map(
       (item) =>
-        (auth.currentUser?.uid === item.id && setFollowing(item.following)) ||
-        (auth.currentUser?.uid == item.id && setScraps(item.scraps)),
+        (currentUserId === item.id && setFollowing(item.following)) ||
+        (currentUserId == item.id && setScraps(item.scraps)),
     );
   }, [userInfor]);
-
-  // userInfor, following, scraps
 
   const onclickScrap = async (num: any) => {
     if (isLogin) {
@@ -58,23 +59,34 @@ export default function DetailViewUserInfor({ post }) {
     }
   };
 
-  const onclickLove = async (num: any) => {
-    if (isLogin) {
-      if (isLikesClicked === false) {
-        likes.pop(isUserObj);
-      } else {
-        likes.push(isUserObj);
-      }
-      setIsLikesClicked(true);
+  const { isLikesClicked, postMutate: updateLikes } = useUpdateLikes(
+    currentUserId,
+    post,
+  );
+  const handleUpdateLikes = async () => {
+    if (currentUserId === undefined) {
+      router.push('auth/sign-in');
     } else {
-      router.push('/auth/sign-in');
+      updateLikes(id);
     }
-
-    const likesCount = likes.length;
-    const docRef = doc(dbService, 'postData', num);
-    const payload = { likesCount, likes };
-    await updateDoc(docRef, payload);
   };
+  // const onclickLove = async (num: any) => {
+  //   if (isLogin) {
+  //     if (isLikesClicked === false) {
+  //       likes.pop(isUserObj);
+  //     } else {
+  //       likes.push(isUserObj);
+  //     }
+  //     setIsLikesClicked(true);
+  //   } else {
+  //     router.push('/auth/sign-in');
+  //   }
+
+  //   const likesCount = likes.length;
+  //   const docRef = doc(dbService, 'postData', num);
+  //   const payload = { likesCount, likes };
+  //   await updateDoc(docRef, payload);
+  // };
 
   const onclickFollow = async (num: any) => {
     if (isLogin) {
@@ -117,12 +129,14 @@ export default function DetailViewUserInfor({ post }) {
           )}
         </button>
         {/* <div onClick={updateLikes}> */}
-        <Image
-          src={isLikesClicked ? activeLikes : inactiveLikes}
-          alt="likes-icon"
-          width={24}
-        />
-        <p className={isLikesClicked ? 'active' : 'inactive'}>{likesCount}</p>
+        <div onClick={handleUpdateLikes}>
+          <Image
+            src={isLikesClicked ? activeLikes : inactiveLikes}
+            alt="likes-icon"
+            width={24}
+          />
+          <p className={isLikesClicked ? 'active' : 'inactive'}>{likesCount}</p>
+        </div>
       </div>
       {/* <>
           <button onClick={() => onclickLove(id)}>

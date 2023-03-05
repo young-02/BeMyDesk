@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 import { transDate } from '../utils/transDate';
 import { auth } from '@/shared/firebase';
 import { useUpdateLikes } from '../Hooks/useUpdateLikes';
-import { useQueryClient } from 'react-query';
 
 const PostListCard = ({ post }: { post: PostType }) => {
   const router = useRouter();
@@ -29,11 +28,10 @@ const PostListCard = ({ post }: { post: PostType }) => {
   // 현재 로그인한 유저 정보 가져오기
   const currentUserId: any = auth.currentUser?.uid;
 
-  const {
-    // postLikesCount,
-    isLikesClicked,
-    postListMutate: updateLikes,
-  } = useUpdateLikes(currentUserId, post);
+  const { isLikesClicked, postListMutate: updateLikes } = useUpdateLikes(
+    currentUserId,
+    post,
+  );
 
   const handleUpdateLikes = async () => {
     if (currentUserId === undefined) {

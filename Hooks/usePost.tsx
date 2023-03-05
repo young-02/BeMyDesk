@@ -3,12 +3,10 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
-export const usePost = (postId:any) => {
-  // const router = useRouter();
-  // const postId = router.query.id;
+export const usePost = (postId: any) => {
   return useQuery(['post', postId], () => getPost(postId), {
     staleTime: Infinity,
-    cacheTime: 5000,
+    cacheTime: 0,
     refetchOnWindowFocus: false,
   });
 };
