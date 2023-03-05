@@ -21,6 +21,7 @@ const PostListCard = ({ post }: { post: PostType }) => {
     postTitle,
     postText,
     jobCategory,
+    likesCount,
     postImage1,
     userProfile,
   } = post;
@@ -29,7 +30,7 @@ const PostListCard = ({ post }: { post: PostType }) => {
   const currentUserId: any = auth.currentUser?.uid;
 
   const {
-    postLikesCount,
+    // postLikesCount,
     isLikesClicked,
     postListMutate: updateLikes,
   } = useUpdateLikes(currentUserId, post);
@@ -83,7 +84,7 @@ const PostListCard = ({ post }: { post: PostType }) => {
               width={24}
             />
             <p className={isLikesClicked ? 'active' : 'inactive'}>
-              {postLikesCount}
+              {likesCount}
             </p>
           </div>
         </div>
