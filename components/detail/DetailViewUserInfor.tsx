@@ -13,21 +13,13 @@ import { useUpdateLikes } from '@/Hooks/useUpdateLikes';
 
 export default function DetailViewUserInfor({ post }) {
   const router = useRouter();
-  const {
-    userProfile,
-    userId,
-    jobCategory,
-    likesCount,
-    id,
-    likes,
-    userNickname,
-  } = post;
+  const { userProfile, userId, jobCategory, likesCount, id, userNickname } =
+    post;
 
   // 현재 로그인한 유저 정보 가져오기
   const currentUserId: any = auth.currentUser?.uid;
 
   const { isLogin, isUserObj, logOut } = useCheckLogin();
-  const initialState = likes.includes(isUserObj) ? true : false;
   const { userInfor } = useGetReaction();
   const [following, setFollowing] = useState<[] | undefined>();
   const [scraps, setScraps] = useState<[] | undefined>();
@@ -35,7 +27,6 @@ export default function DetailViewUserInfor({ post }) {
   const follower = following?.includes(userId) ? true : false;
   const userProfileImg = userProfile ?? '/images/defaultProfile.png';
 
-  const { query: currentQuery }: any = router;
   useEffect(() => {
     userInfor?.map(
       (item) =>
@@ -44,6 +35,7 @@ export default function DetailViewUserInfor({ post }) {
     );
   }, [userInfor]);
 
+  // 스크랩
   const onclickScrap = async (num: any) => {
     if (isLogin) {
       if (scraps?.includes(id)) {
@@ -59,10 +51,12 @@ export default function DetailViewUserInfor({ post }) {
     }
   };
 
+  // 좋아요
   const { isLikesClicked, postMutate: updateLikes } = useUpdateLikes(
     currentUserId,
     post,
   );
+
   const handleUpdateLikes = async () => {
     if (currentUserId === undefined) {
       router.push('auth/sign-in');
@@ -70,24 +64,8 @@ export default function DetailViewUserInfor({ post }) {
       updateLikes(id);
     }
   };
-  // const onclickLove = async (num: any) => {
-  //   if (isLogin) {
-  //     if (isLikesClicked === false) {
-  //       likes.pop(isUserObj);
-  //     } else {
-  //       likes.push(isUserObj);
-  //     }
-  //     setIsLikesClicked(true);
-  //   } else {
-  //     router.push('/auth/sign-in');
-  //   }
 
-  //   const likesCount = likes.length;
-  //   const docRef = doc(dbService, 'postData', num);
-  //   const payload = { likesCount, likes };
-  //   await updateDoc(docRef, payload);
-  // };
-
+  // 팔로우
   const onclickFollow = async (num: any) => {
     if (isLogin) {
       if (following?.includes(userId)) {
@@ -138,17 +116,6 @@ export default function DetailViewUserInfor({ post }) {
           <p className={isLikesClicked ? 'active' : 'inactive'}>{likesCount}</p>
         </div>
       </div>
-      {/* <>
-          <button onClick={() => onclickLove(id)}>
-            {!isLikesClicked ? (
-              <span className="love active">좋아요</span>
-            ) : (
-              <span className="love  ">좋아요</span>
-            )}
-          </button>
-          {likesCount}
-        </> */}
-
       <div>
         {!follower ? (
           <CustomButton
