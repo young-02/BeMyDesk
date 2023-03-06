@@ -6,16 +6,40 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import PostListItem from '../post-list/PostListItem';
 
 const parse = require('html-react-parser');
 
 // 모달창에서 선택한 제품이 들어가는 카드
-const DetailWriteProductCard = ({ selectList }: any) => {
+const DetailWriteProductCard = ({
+  selectList,
+  setSelectList,
+  list,
+  setList,
+}: any) => {
+  const deleteCard = (i: any) => {
+    const deletedSelectList = selectList;
+    const deleteList = list;
+    setSelectList(
+      deletedSelectList.filter((item: any) => item.productId !== i.productId),
+    );
+
+    console.log('selectList', selectList);
+  };
+
   return (
     <DetailWriteCardLayout>
       {selectList.length < 3 ? (
         selectList.map((i: any) => (
           <DetailWriteCardBox key={i.productId}>
+            <Image
+              className="close"
+              src={'/images/close.png'}
+              alt="closeBtn"
+              width={24}
+              height={24}
+              onClick={() => deleteCard(i)}
+            />
             <CardBox>
               <div className="card">
                 <Image
@@ -48,6 +72,14 @@ const DetailWriteProductCard = ({ selectList }: any) => {
             <SwiperSlide key={i.productId}>
               {
                 <DetailWriteCardBox>
+                  <Image
+                    className="close"
+                    src={'/images/close.png'}
+                    alt="closeBtn"
+                    width={24}
+                    height={24}
+                    onClick={() => deleteCard(i)}
+                  />
                   <CardBox>
                     <div className="card">
                       <Image
@@ -71,7 +103,6 @@ const DetailWriteProductCard = ({ selectList }: any) => {
     </DetailWriteCardLayout>
   );
 };
-//pr위한 주석...
 
 const DetailWriteCardLayout = styled.div`
   display: flex;
@@ -97,6 +128,12 @@ const DetailWriteCardLayout = styled.div`
 const DetailWriteCardBox = styled.div`
   display: flex;
   flex-direction: column;
+
+  .close {
+    position: absolute;
+    /* left: 37%;
+    bottom: -18%; */
+  }
 `;
 
 const CardBox = styled.div`
