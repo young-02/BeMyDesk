@@ -76,7 +76,7 @@ const ChangePassword = ({ user }: any) => {
     } else if (newPassword !== passwordConfirmation) {
       setErrorPasswordConfirmationVerify(true);
     } else {
-      // 현재 비밀번호 유효성 검사
+      // 현재 비밀번호 재검증(로그인후 시간 오래지나면 비번변경, 회원삭제 할때 재인증 필요함)
       const credential = await EmailAuthProvider.credential(
         user.email,
         currentPassword,
@@ -228,9 +228,11 @@ const PasswordChange = styled.div`
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-end;
-    min-height: 80px;
+    min-height: 65px;
     margin: 76px 0 0 0;
-
+    :hover {
+      opacity: 90%;
+    }
     > p {
       font-family: 'Pretendard';
       font-style: normal;

@@ -1,6 +1,14 @@
+import useCheckUser from '@/Hooks/useCheckUser';
 import { auth, dbService } from '@/shared/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -9,6 +17,9 @@ import CustomButton from '../../../components/ui/CustomButton';
 type Props = {};
 
 export default function SignUp({}: Props) {
+  // 유저 상태 체크
+  useCheckUser();
+
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
@@ -18,6 +29,9 @@ export default function SignUp({}: Props) {
   const [pwValid, setPwValid] = useState(false);
   const [pwVerfyValid, setPwVerfyValid] = useState(false);
   const [nicknameValid, setNicknameValid] = useState(false);
+  const [errorNicknameDuplication, setErrorNicknameDuplication] =
+    useState(false);
+  const [errorEmailDuplication, setErrorEmailDuplication] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
   // 동의 버튼
   const [allCheck, setAllCheck] = useState(false);
@@ -154,37 +168,56 @@ export default function SignUp({}: Props) {
 
   // 회원가입 버튼
   const onClickConfirmButton = async () => {
-    try {
-      const data = await createUserWithEmailAndPassword(auth, emailValue, pw);
-      const remainInfo = {
-        email: emailValue,
-        displayName: nickname,
-        photoURL: '/images/defaultProfile.png',
-      };
+    const userInfoRef = collection(dbService, 'userInfo');
+    // 닉네임 중복검사
+    const nicknameQuery = query(userInfoRef, where('nickname', '==', nickname));
+    const nicknameDocs = await getDocs(nicknameQuery);
+    // 이메일 중복검사
+    const emailQuery = query(userInfoRef, where('email', '==', emailValue));
+    const emailDocs = await getDocs(emailQuery);
 
-      await updateProfile(data.user, remainInfo);
+    if (!nicknameDocs.empty) {
+      setErrorNicknameDuplication(true);
+    } else if (!emailDocs.empty) {
+      setErrorEmailDuplication(true);
+    } else {
+      try {
+        const data = await createUserWithEmailAndPassword(auth, emailValue, pw);
+        const remainInfo = {
+          email: emailValue,
+          displayName: nickname,
+          photoURL: '/images/defaultProfile.png',
+        };
 
-      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
-      const payload = {
-        profileImage: '/images/defaultProfile.png',
-        nickname: nickname,
-        userId: auth.currentUser?.uid,
-        scraps: [],
-        following: [],
-        introduction: '안녕하세요!',
-      };
+        await updateProfile(data.user, remainInfo);
 
-      await setDoc(collectionRef, payload).then(router.push('/post-list'));
+        const collectionRef = doc(
+          dbService,
+          `userInfo/${auth.currentUser?.uid}`,
+        );
+        const payload = {
+          profileImage: '/images/defaultProfile.png',
+          nickname: nickname,
+          email: emailValue,
+          isSocial: false,
+          userId: auth.currentUser?.uid,
+          scraps: [],
+          following: [],
+          introduction: '안녕하세요!',
+        };
 
-      alert('회원가입 성공');
-    } catch (error: any) {
-      console.error(error);
-      if (error.message.includes('auth/invalid-email')) {
-        alert('이메일을 확인해주세요');
+        await setDoc(collectionRef, payload).then(router.push('/post-list'));
+
+        alert('회원가입 성공');
+      } catch (error: any) {
+        console.error(error);
+        if (error.message.includes('auth/invalid-email')) {
+          alert('이메일을 확인해주세요');
+        }
       }
     }
   };
-  // 체크박스 확인 useEffect
+  // 동의 체크박스 확인 useEffect
   useEffect(() => {
     if (ageCheck === true && useCheck === true && marketingCheck === true) {
       setAllCheck(true);
@@ -215,22 +248,27 @@ export default function SignUp({}: Props) {
               <input
                 type="text"
                 className={
-                  !nicknameValid && nickname.length > 0
+                  (!nicknameValid && nickname.length > 0) ||
+                  errorNicknameDuplication
                     ? 'input error'
                     : 'input'
                 }
                 placeholder="닉네임을 작성해주세요."
                 value={nickname}
                 onChange={handleNickname}
+                onFocus={() => setErrorNicknameDuplication(false)}
               />
             </div>
             <div className="error-text">
-              {!nicknameValid && nickname.length > 0 && (
+              {!nicknameValid && nickname.length > 1 && (
                 <div className="errorMessageWrap">
                   닉네임은 특수문자를 포함할수 없고 2글자 이상 8자
                   이하이어야합니다.
                 </div>
               )}
+              {errorNicknameDuplication ? (
+                <div className="errorMessageWrap">중복된 닉네임 입니다.</div>
+              ) : null}
             </div>
           </div>
 
@@ -242,13 +280,16 @@ export default function SignUp({}: Props) {
               <input
                 type="text"
                 className={
-                  !emailValid && email.length > 0 ? 'input error' : 'input'
+                  (!emailValid && email.length > 0) || errorEmailDuplication
+                    ? 'input error'
+                    : 'input'
                 }
                 placeholder="이메일을 입력해주세요"
                 value={email}
                 // autoComplete 어트리뷰트는 브라우저 자동완성 작동여부
                 autoComplete="off"
                 onChange={handleEmail}
+                onFocus={() => setErrorEmailDuplication(false)}
               />
               @{/* @ 뒷쪽 */}
               <SelectBox
@@ -258,9 +299,11 @@ export default function SignUp({}: Props) {
                     selectBox: !selected.selectBox,
                   }))
                 }
-                className={
-                  !emailValid && email.length > 0 ? 'input error' : 'input'
-                }
+                // className={
+                //   (!emailValid && email.length > 0) || errorEmailDuplication
+                //     ? 'input error'
+                //     : 'input'
+                // }
               >
                 <p
                   className={
@@ -294,6 +337,11 @@ export default function SignUp({}: Props) {
                   이메일 양식을 확인해주세요.
                 </div>
               )}
+              {errorEmailDuplication ? (
+                <div className="errorMessageWrap">
+                  해당 이메일 계정이 이미 존재합니다.
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -427,12 +475,24 @@ const StyledBackground = styled.div`
 `;
 
 const SignUpLayout = styled.div`
-  max-width: 36.75rem;
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  width: 36.75rem;
+  height: 45.5rem;
+  background: #ffffff;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
+  border-radius: 20px;
+  padding: 2.375rem 2.5rem;
+
+  /* max-width: 36.75rem;
   width: 100%;
+
   padding: 2.375rem 2.5rem;
   border-radius: 1.25rem;
   background: #fff;
   margin-top: 40px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29); */
 
   // 개별항목 헤딩 + 맨위 '회원가입'
   .title {
@@ -446,13 +506,13 @@ const SignUpLayout = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 45px;
+    margin-top: 40px;
     // 개별항목 헤딩 Div
     .inputTitleWrap {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.875rem;
+      margin-bottom: 0.5rem;
 
       > .title {
         font-size: 1.25rem;
@@ -495,7 +555,9 @@ const SignUpLayout = styled.div`
 
     > button {
       width: 100%;
-
+      :hover {
+        opacity: 90%;
+      }
       &:disabled {
         background-color: #adb5bd;
       }
@@ -569,10 +631,10 @@ const SelectBox = styled.div`
   }
 `;
 const SignUpAgreeDiv = styled.div`
-  margin-top: 1.75rem;
+  margin-top: 1rem;
 
   .agree-input-wrap {
-    margin-bottom: 0.625rem;
+    margin-bottom: 0.5rem;
 
     &:last-child {
       margin-bottom: 0;
@@ -612,7 +674,7 @@ const SignUpAgreeDiv = styled.div`
     .agree-title {
       font-size: 0.875rem;
       font-weight: 700;
-      margin-bottom: 1.0625rem;
+      margin-bottom: 0.6rem;
     }
   }
 

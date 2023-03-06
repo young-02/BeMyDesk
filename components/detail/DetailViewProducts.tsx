@@ -4,8 +4,8 @@ import ReactHtmlParser from 'html-react-parser';
 import Image from 'next/image';
 type Props = {};
 
-export default function DetailViewProducts({ detail }) {
-  const { products } = detail;
+export default function DetailViewProducts({ post }) {
+  const { products } = post;
   return (
     <DetailViewProductsLayout>
       <h3 className="title">사용한 제품</h3>

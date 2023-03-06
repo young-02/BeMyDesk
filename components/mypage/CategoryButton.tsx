@@ -73,6 +73,10 @@ const StyledButtonContainer = styled.div`
       line-height: 32px;
       margin-left: 3px;
     }
+
+    :hover {
+      opacity: 60%;
+    }
   }
 `;
 

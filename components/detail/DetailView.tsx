@@ -9,53 +9,54 @@ import Comment from '../post-list/Comment/Comment';
 import DetailViewProducts from './DetailViewProducts';
 import { doc, deleteDoc, getDoc } from 'firebase/firestore';
 import { dbService, auth } from '../../shared/firebase';
+import { usePost } from '../../Hooks/usePost';
 
 type Props = {};
 
 export default function DetailView({}) {
-  const { posts } = useGetPosts();
   const router = useRouter();
-  const { id } = router.query;
+  const postId = router.query.id;
+
+  const { isLoading, isError, data: post, error } = usePost(postId);
 
   const deletePost = async () => {
     alert('삭제?');
-    await deleteDoc(doc(dbService, 'postData', router.query.id));
+    await deleteDoc(doc(dbService, `postData/${postId}`));
     router.push('/post-list');
   };
 
   const updatePost = async () => {
     alert('수정?');
-    router.push(`/detail/write/${router.query.id}/edit`);
+    router.push(`/detail/write/${postId}/edit`);
   };
 
   return (
     <>
-      {posts?.map(
-        (detail: PostType) =>
-          id == detail.id && (
-            <DetailViewLayout key={detail.id}>
-              <div className="detail-header">
-                {auth.currentUser?.uid === detail.userId && (
-                  <>
-                    <button onClick={deletePost}>삭제</button>
-                    <button onClick={updatePost}>수정</button>
-                  </>
-                )}
+      {isLoading && <DetailViewLayout>Loading...</DetailViewLayout>}
+      {isError && <DetailViewLayout>Error: {error.message}</DetailViewLayout>}
+      {post && (
+        <DetailViewLayout>
+          <div className="detail-header">
+            {auth.currentUser?.uid === post?.userId && (
+              <>
+                <button onClick={deletePost}>삭제</button>
+                <button onClick={updatePost}>수정</button>
+              </>
+            )}
 
-                <DetailViewUserInfor detail={detail} />
-              </div>
-              <DetailViewDiv>
-                <div className="detail-view">
-                  <DetailViewSlide detail={detail} />
-                  <DetailViewText detail={detail} />
-                  <Comment path={`postData/${id}/comments`} />
-                </div>
-                <div className="detail-product">
-                  <DetailViewProducts detail={detail} />
-                </div>
-              </DetailViewDiv>
-            </DetailViewLayout>
-          ),
+            <DetailViewUserInfor post={post} />
+          </div>
+          <DetailViewDiv>
+            <div className="detail-view">
+              <DetailViewSlide post={post} />
+              <DetailViewText post={post} />
+              <Comment path={`postData/${postId}/comments`} />
+            </div>
+            <div className="detail-product">
+              <DetailViewProducts post={post} />
+            </div>
+          </DetailViewDiv>
+        </DetailViewLayout>
       )}
     </>
   );

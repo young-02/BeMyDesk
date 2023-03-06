@@ -7,16 +7,28 @@ import styled from 'styled-components';
 import ChangePassword from './editProfile/ChangePassword';
 import ChangeProfile from './editProfile/ChangeProfile';
 import { BiCamera } from 'react-icons/bi';
+import { AiOutlineClose } from 'react-icons/ai';
 import Image from 'next/image';
+import DeleteAccount from './editProfile/DeleteAccount';
 
 export function ProfileEditModal({
   setProfileEditModalOpen,
   user,
   profileData,
 }: any) {
-  const [toggleEditMenu, setToggleEditMenu] = useState(true);
+  const [toggleEditMenu, setToggleEditMenu] = useState({
+    profileEditToggle: true,
+    changePasswordToggle: false,
+    deleteAccountToggle: false,
+  });
+  // 구조분해 할당
+  const { profileEditToggle, changePasswordToggle, deleteAccountToggle } =
+    toggleEditMenu;
+
   //프로필사진
-  const [profileImageUrl, setProfileImageUrl] = useState(user.photoURL);
+  const [profileImageUrl, setProfileImageUrl] = useState(
+    profileData.profileImage,
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -105,21 +117,33 @@ export function ProfileEditModal({
           <div className="modalThirdLine">
             <button
               className={
-                toggleEditMenu
+                profileEditToggle
                   ? 'editModalbuttonActive'
                   : 'editModalbuttoninActive'
               }
-              onClick={() => setToggleEditMenu(true)}
+              onClick={() =>
+                setToggleEditMenu({
+                  profileEditToggle: true,
+                  changePasswordToggle: false,
+                  deleteAccountToggle: false,
+                })
+              }
             >
               프로필 정보 설정
             </button>
             <button
               className={
-                !toggleEditMenu
+                changePasswordToggle
                   ? 'editModalbuttonActive'
                   : 'editModalbuttoninActive'
               }
-              onClick={() => setToggleEditMenu(false)}
+              onClick={() =>
+                setToggleEditMenu({
+                  profileEditToggle: false,
+                  changePasswordToggle: true,
+                  deleteAccountToggle: false,
+                })
+              }
               disabled={user.providerData[0].providerId !== 'password'}
             >
               비밀번호 변경
@@ -130,25 +154,41 @@ export function ProfileEditModal({
                 : null}{' '}
             </p>
           </div>
+          <div className="modalFourthLine">
+            <button
+              className="deleteAccountText"
+              onClick={() =>
+                setToggleEditMenu({
+                  profileEditToggle: false,
+                  changePasswordToggle: false,
+                  deleteAccountToggle: true,
+                })
+              }
+            >
+              회원탈퇴
+            </button>
+          </div>
         </div>
         <div className="modalRightContiner">
           <div className="RightModalFirstLine">
             <p className="RightModalTitle">
-              {toggleEditMenu ? '프로필 정보 설정' : '비밀번호 변경'}
+              {profileEditToggle && '프로필 정보 설정'}
+              {changePasswordToggle && '비밀번호 변경'}
+              {deleteAccountToggle && '회원 탈퇴'}
             </p>
             <button
               className="modal-close"
               onClick={() => setProfileEditModalOpen(false)}
             >
-              X
+              <AiOutlineClose />
             </button>
           </div>
           <div>
-            {toggleEditMenu ? (
+            {profileEditToggle && (
               <ChangeProfile user={user} profileData={profileData} />
-            ) : (
-              <ChangePassword user={user} />
             )}
+            {changePasswordToggle && <ChangePassword user={user} />}
+            {deleteAccountToggle && <DeleteAccount />}
           </div>
         </div>
       </div>
@@ -195,6 +235,9 @@ const StyledEditProfileModalContainer = styled.div`
       border-top-left-radius: 20px;
       border-bottom-left-radius: 20px;
       .modalFirstLine {
+        :hover {
+          opacity: 90%;
+        }
         margin-top: 40px;
         .modalProfileImage {
           border-radius: 10px;
@@ -238,6 +281,9 @@ const StyledEditProfileModalContainer = styled.div`
       }
       .modalSecondLine {
         .modalSecondLineButton {
+          :hover {
+            opacity: 70%;
+          }
           /* Pretendard Bold 12 */
 
           font-family: 'Pretendard';
@@ -279,15 +325,37 @@ const StyledEditProfileModalContainer = styled.div`
           background: #f1f3f5;
           font-family: 'Pretendard';
           font-style: normal;
-          font-weight: 700;
+          font-weight: 500;
           font-size: 16px;
           line-height: 20px;
+          :hover {
+            opacity: 80%;
+          }
 
           /* identical to box height, or 125% */
 
           /* Gray 05 */
 
           color: #868e96;
+        }
+      }
+      .modalFourthLine {
+        margin-top: 200px;
+        margin-right: 160px;
+        :hover {
+          opacity: 45%;
+        }
+        .deleteAccountText {
+          font-family: 'Pretendard';
+          font-style: normal;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 20px;
+          /* identical to box height, or 125% */
+
+          /* Point Red */
+
+          color: #f83e4b;
         }
       }
     }
@@ -323,6 +391,9 @@ const StyledEditProfileModalContainer = styled.div`
       background-color: transparent;
       border: none;
       cursor: pointer;
+      :hover {
+        opacity: 50%;
+      }
     }
   }
 
@@ -339,6 +410,7 @@ const StyledEditProfileModalContainer = styled.div`
     /* Gray 04 */
 
     color: #adb5bd;
+    min-height: 20px;
   }
 `;
 export default ProfileEditModal;
