@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 export const usePost = (postId: any) => {
   return useQuery(['post', postId], () => getPost(postId), {
     staleTime: Infinity,
-    cacheTime: 0,
+    cacheTime: Infinity,
     refetchOnWindowFocus: false,
   });
 };
