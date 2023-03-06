@@ -24,7 +24,7 @@ function MyPost({ myPost, postCount }: any) {
   } else {
     return (
       <>
-        {myPost.map((post: any) => (
+        {myPost?.map((post: any) => (
           <StyledContainer key={post.id}>
             <StyledLeftDiv>
               {post.postImage1 ? (
