@@ -11,8 +11,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { v4 } from 'uuid';
 import CustomButton from '../ui/CustomButton';
-
 import Image from 'next/image';
+import { relative } from 'path';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
@@ -21,6 +21,8 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
   // 모달 관리 State
   const [isModalShow, setIsModalShow] = useState(false);
+
+  // 제목 관리 state
   const [title, setTitle] = useState(initialValues?.title);
 
   // 검색어 state
@@ -82,7 +84,8 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         params: {
           query: searchWord,
         },
-      }).then((response) => setData(response.data))
+      })
+      .then((response) => setData(response.data))
       .catch((Error) => console.log(Error));
   };
 
@@ -156,12 +159,8 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         };
         fileReader.readAsDataURL(file as any);
       }
-      // console.log(fileUrl, 'fileUrl');
-      // console.log('attachment11111', typeof attachment);
     }
   };
-
-  // console.log('attachment2222222', typeof attachment);
 
   const deleteImage = (image: any) => {
     const imageUrlList = [...attachment];
@@ -178,11 +177,17 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
     if (!title) {
       alert('제목을 입력해주세요');
-      titleRef.current.focus();
+      return titleRef.current.focus();
     }
 
     if (!attachment) {
       alert('데스크테리어 사진을 선택해주세요');
+      return;
+    }
+
+    if (attachment.length < 2) {
+      alert('데스크테리어 사진을 선택해주세요');
+      return;
     }
 
     const products = list.map((item) => {
@@ -221,6 +226,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         });
       });
     });
+
     alert('글이 저장되었습니다');
     router.push('/post-list');
   };
@@ -306,17 +312,18 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         />
         <QuillEditor onChange={changeEditorText} value={content} />
         <DetailWriteBox>
-          <div className="title_span_a">테스크테리어 이미지를 추가해주세요</div>
+          <div className="title_span_a">데스크테리어 이미지를 추가해주세요</div>
           <div className="preview_image_wrap">
             {attachment.length === 0 && (
               <div className="image-container">
-                <Image
-                  className="no_preview"
-                  src={'/images/preViewImg.png'}
-                  alt="preview"
-                  width={64}
-                  height={64}
-                />
+                <div className="no-preview-box">
+                  <Image
+                    src={'/images/preViewImg.png'}
+                    alt="preview"
+                    width={64}
+                    height={64}
+                  />
+                </div>
               </div>
             )}
 
@@ -346,7 +353,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           <DeskPhotoBox>
             <div className="photo_wrap">
               <label className="desk_label" htmlFor="deskImage">
-                이미지를 업로드해주세요
+                이미지를 업로드해주세요 {attachment.length}/2
                 <input
                   type="file"
                   multiple
@@ -517,10 +524,9 @@ const DetailWriteBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* margin-top: 1rem; */
 
   .image-container {
-    display: flex;
+    position: relative;
     width: 35%;
     height: 15rem;
     border: 1px solid #868e96;
@@ -531,9 +537,15 @@ const DetailWriteBox = styled.div`
     margin-right: 1rem;
   }
 
-  .no_preview {
-    width: 4rem;
-    height: 4rem;
+  .no-preview-box {
+    position: relative;
+    left: 42%;
+    top: 36%;
+
+    > img {
+      width: 4rem;
+      height: 4rem;
+    }
   }
 
   .preview_image {
@@ -543,11 +555,9 @@ const DetailWriteBox = styled.div`
   }
 
   .closeBtnImage {
-    position: relative;
-    right: 10%;
-    left: 10;
-    top: -35%;
-    /* bottom: -18%; */
+    position: absolute;
+    top: 10%;
+    right: 5%;
     cursor: pointer;
   }
 
@@ -583,13 +593,10 @@ const DetailWriteBox = styled.div`
   }
 
   .title_span_b {
-    /* margin-bottom: 1rem; */
     font-weight: 700;
     font-size: 1.5rem;
     color: #17171c;
     line-height: 2rem;
-    /* margin-right: 1rem; */
-    /* margin-top: 3rem; */
     align-content: center;
   }
 `;
@@ -599,8 +606,6 @@ const DeskPhotoBox = styled.div`
   width: 100%;
   height: 5rem;
   flex-direction: column;
-  /* text-align: center; */
-  /* justify-content: center; */
 
   .photo_wrap {
     position: relative;
@@ -608,14 +613,11 @@ const DeskPhotoBox = styled.div`
     height: 3.25rem;
     flex-direction: column;
     margin-top: 1rem;
-    /* background-color: green; */
 
     .desk_label {
       display: flex;
-      /* flex-direction: column; */
       width: 100%;
       height: 100%;
-      /* background-color: yellow; */
       border: 1px solid #868e96;
       border-radius: 1.25rem;
       font-size: 1.25rem;
@@ -711,10 +713,3 @@ const DeskPhotoWrap = styled.div`
     }
   }
 `;
-
-// const PreviewBox = styled.div`
-/* background-size: 10rem 10rem;
-  background-image: url('/images/previewImage.png');
-  background-repeat: no-repeat;
-  background-position: center center;
-`; */
