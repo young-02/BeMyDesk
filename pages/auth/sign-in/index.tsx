@@ -374,7 +374,7 @@ const StyledDiv = styled.div`
     width: 100%;
     outline: none;
     border: none;
-    font-family: 'Pretendard';
+
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -425,7 +425,6 @@ const StyledDiv = styled.div`
   .inputTitle {
     /* Pretendard Medium 18 */
 
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -505,7 +504,6 @@ const StyledDiv = styled.div`
     p {
       /* Pretendard Medium 14 */
 
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -524,7 +522,6 @@ const StyledDiv = styled.div`
   .findPassword {
     /* Pretendard Medium 14 */
 
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -551,7 +548,6 @@ const StyledDiv = styled.div`
     align-items: center;
     margin-top: 85px;
     p {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
@@ -582,7 +578,6 @@ const StyledDiv = styled.div`
   .LinkSignUpMessage {
     /* Pretendard Medium 12 */
 
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 12px;

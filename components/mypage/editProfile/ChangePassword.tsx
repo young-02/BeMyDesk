@@ -176,7 +176,6 @@ const PasswordChange = styled.div`
   flex-direction: column;
 
   label {
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
@@ -191,7 +190,7 @@ const PasswordChange = styled.div`
   > input {
     width: 87%;
     height: 42px;
-    font-family: 'Pretendard';
+
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
@@ -206,7 +205,6 @@ const PasswordChange = styled.div`
     padding: 0 20px;
 
     &:focus-within {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -234,7 +232,6 @@ const PasswordChange = styled.div`
       opacity: 90%;
     }
     > p {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -247,7 +244,7 @@ const PasswordChange = styled.div`
       height: 48px;
       background: #206efb;
       border-radius: 10px;
-      font-family: 'Pretendard';
+
       font-style: normal;
       font-weight: 700;
       font-size: 20px;
@@ -261,7 +258,6 @@ const PasswordChange = styled.div`
   .errorDiv {
     min-height: 40px;
     > p {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 12px;
@@ -283,7 +279,6 @@ const PasswordChange = styled.div`
     display: flex;
     justify-content: space-between;
     > p {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 12px;

@@ -60,7 +60,6 @@ const FooterLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Pretendard Variable';
   border-top: 0.0625rem solid #868e96;
 `;
 

@@ -243,7 +243,7 @@ const StyledDivProfile = styled.div`
 
     .userName {
       /* Pretendard Bold 24 */
-      font-family: 'Pretendard';
+
       font-style: normal;
       font-weight: 700;
       font-size: 22px;
@@ -255,7 +255,6 @@ const StyledDivProfile = styled.div`
       color: #17171c;
     }
     .nim {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -267,7 +266,6 @@ const StyledDivProfile = styled.div`
   .secondLine {
     height: 80px;
     .introduction {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
@@ -284,7 +282,6 @@ const StyledDivProfile = styled.div`
       display: flex;
       align-items: center;
       .followerLetter {
-        font-family: 'Pretendard';
         font-style: normal;
         font-weight: 500;
         font-size: 16px;
@@ -297,7 +294,7 @@ const StyledDivProfile = styled.div`
       }
       .followerCount {
         margin-left: 8px;
-        font-family: 'Pretendard';
+
         font-style: normal;
         font-weight: 700;
         font-size: 16px;

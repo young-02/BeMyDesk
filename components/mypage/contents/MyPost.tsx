@@ -82,7 +82,6 @@ const StyledErrorDiv = styled.div`
     height: 164px;
   }
   .errorFirstLine {
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 700;
     font-size: 32px;
@@ -98,7 +97,6 @@ const StyledErrorDiv = styled.div`
     color: #495057;
   }
   .errorSecondLine {
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -147,7 +145,6 @@ const StyledRightDiv = styled.div`
     .Title {
       /* Pretendard Bold 24 */
 
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 700;
       font-size: 24px;
@@ -164,7 +161,6 @@ const StyledRightDiv = styled.div`
     height: 58.12px;
     overflow: hidden;
     .Text {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
@@ -194,7 +190,7 @@ const StyledRightDiv = styled.div`
       }
       .likeCount {
         margin-left: 13px;
-        font-family: 'Pretendard';
+
         font-style: normal;
         font-weight: 500;
         font-size: 18px;

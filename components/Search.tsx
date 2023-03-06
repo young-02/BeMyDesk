@@ -45,7 +45,6 @@ const SearchLayout = styled.form<{ theme: string }>`
   justify-content: space-between;
   align-items: center;
   gap: 2.5rem;
-  font-family: 'Pretendard Variable';
   font-size: 1.125rem;
   font-weight: 500;
 

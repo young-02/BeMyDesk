@@ -75,7 +75,6 @@ const StyledErrorDiv = styled.div`
     height: 164px;
   }
   .errorFirstLine {
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 700;
     font-size: 32px;
@@ -91,7 +90,6 @@ const StyledErrorDiv = styled.div`
     color: #495057;
   }
   .errorSecondLine {
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -144,7 +142,6 @@ const StyledDivRight = styled.div`
       border-radius: 10px;
       /* Pretendard Medium 14 */
 
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -162,7 +159,6 @@ const StyledDivRight = styled.div`
       .followingButtonText {
         /* Pretendard Medium 14 */
 
-        font-family: 'Pretendard';
         font-style: normal;
         font-weight: 500;
         font-size: 16px;
@@ -183,7 +179,6 @@ const StyledDivRight = styled.div`
     .nickname {
       /* Pretendard Bold 20 */
 
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 700;
       font-size: 20px;
@@ -202,7 +197,6 @@ const StyledDivRight = styled.div`
   .thirdLine {
     margin-top: 10px;
     .introduction {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 16px;

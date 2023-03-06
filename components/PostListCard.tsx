@@ -122,7 +122,6 @@ const CardContentBox = styled.div`
   justify-content: space-between;
   height: fit-content;
   padding: 1.25rem 1.25rem 1.25rem;
-  font-family: 'Pretendard Variable';
 
   .profile-image {
     position: absolute;

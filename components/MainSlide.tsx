@@ -338,7 +338,6 @@ const MotionText = styled(motion.div)`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  font-family: 'Pretendard Variable';
 
   .text-top {
     width: 25rem;
@@ -438,7 +437,6 @@ const CategoryCardBox = styled.div`
   gap: 10px;
   padding: 32px;
   border-radius: 10px;
-  font-family: 'Pretendard Variable';
   overflow: hidden;
   transition: all 0.8s ease-in-out;
   cursor: pointer;
@@ -508,7 +506,6 @@ const SlideContentBottom = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: 'Pretendard Variable';
   overflow: hidden;
 
   > div {
@@ -552,7 +549,6 @@ const FooterBox = styled.div`
   justify-content: center;
   align-items: center;
   bottom: 0%;
-  font-family: 'Pretendard Variable';
   border-top: 0.0625rem solid #868e96;
 `;
 
