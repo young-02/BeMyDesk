@@ -10,18 +10,21 @@ import DetailViewProducts from './DetailViewProducts';
 import { doc, deleteDoc, getDoc } from 'firebase/firestore';
 import { dbService, auth } from '../../shared/firebase';
 import { usePost } from '../../Hooks/usePost';
+import { QueryClient, useQueryClient } from 'react-query';
 
 type Props = {};
 
 export default function DetailView({}) {
   const router = useRouter();
   const postId = router.query.id;
+  const queryClient = useQueryClient();
 
   const { isLoading, isError, data: post, error } = usePost(postId);
 
   const deletePost = async () => {
     alert('삭제?');
     await deleteDoc(doc(dbService, `postData/${postId}`));
+    queryClient.removeQueries('post-list');
     router.push('/post-list');
   };
 
