@@ -146,7 +146,6 @@ function SnsNickname() {
             introduction: '안녕하세요!',
           };
           await setDoc(collectionRef, payload);
-
           router.push('/post-list');
         }
       } catch (error) {
@@ -349,6 +348,9 @@ const StyledDiv = styled.div`
     margin-top: 2.5rem;
     > button {
       width: 100%;
+      :hover {
+        opacity: 90%;
+      }
     }
   }
 

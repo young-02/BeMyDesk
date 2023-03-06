@@ -17,14 +17,6 @@ declare interface PostType {
   products: string[];
   userProfile: string;
 }
-declare interface PostDocType {
-  id?: string;
-  data?: () => PostDataType;
-}
-
-declare interface PostType extends PostDataType {
-  id?: string;
-}
 
 declare interface GetPostType {
   id: string;
