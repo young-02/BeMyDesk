@@ -23,8 +23,7 @@ const DetailWriteProductCard = ({
     setSelectList(
       deletedSelectList.filter((item: any) => item.productId !== i.productId),
     );
-
-    console.log('selectList', selectList);
+    setList(deleteList.filter((item: any) => item.productId !== i.productId));
   };
 
   return (
@@ -32,15 +31,17 @@ const DetailWriteProductCard = ({
       {selectList.length < 3 ? (
         selectList.map((i: any) => (
           <DetailWriteCardBox key={i.productId}>
-            <Image
-              className="close"
-              src={'/images/close.png'}
-              alt="closeBtn"
-              width={24}
-              height={24}
-              onClick={() => deleteCard(i)}
-            />
             <CardBox>
+              <div className="close_box">
+                <Image
+                  className="close"
+                  src={'/images/close.png'}
+                  alt="closeBtn"
+                  width={24}
+                  height={24}
+                  onClick={() => deleteCard(i)}
+                />
+              </div>
               <div className="card">
                 <Image
                   src={i.image}
@@ -71,16 +72,18 @@ const DetailWriteProductCard = ({
           {selectList?.map((i: any) => (
             <SwiperSlide key={i.productId}>
               {
-                <DetailWriteCardBox>
-                  <Image
-                    className="close"
-                    src={'/images/close.png'}
-                    alt="closeBtn"
-                    width={24}
-                    height={24}
-                    onClick={() => deleteCard(i)}
-                  />
+                <DetailWriteCardBox key={i.productId}>
                   <CardBox>
+                    <div className="close_box">
+                      <Image
+                        className="close"
+                        src={'/images/close.png'}
+                        alt="closeBtn"
+                        width={24}
+                        height={24}
+                        onClick={() => deleteCard(i)}
+                      />
+                    </div>
                     <div className="card">
                       <Image
                         src={i.image}
@@ -130,9 +133,8 @@ const DetailWriteCardBox = styled.div`
   flex-direction: column;
 
   .close {
-    position: absolute;
-    /* left: 37%;
-    bottom: -18%; */
+    display: flex;
+    justify-content: end;
   }
 `;
 
@@ -142,6 +144,11 @@ const CardBox = styled.div`
   border-radius: 0.625rem;
   margin: 1.5rem;
   padding: 1rem;
+
+  .close_box {
+    display: flex;
+    justify-content: end;
+  }
 
   .card {
     display: flex;
