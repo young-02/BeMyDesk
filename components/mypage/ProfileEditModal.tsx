@@ -26,7 +26,9 @@ export function ProfileEditModal({
     toggleEditMenu;
 
   //프로필사진
-  const [profileImageUrl, setProfileImageUrl] = useState(user.photoURL);
+  const [profileImageUrl, setProfileImageUrl] = useState(
+    profileData.profileImage,
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -323,7 +325,7 @@ const StyledEditProfileModalContainer = styled.div`
           background: #f1f3f5;
           font-family: 'Pretendard';
           font-style: normal;
-          font-weight: 700;
+          font-weight: 500;
           font-size: 16px;
           line-height: 20px;
           :hover {

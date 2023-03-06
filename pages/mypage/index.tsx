@@ -38,6 +38,7 @@ export default function MyPage({}: Props) {
 
   const [profileData, setProfileData] = useState({});
   const uid = auth.currentUser?.uid;
+
   useEffect(() => {
     if (!uid) {
       return;
@@ -135,14 +136,14 @@ export default function MyPage({}: Props) {
             <div>
               <Image
                 className="profileImage"
-                src={user.photoURL}
+                src={profileData.profileImage}
                 alt="ProfileImage"
                 width={202}
                 height={202}
               />
             </div>
             <div className="firstLine">
-              <p className="userName">{user.displayName}</p>
+              <p className="userName">{profileData.nickname}</p>
               <p className="nim">님</p>
             </div>
             <div className="secondLine">
@@ -176,13 +177,25 @@ export default function MyPage({}: Props) {
 
           <StyledDivContents>
             {category === 'myPost' && (
-              <MyPost myPost={myPost} postCount={postCount} />
+              <MyPost
+                myPost={myPost}
+                postCount={postCount}
+                profileData={profileData}
+              />
             )}
             {category === 'myScrap' && (
-              <MyScrap myScrap={myScrap} scrapCount={scrapCount} />
+              <MyScrap
+                myScrap={myScrap}
+                scrapCount={scrapCount}
+                profileData={profileData}
+              />
             )}
             {category === 'myFollow' && (
-              <MyFollow myFollow={myFollow} followCount={followCount} />
+              <MyFollow
+                myFollow={myFollow}
+                followCount={followCount}
+                profileData={profileData}
+              />
             )}
           </StyledDivContents>
         </StyledDivMain>

@@ -177,7 +177,9 @@ function ChangeProfile({ user, profileData }: any) {
             }`}
             type="text"
             placeholder={
-              !nicknameInputEnable ? user.displayName : '닉네임을 입력하세요'
+              !nicknameInputEnable
+                ? profileData.nickname
+                : '닉네임을 입력하세요'
             }
             disabled={!nicknameInputEnable}
             onChange={nickNameEditonChangeHandler}
