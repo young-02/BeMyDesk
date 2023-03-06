@@ -38,7 +38,7 @@ export default function SignIn({}: Props) {
   const [emailEmptyError, setEmailEmptyError] = useState(false);
   const [pwEmptyError, setPwEmptyError] = useState(false);
   const [stayLoginisChecked, setStayLoginIsChecked] = useState(false);
-  const [userInfo, setUserInfor] = useRecoilState(userState);
+  const [userInfo, setUserInfo] = useRecoilState(userState);
   const setIsLogin = useSetRecoilState(userLoginState);
 
   // 로그인유지 버튼
@@ -87,7 +87,7 @@ export default function SignIn({}: Props) {
         .then(() => {
           alert('로그인 성공');
           setIsLogin(true);
-          setUserInfor(auth?.currentUser);
+          setUserInfo(auth?.currentUser);
           console.log('login sucess', auth.currentUser);
           router.push('/post-list');
         })
@@ -179,7 +179,7 @@ export default function SignIn({}: Props) {
 
         router.push('/auth/sns-nickname');
       } else {
-        setUserInfor(auth.currentUser);
+        setUserInfo(auth.currentUser);
         setIsLogin(true);
         router.push('/post-list');
       }
@@ -214,7 +214,7 @@ export default function SignIn({}: Props) {
         // await setDoc(collectionRef, payload);
         router.push('/auth/sns-nickname');
       } else {
-        setUserInfor(auth.currentUser);
+        setUserInfo(auth.currentUser);
         setIsLogin(true);
         router.push('/post-list');
       }

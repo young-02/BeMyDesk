@@ -1,4 +1,5 @@
 import CustomButton from '@/components/ui/CustomButton';
+import { userLoginState, userState } from '@/shared/atom';
 import { auth, dbService } from '@/shared/firebase';
 import { updateProfile } from 'firebase/auth';
 import {
@@ -15,6 +16,7 @@ import {
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 function SnsNickname() {
@@ -39,6 +41,10 @@ function SnsNickname() {
 
   // 닉네임 입력
   const [nickname, setNickname] = useState('');
+
+  //유저정보
+  const [userInfo, setUserInfo] = useRecoilState(userState);
+  const setIsLogin = useSetRecoilState(userLoginState);
 
   // 전체동의 버튼
   const allBtnEvent = () => {
@@ -109,10 +115,7 @@ function SnsNickname() {
     const nicknameSet = async () => {
       try {
         //해당 문서 경로
-        const collectionRef = doc(
-          dbService,
-          `userInfo/${auth.currentUser?.uid}`,
-        );
+        const collectionRef = doc(dbService, `userInfo/${userInfo?.uid}`);
 
         // 닉네임 중복검사
         const nicknameRegex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$/;
@@ -151,14 +154,17 @@ function SnsNickname() {
           const payload = {
             profileImage: '/images/defaultProfile.png',
             nickname: nickname,
-            userId: auth.currentUser?.uid,
+            userId: userInfo?.uid,
             scraps: [],
             following: [],
             introduction: '안녕하세요!',
             email: user?.email,
             isSocial: true,
           };
+          setIsLogin(true);
+          setUserInfo(auth.currentUser);
           await setDoc(collectionRef, payload);
+
           router.push('/post-list');
         }
       } catch (error) {
