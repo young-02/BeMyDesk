@@ -93,7 +93,10 @@ export default function MyPage({}: Props) {
           );
         }
       } else {
-        console.log('No such document!');
+        // sns 로그인유저 추가정보 입력 안했을때
+        alert('유저 정보를 설정하세요');
+        router.push('/auth/sns-nickname');
+        return null;
       }
     };
 

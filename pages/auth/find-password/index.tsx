@@ -1,10 +1,15 @@
 import CustomButton from '@/components/ui/CustomButton';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AiOutlineMail } from 'react-icons/ai';
 import { useRouter } from 'next/router';
+import { auth, dbService } from '@/shared/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import useCheckUser from '@/Hooks/useCheckUser';
 
 function FindPassword() {
+  useCheckUser();
+
   const router = useRouter();
   // 이메일 인풋
   const [email, setEmail] = useState('');
@@ -28,6 +33,24 @@ function FindPassword() {
       setErrorEmailEmpty(true);
     }
   };
+
+  // useEffect(() => {
+  //   const checkUser = async () => {
+  //     if (auth.currentUser?.uid) {
+  //       const uid = auth.currentUser.uid;
+  //       const docRef = doc(dbService, 'userInfo', uid);
+  //       const docSnap = await getDoc(docRef);
+  //       if (!docSnap.exists()) {
+  //         alert('유저 정보를 설정하세요');
+  //         router.push('/auth/sns-nickname');
+  //       }
+  //     } else {
+  //       alert('잘못된 접근입니다.');
+  //       router.push('/main');
+  //     }
+  //   };
+  //   checkUser();
+  // }, []);
 
   return (
     <StyledBackground>
@@ -104,6 +127,7 @@ function FindPassword() {
     </StyledBackground>
   );
 }
+
 const StyledBackground = styled.div`
   display: flex;
   justify-content: center;
