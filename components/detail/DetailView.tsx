@@ -10,6 +10,8 @@ import DetailViewProducts from './DetailViewProducts';
 import { doc, deleteDoc, getDoc } from 'firebase/firestore';
 import { dbService, auth } from '../../shared/firebase';
 import { usePost } from '../../Hooks/usePost';
+import CustomModal from '../ui/CustomModal';
+import CustomButton from '../ui/CustomButton';
 
 type Props = {};
 
@@ -18,15 +20,15 @@ export default function DetailView({}) {
   const postId = router.query.id;
 
   const { isLoading, isError, data: post, error } = usePost(postId);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
 
   const deletePost = async () => {
-    alert('삭제?');
     await deleteDoc(doc(dbService, `postData/${postId}`));
     router.push('/post-list');
   };
 
   const updatePost = async () => {
-    alert('수정?');
     router.push(`/detail/write/${postId}/edit`);
   };
 
@@ -39,9 +41,60 @@ export default function DetailView({}) {
           <div className="detail-header">
             {auth.currentUser?.uid === post?.userId && (
               <>
-                <button onClick={deletePost}>삭제</button>
-                <button onClick={updatePost}>수정</button>
+                <button onClick={() => setIsDelete((prev) => !prev)}>
+                  삭제
+                </button>
+                <button onClick={() => setIsEdit((prev) => !prev)}>수정</button>
               </>
+            )}
+            {isEdit && (
+              <CustomModal title="Edit" description="글을 수정하시겠습니까?">
+                <div className="buttonWrap">
+                  <CustomButton
+                    paddingRow="0"
+                    paddingColumns="0.5"
+                    backgroundColor="#F83E4B"
+                    fontColor="#fff"
+                    onClick={updatePost}
+                  >
+                    수정
+                  </CustomButton>
+                  <CustomButton
+                    paddingRow="0"
+                    paddingColumns="0.5"
+                    backgroundColor="#fff"
+                    fontColor="#868E96"
+                    onClick={() => setIsEdit((prev) => !prev)}
+                  >
+                    취소
+                  </CustomButton>
+                </div>
+              </CustomModal>
+            )}
+
+            {isDelete && (
+              <CustomModal title="Delete" description="정말 삭제하시겠습니까?">
+                <div className="buttonWrap">
+                  <CustomButton
+                    paddingRow="0"
+                    paddingColumns="0.5"
+                    backgroundColor="#F83E4B"
+                    fontColor="#fff"
+                    onClick={deletePost}
+                  >
+                    삭제
+                  </CustomButton>
+                  <CustomButton
+                    paddingRow="0"
+                    paddingColumns="0.5"
+                    backgroundColor="#fff"
+                    fontColor="#868E96"
+                    onClick={() => setIsDelete((prev) => !prev)}
+                  >
+                    취소
+                  </CustomButton>
+                </div>
+              </CustomModal>
             )}
 
             <DetailViewUserInfor post={post} />

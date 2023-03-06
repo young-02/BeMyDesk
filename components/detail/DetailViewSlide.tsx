@@ -29,7 +29,7 @@ export default function DetailViewSlide({ post }) {
         <SwiperSlide>
           <Image
             className="post-img"
-            src={detail.postImage2}
+            src={post.postImage2}
             alt="postImage1"
             layout="fill"
             objectFit="cover"
