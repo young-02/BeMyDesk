@@ -16,7 +16,6 @@ function GlobalNavigationBar() {
 
   //리코일 불러오기
   const userInfo = useRecoilValue(userState);
-  // const isLogin = useRecoilValue(userLoginState);
   const userProfilImg = userInfo?.photoURL ?? '/images/Padeeffillortu.png';
 
   return (

@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 import { transDate } from '../utils/transDate';
 import { auth } from '@/shared/firebase';
 import { useUpdateLikes } from '../Hooks/useUpdateLikes';
-import { useQueryClient } from 'react-query';
 
 const PostListCard = ({ post }: { post: PostType }) => {
   const router = useRouter();
@@ -21,7 +20,6 @@ const PostListCard = ({ post }: { post: PostType }) => {
     postTitle,
     postText,
     jobCategory,
-    likes,
     likesCount,
     postImage1,
     userProfile,
@@ -30,36 +28,16 @@ const PostListCard = ({ post }: { post: PostType }) => {
   // 현재 로그인한 유저 정보 가져오기
   const currentUserId: any = auth.currentUser?.uid;
 
-  // currentUser 가 해당 포스트가 좋아요 눌렀는지 여부 확인
-  const initialState = likes.includes(currentUserId) ? true : false;
-  const [isLikesClicked, setIsLikesClicked] = useState(initialState);
+  const { isLikesClicked, postListMutate: updateLikes } = useUpdateLikes(
+    currentUserId,
+    post,
+  );
 
-  const { mutate: updateLikes } = useUpdateLikes();
-
-  // 수정된 좋아요
-  let newLikes = {};
-  if (isLikesClicked === false) {
-    newLikes = {
-      ...post,
-      likes: [...likes, currentUserId],
-      likesCount: likesCount + 1,
-    };
-  }
-  if (isLikesClicked === true) {
-    newLikes = {
-      ...post,
-      likes: likes.filter((id) => id !== currentUserId),
-      likesCount: likesCount - 1,
-    };
-  }
-
-  // 좋아요 버튼을 클릭했을 때, firebase 의 likes & likesCount 수정 로직
   const handleUpdateLikes = async () => {
     if (currentUserId === undefined) {
       router.push('auth/sign-in');
     } else {
-      updateLikes({ postId: id, newLikes });
-      setIsLikesClicked(!isLikesClicked);
+      updateLikes(id);
     }
   };
 

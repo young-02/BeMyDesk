@@ -17,6 +17,10 @@ const DetailWriteSearch = ({
   list,
   setList,
   select,
+  isNotData,
+  setIsNotData,
+  leftToggle,
+  rightToggle,
   inputSearchWord,
   getNaverData,
   selectProduct,
@@ -30,8 +34,12 @@ const DetailWriteSearch = ({
         <DetailWriteSearchBoxTop>
           <DetailWriteSearchBox>
             <div>
-              <span className="search">검색하기</span>
-              {/* <span className="search">직접 등록하기</span> */}
+              <span className="search" onClick={leftToggle}>
+                검색하기
+              </span>
+              <span className="search" onClick={rightToggle}>
+                직접 등록하기
+              </span>
             </div>
             <button className="closeBtn" onClick={onClose}>
               <Image
@@ -43,59 +51,127 @@ const DetailWriteSearch = ({
               />
             </button>
           </DetailWriteSearchBox>
-          <p className="search_products">제품을 검색해주세요</p>
+          {isNotData ? (
+            <p className="search_products">제품을 입력해주세요</p>
+          ) : (
+            <p className="search_products">제품을 검색해주세요</p>
+          )}
           <SearchInputBox>
             <input
               className="searchInput"
               id="products"
               type="text"
-              placeholder="검색어를 입력해주세요"
+              placeholder={
+                isNotData ? '제품명을 입력해주세요' : '검색어를 입력해주세요'
+              }
               value={searchWord}
               onChange={inputSearchWord}
             />
-            <CustomButton onClick={getNaverData}>검색</CustomButton>
+            {isNotData ? (
+              <CustomButton onClick={getNaverData}>입력</CustomButton>
+            ) : (
+              <CustomButton onClick={getNaverData}>검색</CustomButton>
+            )}
           </SearchInputBox>
-        </DetailWriteSearchBoxTop>
-        <SelectProductBox>
-          {data?.map((item: any) => (
-            <DetailWriteSearchProductBox
-              key={item.productId}
-              onClick={() => selectProduct(item)}
-            >
-              <div className="searchProduct">
-                <div style={{ width: '600px' }}>
-                  {item.title.split('<b>').join('').split('</b>').join('')}
-                </div>
-                <div className="search_category">{item.category2}</div>
+          {isNotData ? (
+            <>
+              <div className="search_description">
+                검색하기에서 안 나오는 제품들을 입력해주세요
               </div>
-            </DetailWriteSearchProductBox>
-          ))}
-        </SelectProductBox>
-        <DetailWriteSearchBoxBottom>
-          <PickProductListBox>
-            {list?.map((item: any) => (
-              <PickProductsBox key={item.productId}>
-                <div className="pickProducts" >
-                  {parse(item.title)}
-                </div>
-
+              <div className="laptop_box">
                 <Image
-                  className="closeBtnImage"
-                  src={close.src}
-                  alt="closeBtn"
-                  width={24}
-                  height={24}
-                  onClick={() => deleteProduct(item)}
-                  style={{ alignContent: 'center', justifyContent: 'center' }}
+                  src={'/images/laptop.png'}
+                  alt="isYourProduct"
+                  width={300}
+                  height={300}
+                  className="laptop"
                 />
-              </PickProductsBox>
-            ))}
-          </PickProductListBox>
-          <ButtonBox>
-            <CustomButton onClick={onClose}>닫기</CustomButton>
-            <CustomButton onClick={onClick}>등록하기</CustomButton>
-          </ButtonBox>
-        </DetailWriteSearchBoxBottom>
+                <div className="check_text">입력하신 제품이 맞으신가요?</div>
+                <div className="check_title_text">
+                  입력한 값 여기 들어올거임
+                </div>
+              </div>
+              <div className="enter_again_text">다시 입력할게요</div>
+              <DetailWriteSearchBoxBottom>
+                <PickProductListBox>
+                  <PickProductList>
+                    {list?.map((item: any) => (
+                      <PickProductsBox key={item.productId}>
+                        <div className="pickProducts">{parse(item.title)}</div>
+
+                        <Image
+                          className="closeBtnImage"
+                          src={close.src}
+                          alt="closeBtn"
+                          width={24}
+                          height={24}
+                          onClick={() => deleteProduct(item)}
+                          style={{
+                            alignContent: 'center',
+                            justifyContent: 'center',
+                          }}
+                        />
+                      </PickProductsBox>
+                    ))}
+                  </PickProductList>
+                </PickProductListBox>
+                <ButtonBox>
+                  <CustomButton onClick={onClose}>닫기</CustomButton>
+                  <CustomButton onClick={onClick}>등록하기</CustomButton>
+                </ButtonBox>
+              </DetailWriteSearchBoxBottom>
+            </>
+          ) : null}
+        </DetailWriteSearchBoxTop>
+
+        {isNotData ? null : (
+          <>
+            <SelectProductBox>
+              {data?.map((item: any) => (
+                <DetailWriteSearchProductBox
+                  key={item.productId}
+                  onClick={() => selectProduct(item)}
+                >
+                  <div className="searchProduct">
+                    <div style={{ width: '600px' }}>
+                      {item.title.split('<b>').join('').split('</b>').join('')}
+                    </div>
+                    <div className="search_category">{item.category2}</div>
+                  </div>
+                </DetailWriteSearchProductBox>
+              ))}
+            </SelectProductBox>
+
+            <DetailWriteSearchBoxBottom>
+              <PickProductListBox>
+                <PickProductList>
+                  {list?.map((item: any) => (
+                    <PickProductsBox key={item.productId}>
+                      <div className="pickProducts">{parse(item.title)}</div>
+
+                      <Image
+                        className="closeBtnImage"
+                        src={close.src}
+                        alt="closeBtn"
+                        width={24}
+                        height={24}
+                        onClick={() => deleteProduct(item)}
+                        style={{
+                          alignContent: 'center',
+                          justifyContent: 'center',
+                        }}
+                      />
+                    </PickProductsBox>
+                  ))}
+                </PickProductList>
+              </PickProductListBox>
+              <ButtonBox>
+                <CustomButton onClick={onClose}>닫기</CustomButton>
+                <CustomButton onClick={onClick}>등록하기</CustomButton>
+              </ButtonBox>
+            </DetailWriteSearchBoxBottom>
+          </>
+        )}
       </DetailWriteSearchLayout>
     </DetailWriteSearchModal>
   );
@@ -119,13 +195,17 @@ const DetailWriteSearchBox = styled.div`
   }
 
   .search {
-    font-size: 1rem;
+    color: #868e96;
+    font-size: 1.25rem;
+    font-weight: 700;
     line-height: 1.25rem;
     margin: 0.5rem 1rem;
+    border-bottom: 2px solid #fff;
     cursor: pointer;
 
     &:active {
       border-bottom: 2px solid #206efb;
+      color: #000000;
     }
   }
 
@@ -188,7 +268,71 @@ const DetailWriteSearchBoxTop = styled.div`
     font-weight: 700;
     line-height: 3rem;
     margin-bottom: 0.625rem;
-    padding-left: 1.25rem;
+    padding: 0 1.6rem;
+  }
+
+  .search_description {
+    padding: 0 1.6rem;
+    font-size: 0.875rem;
+    color: #f83e4b;
+  }
+
+  .laptop_box {
+    position: relative;
+    width: 40%;
+    margin: 0.625rem auto;
+    padding: 5.2px 0;
+  }
+
+  .laptop {
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+    opacity: 0.2;
+    transform: rotate(14.85deg);
+    z-index: 21;
+    overflow: hidden;
+  }
+
+  .check_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150%;
+    text-align: center;
+    z-index: 22;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 3rem;
+  }
+
+  .check_title_text {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    z-index: 22;
+    color: #206efb;
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 1.25rem;
+    text-decoration: underline 0.125rem #206efb;
+    /* border-bottom: 0.125rem solid #206efb; */
+  }
+
+  .enter_again_text {
+    position: absolute;
+    top: 69%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    color: #868e96;
   }
 `;
 
@@ -197,8 +341,9 @@ const DetailWriteSearchBoxBottom = styled.div`
   bottom: 0;
   width: 100%;
   background-color: #fff;
-  overflow: hidden;
+  /* overflow: hidden; */
   z-index: 30;
+  justify-content: center;
   /* flex-wrap: wrap; */
   /* width: fit-content; */
   /* align-items: flex-start; */
@@ -252,9 +397,9 @@ const PickProductsBox = styled.div`
   align-items: center;
   color: #fff;
   background-color: #206efb;
-  width: 23.125rem;
-  height: 2.25rem;
-  margin: 0.625rem;
+  width: 16.75rem;
+  /* height: 2.25rem; */
+  /* margin: 0.625rem; */
   border-radius: 1.875rem;
   padding: 0.5rem 1.25rem;
   font-size: 1rem;
@@ -295,14 +440,23 @@ const SelectProductBox = styled.div`
 `;
 
 const PickProductListBox = styled.div`
+  overflow-x: scroll;
+  display: flex;
+  align-items: center;
+  height: fit-content;
+  padding: 1rem;
+`;
+
+const PickProductList = styled.div`
   background-color: #fff;
   display: flex;
-  overflow-x: scroll;
-  height: 9.375rem;
+  /* overflow-x: scroll; */
+  height: 4.625rem;
   flex-direction: column;
   flex-wrap: wrap;
   width: fit-content;
-  width: 100%;
+  gap: 0.625rem;
+  /* width: 100%; */
   align-items: flex-start;
 `;
 
