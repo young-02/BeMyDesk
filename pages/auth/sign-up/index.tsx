@@ -31,6 +31,7 @@ export default function SignUp({}: Props) {
   const [nicknameValid, setNicknameValid] = useState(false);
   const [errorNicknameDuplication, setErrorNicknameDuplication] =
     useState(false);
+  const [errorEmailDuplication, setErrorEmailDuplication] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
   // 동의 버튼
   const [allCheck, setAllCheck] = useState(false);
@@ -167,12 +168,18 @@ export default function SignUp({}: Props) {
 
   // 회원가입 버튼
   const onClickConfirmButton = async () => {
+    const userInfoRef = collection(dbService, 'userInfo');
     // 닉네임 중복검사
-    const nicknameRef = collection(dbService, 'userInfo');
-    const nicknameQuery = query(nicknameRef, where('nickname', '==', nickname));
+    const nicknameQuery = query(userInfoRef, where('nickname', '==', nickname));
     const nicknameDocs = await getDocs(nicknameQuery);
+    // 이메일 중복검사
+    const emailQuery = query(userInfoRef, where('email', '==', emailValue));
+    const emailDocs = await getDocs(emailQuery);
+
     if (!nicknameDocs.empty) {
       setErrorNicknameDuplication(true);
+    } else if (!emailDocs.empty) {
+      setErrorEmailDuplication(true);
     } else {
       try {
         const data = await createUserWithEmailAndPassword(auth, emailValue, pw);
@@ -191,6 +198,8 @@ export default function SignUp({}: Props) {
         const payload = {
           profileImage: '/images/defaultProfile.png',
           nickname: nickname,
+          email: emailValue,
+          isSocial: false,
           userId: auth.currentUser?.uid,
           scraps: [],
           following: [],
@@ -239,7 +248,8 @@ export default function SignUp({}: Props) {
               <input
                 type="text"
                 className={
-                  !nicknameValid && nickname.length > 0
+                  (!nicknameValid && nickname.length > 0) ||
+                  errorNicknameDuplication
                     ? 'input error'
                     : 'input'
                 }
@@ -250,7 +260,7 @@ export default function SignUp({}: Props) {
               />
             </div>
             <div className="error-text">
-              {!nicknameValid && nickname.length > 0 && (
+              {!nicknameValid && nickname.length > 1 && (
                 <div className="errorMessageWrap">
                   닉네임은 특수문자를 포함할수 없고 2글자 이상 8자
                   이하이어야합니다.
@@ -270,13 +280,16 @@ export default function SignUp({}: Props) {
               <input
                 type="text"
                 className={
-                  !emailValid && email.length > 0 ? 'input error' : 'input'
+                  (!emailValid && email.length > 0) || errorEmailDuplication
+                    ? 'input error'
+                    : 'input'
                 }
                 placeholder="이메일을 입력해주세요"
                 value={email}
                 // autoComplete 어트리뷰트는 브라우저 자동완성 작동여부
                 autoComplete="off"
                 onChange={handleEmail}
+                onFocus={() => setErrorEmailDuplication(false)}
               />
               @{/* @ 뒷쪽 */}
               <SelectBox
@@ -286,9 +299,11 @@ export default function SignUp({}: Props) {
                     selectBox: !selected.selectBox,
                   }))
                 }
-                className={
-                  !emailValid && email.length > 0 ? 'input error' : 'input'
-                }
+                // className={
+                //   (!emailValid && email.length > 0) || errorEmailDuplication
+                //     ? 'input error'
+                //     : 'input'
+                // }
               >
                 <p
                   className={
@@ -322,6 +337,11 @@ export default function SignUp({}: Props) {
                   이메일 양식을 확인해주세요.
                 </div>
               )}
+              {errorEmailDuplication ? (
+                <div className="errorMessageWrap">
+                  해당 이메일 계정이 이미 존재합니다.
+                </div>
+              ) : null}
             </div>
           </div>
 
