@@ -24,11 +24,6 @@ export default function DetailView({}) {
   };
 
   const updatePost = async () => {
-    // getDoc(doc(dbService, 'postData', router.query.id)).then((doc) => {
-    //   const data = doc.data();
-    //   // console.log(data, 'data');
-    //   // setInitialValues(data as any);
-    // });
     alert('수정?');
     router.push(`/detail/write/${router.query.id}/edit`);
   };
