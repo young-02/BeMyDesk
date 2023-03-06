@@ -146,7 +146,6 @@ function SnsNickname() {
             introduction: '안녕하세요!',
           };
           await setDoc(collectionRef, payload);
-
           router.push('/post-list');
         }
       } catch (error) {
