@@ -9,12 +9,13 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
-import { useAuthState } from 'react-firebase-hooks/auth';
+// import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import useGetReaction from '../../../Hooks/useGetReaction';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { userLoginState, userState } from '@/shared/atom';
 type Props = {};
 
 export default function SignIn({}: Props) {
@@ -33,11 +34,14 @@ export default function SignIn({}: Props) {
   const [emailEmptyError, setEmailEmptyError] = useState(false);
   const [pwEmptyError, setPwEmptyError] = useState(false);
   const [stayLoginisChecked, setStayLoginIsChecked] = useState(false);
+  const [userInfo, setUserInfor] = useRecoilState(userState);
+  const setIsLogin = useSetRecoilState(userLoginState);
 
   // 로그인유지 버튼
   const handleRadioChange = (e: any) => {
     setStayLoginIsChecked(e.target.checked);
   };
+
   // 이메일 유효성검사
   const handleEmail = function (event: any) {
     setEmail(event.target.value);
@@ -78,6 +82,7 @@ export default function SignIn({}: Props) {
       signInWithEmailAndPassword(auth, email, pw)
         .then(() => {
           alert('로그인 성공');
+
           console.log('login sucess', auth.currentUser);
           router.push('/post-list');
         })
@@ -109,6 +114,9 @@ export default function SignIn({}: Props) {
         }
       }
     }
+
+    setIsLogin(true);
+    setUserInfor(auth.currentUser);
   };
 
   //카카오 로그인
@@ -148,10 +156,11 @@ export default function SignIn({}: Props) {
   const googleLogin = async () => {
     try {
       const result_google = await signInWithPopup(auth, googleAuth);
-      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
+      const collectionRef = doc(dbService, `userInfo/${userInfo?.uid}`);
       const docSnap = await getDoc(collectionRef);
       const isFirstLogin = !docSnap.exists();
 
+      
       if (isFirstLogin) {
         await updateProfile(result_google.user, {
           photoURL: '/images/defaultProfile.png',
@@ -166,8 +175,11 @@ export default function SignIn({}: Props) {
         // };
 
         // await setDoc(collectionRef, payload);
+
         router.push('/auth/sns-nickname');
       } else {
+        setUserInfor(auth.currentUser);
+        setIsLogin(true);
         router.push('/post-list');
       }
     } catch (error) {
@@ -201,16 +213,14 @@ export default function SignIn({}: Props) {
         // await setDoc(collectionRef, payload);
         router.push('/auth/sns-nickname');
       } else {
+        setUserInfor(auth.currentUser);
+        setIsLogin(true);
         router.push('/post-list');
       }
     } catch (error) {
       console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //   console.log('userInfo', auth?.currentUser);
-  // }, [auth?.currentUser]);
 
   return (
     <StyledBackground>
