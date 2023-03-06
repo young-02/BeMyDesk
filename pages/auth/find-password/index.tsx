@@ -4,7 +4,14 @@ import styled from 'styled-components';
 import { AiOutlineMail } from 'react-icons/ai';
 import { useRouter } from 'next/router';
 import { auth, dbService } from '@/shared/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
 import useCheckUser from '@/Hooks/useCheckUser';
 import { sendPasswordResetEmail } from 'firebase/auth';
 
@@ -19,6 +26,7 @@ function FindPassword() {
   // 이메일 에러처리
   const [errorEmailEmpty, setErrorEmailEmpty] = useState(false);
   const [errorEmailInvalid, setErrorEmailInvalid] = useState(false);
+  // const [errorEmailDuplication, setErrorEmailDuplication] = useState(false);
   const [errorEmailSnsUser, setErrorEmailSnsUser] = useState(false);
   //완료 메세지
   const [sendDone, setSendDone] = useState(false);
@@ -29,19 +37,26 @@ function FindPassword() {
   const emailOnfocus = () => {
     setErrorEmailEmpty(false);
     setErrorEmailInvalid(false);
+    setErrorEmailSnsUser(false);
   };
 
   // 버튼 클릭
-  const ButtonClickHandler = () => {
+  const ButtonClickHandler = async () => {
+    const userInfoRef = collection(dbService, 'userInfo');
+    // SNS 로그인유저 검사
+    const SNSQuery = query(
+      userInfoRef,
+      where('email', '==', email),
+      where('isSocial', '==', true),
+    );
+    const SNSDocs = await getDocs(SNSQuery);
+    console.log(SNSDocs);
     if (email == '') {
       setErrorEmailEmpty(true);
       return;
-    }
-    // else if (!emailRegex.test(email)) {
-    //   setErrorEmailInvalid(true);
-    //   return;
-    // }
-    else
+    } else if (!SNSDocs.empty) {
+      setErrorEmailSnsUser(true);
+    } else {
       sendPasswordResetEmail(auth, email)
         .then(() => {
           setSendDone(true);
@@ -50,6 +65,7 @@ function FindPassword() {
           setErrorEmailInvalid(true);
           console.log(error);
         });
+    }
   };
 
   return (
