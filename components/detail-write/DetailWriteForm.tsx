@@ -79,9 +79,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         params: {
           query: searchWord,
         },
-      })
-
-      .then((response) => setData(response.data))
+      }).then((response) => setData(response.data))
       .catch((Error) => console.log(Error));
   };
 

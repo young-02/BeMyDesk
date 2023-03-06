@@ -230,7 +230,9 @@ const PasswordChange = styled.div`
     align-items: flex-end;
     min-height: 80px;
     margin: 76px 0 0 0;
-
+    :hover {
+      opacity: 90%;
+    }
     > p {
       font-family: 'Pretendard';
       font-style: normal;

@@ -1,7 +1,16 @@
 import { updateProfile } from 'firebase/auth';
 import React, { useEffect, useRef, useState } from 'react';
 import { app, auth, dbService } from '@/shared/firebase';
-import { addDoc, collection, doc, setDoc, updateDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import styled from 'styled-components';
 
 function ChangeProfile({ user, profileData }: any) {
@@ -20,6 +29,8 @@ function ChangeProfile({ user, profileData }: any) {
   //오류처리
   const [errorNickNameEmpty, setErrorNickNameEmpty] = useState(false);
   const [errorNickNameRegex, setErrorNickNameRegex] = useState(false);
+  const [errorNicknameduDlication, setErrorNicknameDuplication] =
+    useState(false);
   const [errorIntroductionEmpty, setErrorIntroductionEmpty] = useState(false);
   //자기소개 글자수 세기
   const countOnChangeHandler = function (event: any) {
@@ -52,6 +63,7 @@ function ChangeProfile({ user, profileData }: any) {
     setErrorNickNameEmpty(false);
     setErrorNickNameRegex(false);
     setProfileChangeDone(false);
+    setErrorNicknameDuplication(false);
   };
   // 자기소개 인풋 포커스
 
@@ -60,7 +72,7 @@ function ChangeProfile({ user, profileData }: any) {
     setProfileChangeDone(false);
   };
   // 적용 버튼
-  const profileChangeConfirmButtonHandler = function () {
+  const profileChangeConfirmButtonHandler = async () => {
     const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$/;
     const collectionRef = doc(dbService, `userInfo/${user.uid}`);
 
@@ -68,25 +80,41 @@ function ChangeProfile({ user, profileData }: any) {
     // 2. 닉네임 유효성검사
     // 3. 자기소개 입력여부
 
-    //1.닉네임 활성화 여부 - 활성화
+    // 닉네임 활성화 여부 - 활성화
     if (nicknameInputEnable) {
       //2. 닉네임 유효성검사 - 정상입력
       // 3. 자기소개 입력여부 - 입력완료
       if (regex.test(nickNameEdit) && Characters !== '') {
-        updateProfile(auth.currentUser as any, {
-          displayName: nickNameEdit,
-        });
-        const payload = {
-          nickname: nickNameEdit,
-          introduction: Characters,
-        };
-        updateDoc(collectionRef, payload)
-          .then(() => {
-            setProfileChangeDone(true);
-          })
-          .catch((error) => {
-            console.error(error);
+        //닉네임 중복검사
+        const nicknameRegex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$/;
+        const nicknameRef = collection(dbService, 'userInfo');
+        const nicknameQuery = query(
+          nicknameRef,
+          where('nickname', '==', nickNameEdit),
+          where('userId', '!=', auth.currentUser?.uid),
+        );
+        const nicknameDocs = await getDocs(nicknameQuery);
+
+        if (!nicknameDocs.empty) {
+          setErrorNicknameDuplication(true);
+        }
+        //닉네임 중복검사 통과
+        else {
+          updateProfile(auth.currentUser as any, {
+            displayName: nickNameEdit,
           });
+          const payload = {
+            nickname: nickNameEdit,
+            introduction: Characters,
+          };
+          updateDoc(collectionRef, payload)
+            .then(() => {
+              setProfileChangeDone(true);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
       } else {
         // 3. 자기소개 입력여부 - 비어있음
         if (Characters == '') {
@@ -105,7 +133,7 @@ function ChangeProfile({ user, profileData }: any) {
         }
       }
     }
-    // 1.닉네임 활성화 여부 - 비활성화
+    // 닉네임 활성화 여부 - 비활성화
     else {
       // 3. 자기소개 입력여부 - 비어있음
       if (Characters !== '') {
@@ -141,7 +169,11 @@ function ChangeProfile({ user, profileData }: any) {
         <div onClick={handleDivClick}>
           <input
             className={`inputNickname ${
-              errorNickNameRegex || errorNickNameEmpty ? 'error' : ''
+              errorNickNameRegex ||
+              errorNickNameEmpty ||
+              errorNicknameduDlication
+                ? 'error'
+                : ''
             }`}
             type="text"
             placeholder={
@@ -150,18 +182,24 @@ function ChangeProfile({ user, profileData }: any) {
             disabled={!nicknameInputEnable}
             onChange={nickNameEditonChangeHandler}
             ref={inputRef}
-            onBlur={() => {
-              setErrorNickNameEmpty(false);
-              setErrorNickNameRegex(false);
-            }}
+            // onBlur={() => {
+            //   setErrorNickNameEmpty(false);
+            //   setErrorNickNameRegex(false);
+            // }}
             onFocus={handleNicknameInputFocus}
           />
           <div className="errorDiv">
             <p className="errorMessage">
-              {errorNickNameRegex ? '닉네임 양식을 확인해주세요 2~8자' : null}
+              {errorNickNameRegex
+                ? '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자이하이어야합니다.'
+                : null}
             </p>
+
             <p className="errorMessage">
               {errorNickNameEmpty ? '필수 입력사항입니다' : null}
+            </p>
+            <p className="errorMessage">
+              {errorNicknameduDlication ? '중복된 닉네임 입니다.' : null}
             </p>
           </div>
         </div>
@@ -345,6 +383,9 @@ const ProfileEdit = styled.div`
       }
     }
     .ProfileEditThirdLineApplyButtonDiv {
+      :hover {
+        opacity: 90%;
+      }
       .ProfileEditThirdLineApplyButton {
         width: 132px;
         height: 48px;

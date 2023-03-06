@@ -15,9 +15,13 @@ import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import useGetReaction from '../../../Hooks/useGetReaction';
+import useCheckUser from '@/Hooks/useCheckUser';
 type Props = {};
 
 export default function SignIn({}: Props) {
+  // 유저 상태 체크
+  useCheckUser();
+
   const router = useRouter();
   // const emailRef = useRef<HTMLInputElement>(null);
   // const pwRef = useRef<HTMLInputElement>(null);
@@ -156,21 +160,23 @@ export default function SignIn({}: Props) {
         await updateProfile(result_google.user, {
           photoURL: '/images/defaultProfile.png',
         });
-        const payload = {
-          profileImage: '/images/defaultProfile.png',
-          nickname: auth.currentUser?.displayName,
-          userId: auth.currentUser?.uid,
-          scraps: [],
-          following: [],
-          introduction: '안녕하세요!',
-        };
+        // const payload = {
+        //   profileImage: '/images/defaultProfile.png',
+        //   nickname: auth.currentUser?.displayName,
+        //   userId: auth.currentUser?.uid,
+        //   scraps: [],
+        //   following: [],
+        //   introduction: '안녕하세요!',
+        // };
 
-        await setDoc(collectionRef, payload);
+        // await setDoc(collectionRef, payload);
+        router.push('/auth/sns-nickname');
+      } else {
+        router.push('/post-list');
       }
     } catch (error) {
       console.error(error);
     }
-    router.push('/post-list');
   };
 
   //페이스북 로그인
@@ -187,26 +193,24 @@ export default function SignIn({}: Props) {
           photoURL: '/images/defaultProfile.png',
         });
 
-        const payload = {
-          profileImage: '/images/defaultProfile.png',
-          nickname: auth.currentUser?.displayName,
-          userId: auth.currentUser?.uid,
-          scraps: [],
-          following: [],
-          introduction: '안녕하세요!',
-        };
+        // const payload = {
+        //   profileImage: '/images/defaultProfile.png',
+        //   nickname: auth.currentUser?.displayName,
+        //   userId: auth.currentUser?.uid,
+        //   scraps: [],
+        //   following: [],
+        //   introduction: '안녕하세요!',
+        // };
 
-        await setDoc(collectionRef, payload);
+        // await setDoc(collectionRef, payload);
+        router.push('/auth/sns-nickname');
+      } else {
+        router.push('/post-list');
       }
     } catch (error) {
       console.error(error);
     }
-    router.push('/post-list');
   };
-
-  // useEffect(() => {
-  //   console.log('userInfo', auth?.currentUser);
-  // }, [auth?.currentUser]);
 
   return (
     <StyledBackground>
@@ -295,7 +299,7 @@ export default function SignIn({}: Props) {
         <div className="SNSWrap">
           <p> SNS로 시작하기</p>
           <div className="SNSLoginContainer">
-            <div onClick={kakaoLogin}>
+            {/* <div onClick={kakaoLogin}>
               {' '}
               <Image
                 src="/images/kakaoLogo.png"
@@ -303,7 +307,7 @@ export default function SignIn({}: Props) {
                 width={48}
                 height={48}
               />
-            </div>
+            </div> */}
             <div onClick={googleLogin}>
               <Image
                 src="/images/googleLogo.png"
@@ -312,14 +316,14 @@ export default function SignIn({}: Props) {
                 height={48}
               />
             </div>
-            <div>
+            {/* <div>
               <Image
                 src="/images/naverLogo.png"
                 alt="NaverLogin"
                 width={48}
                 height={48}
               />
-            </div>
+            </div> */}
             <div onClick={facebookLogin}>
               {' '}
               <Image
@@ -401,6 +405,11 @@ const StyledDiv = styled.div`
     padding: 15px 8px 0 8px;
     border-bottom: 2px solid #adb5bd;
     min-height: 60px;
+
+    :hover {
+      border-bottom: 2px solid #6d7379;
+    }
+
     .iconSpan {
       margin-right: 1rem;
       display: flex;
@@ -483,6 +492,9 @@ const StyledDiv = styled.div`
     color: white;
     margin-bottom: 16px;
     cursor: pointer;
+    :hover {
+      opacity: 90%;
+    }
   }
 
   .buttonBottomWrap {
@@ -527,6 +539,9 @@ const StyledDiv = styled.div`
 
     color: #495057;
     text-decoration: none;
+    :hover {
+      opacity: 80%;
+    }
   }
 
   .SNSWrap {
@@ -551,6 +566,9 @@ const StyledDiv = styled.div`
         font-size: 30px;
         padding: 10px;
         cursor: pointer;
+        :hover {
+          opacity: 80%;
+        }
       }
     }
   }
@@ -578,5 +596,9 @@ const StyledDiv = styled.div`
 
     color: #868e96;
     text-decoration: none;
+
+    :hover {
+      opacity: 70%;
+    }
   }
 `;
