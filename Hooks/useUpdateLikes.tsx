@@ -23,8 +23,9 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
   const router = useRouter();
   const { query: currentQuery }: any = router;
 
-  // 좋아요 상태값에 따라 업데이트 할 좋아요 객체를 선택합니다.
   let newLikes = {};
+
+  // 좋아요 상태값에 따라 업데이트 할 좋아요 객체를 선택합니다.
   // 좋아요 +1
   if (isLikesClicked === false) {
     newLikes = {
@@ -145,6 +146,8 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
         await queryClient.cancelQueries({
           queryKey: ['post', postId],
         });
+
+        console.log('postId', postId);
 
         // 기존 데이터를 snapshot 찍습니다.
         const prevPost = queryClient.getQueryData(['post', postId]);
