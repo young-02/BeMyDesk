@@ -17,6 +17,7 @@ interface CustomButtonProps {
   margin?: string;
   fontWeight?: string;
   disabled?: boolean;
+  color?: string;
 }
 
 export default function CustomButton({
@@ -34,6 +35,7 @@ export default function CustomButton({
   margin,
   fontWeight,
   disabled,
+  color,
 }: CustomButtonProps) {
   return (
     <Button
@@ -50,6 +52,7 @@ export default function CustomButton({
       margin={margin}
       fontWeight={fontWeight}
       disabled={disabled}
+      color={color}
     >
       {children}
     </Button>
@@ -69,4 +72,5 @@ const Button = styled.button<CustomButtonProps>`
   margin: ${(props) => props.margin}rem;
   font-weight: ${(props) => props.fontWeight};
   font-size: ${(props) => props.fontSize}rem;
+  color: ${(props) => props.color};
 `;
