@@ -101,7 +101,7 @@ export default function DetailViewUserInfor({ post }) {
             width={24}
           />
         </div>
-        <div onClick={handleUpdateLikes}>
+        <div onClick={handleUpdateLikes} className="likes">
           <Image
             src={isLikesClicked ? activeLikes : inactiveLikes}
             alt="likes-icon"
@@ -146,32 +146,13 @@ const DetailViewUserInforLayout = styled.div`
     display: flex;
     align-items: center;
     gap: 1.25rem;
-
-    .follow {
-      display: block;
-      width: 24px;
-      height: 24px;
-      background: url(/images/sprite_icon.png) no-repeat center;
-      background-position: -97px -37px;
-      text-indent: -99999%;
-
-      &.active {
-        background-position: -65px -37px;
-      }
-    }
-
-    .love {
-      display: block;
-      width: 24px;
-      height: 24px;
-      background: url(/images/sprite_icon.png) no-repeat center;
-      background-position: -32px -37px;
-
-      text-indent: -99999%;
-
-      &.active {
-        background-position: -1px -37px;
-      }
+    .likes {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      color: #868e96;
+      gap: 0.625rem;
+      margin: 0rem 0.25rem;
     }
   }
 `;
