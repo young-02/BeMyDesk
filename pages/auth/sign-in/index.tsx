@@ -86,7 +86,8 @@ export default function SignIn({}: Props) {
       signInWithEmailAndPassword(auth, email, pw)
         .then(() => {
           alert('로그인 성공');
-
+          setIsLogin(true);
+          setUserInfor(auth?.currentUser);
           console.log('login sucess', auth.currentUser);
           router.push('/post-list');
         })
@@ -118,9 +119,6 @@ export default function SignIn({}: Props) {
         }
       }
     }
-
-    setIsLogin(true);
-    setUserInfor(auth.currentUser);
   };
 
   //카카오 로그인
@@ -164,7 +162,6 @@ export default function SignIn({}: Props) {
       const docSnap = await getDoc(collectionRef);
       const isFirstLogin = !docSnap.exists();
 
-      
       if (isFirstLogin) {
         await updateProfile(result_google.user, {
           photoURL: '/images/defaultProfile.png',

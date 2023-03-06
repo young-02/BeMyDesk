@@ -7,16 +7,28 @@ import Search from './Search';
 import useCheckLogin from '../Hooks/useCheckLogin';
 import { userLoginState, userState } from '@/shared/atom';
 import { useRecoilValue, useRecoilState } from 'recoil';
+import { auth } from '@/shared/firebase';
 
 function GlobalNavigationBar() {
+  const [isLogin, setIsLogin] = useState(false);
   const router = useRouter();
   const { pathname } = router;
-  const { isLogin,logOut } = useCheckLogin();
+  const { logOut } = useCheckLogin();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   //리코일 불러오기
   const userInfo = useRecoilValue(userState);
   const userProfilImg = userInfo?.photoURL ?? '/images/defaultProfile.png';
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    });
+  }, []);
 
   return (
     <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>

@@ -8,7 +8,6 @@ import { userLoginState, userState } from '../shared/atom';
 type Props = {};
 
 export default function useCheckLogin() {
-  const [isLogin, setIsLogin] = useState(false);
   const router = useRouter();
   //리코일 로그아웃 상태변경
   const userInfo = useResetRecoilState(userState);
@@ -21,15 +20,5 @@ export default function useCheckLogin() {
     router.push('/main');
   };
 
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        setIsLogin(true);
-      } else {
-        setIsLogin(false);
-      }
-    });
-  }, []);
-
-  return { isLogin, logOut };
+  return { logOut };
 }
