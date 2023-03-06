@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 type Props = {};
 
-export default function DetailViewSlide({ detail }) {
+export default function DetailViewSlide({ post }) {
   return (
     <DetailViewSlideLayout>
       <Swiper
@@ -20,7 +20,7 @@ export default function DetailViewSlide({ detail }) {
       >
         <SwiperSlide>
           <Image
-            src={detail.postImage1}
+            src={post.postImage1}
             alt="postImage1"
             layout="fill"
             objectFit="cover"
