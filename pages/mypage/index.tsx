@@ -10,17 +10,11 @@ import MyScrap from '@/components/mypage/contents/MyScrap';
 import MyFollow from '@/components/mypage/contents/MyFollow';
 import CategoryButton from '@/components/mypage/CategoryButton';
 import ProfileEditModal from '@/components/mypage/ProfileEditModal';
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { AiOutlineSetting } from 'react-icons/ai';
+import { useQuery } from 'react-query';
+import { useUserInfo } from '../../Hooks/useUserInfo';
+import useUserPostList from '../../Hooks/useUserPostList';
 
 type Props = {};
 
@@ -28,168 +22,105 @@ export default function MyPage({}: Props) {
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
   const [category, setCategory] = useState('myPost');
-  const [myPost, setMyPost] = useState([]);
-  const [myScrap, setMyScrap] = useState([]);
-  const [myFollow, setMyFollow] = useState([]);
   const [profileEditModalOpen, setProfileEditModalOpen] = useState(false);
-  const postCount = myPost.length;
-  const scrapCount = myScrap.length;
-  const followCount = myFollow.length;
 
-  const [profileData, setProfileData] = useState({});
-  const uid = auth.currentUser?.uid;
-  useEffect(() => {
-    if (!uid) {
-      return;
-    }
-    // 유저정보 문서 가져오기
-    const fetchUserDataHandler = async () => {
-      const docRef = doc(dbService, 'userInfo', uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const fetchedProfile = docSnap.data();
-        setProfileData(docSnap.data());
-        // 마이 포스트 불러오기 (getdocs로 리팩토링 추천)
-        onSnapshot(
-          query(collection(dbService, 'postData'), where('userId', '==', uid)),
-          (snapshot) => {
-            const fetchedMyPostData = snapshot.docs.map((doc) => ({
-              ...doc.data(),
-            }));
-            setMyPost(fetchedMyPostData);
-            console.log('마이포스트 데이터 불러오기 완료');
-          },
-        );
-        // 스크랩한 글 가져오기 (getdocs로 리팩토링 추천)
-        if (fetchedProfile.scraps && fetchedProfile.scraps.length > 0) {
-          onSnapshot(
-            query(
-              collection(dbService, 'postData'),
-              where('__name__', 'in', fetchedProfile.scraps),
-            ),
-            (snapshot) => {
-              const fetchedScrapData = snapshot.docs.map((doc) => ({
-                ...doc.data(),
-              }));
-              setMyScrap(fetchedScrapData);
-              console.log('스크랩 데이터 불러오기 완료');
-            },
-          );
-        }
-        // 팔로우 유저 가져오기 (getdocs로 리팩토링 추천)
-        if (fetchedProfile.following && fetchedProfile.following.length > 0) {
-          onSnapshot(
-            query(
-              collection(dbService, 'userInfo'),
-              where('__name__', 'in', fetchedProfile.following),
-            ),
-            (snapshot) => {
-              const fetchedFollowingData = snapshot.docs.map((doc) => ({
-                ...doc.data(),
-              }));
-              setMyFollow(fetchedFollowingData);
-              console.log('팔로우 유저 데이터 불러오기 완료');
-            },
-          );
-        }
-      } else {
-        console.log('No such document!');
-      }
-    };
+  // const uid = auth.currentUser?.uid;
+  // 테스트용
+  let uid = 'fA5D0FfF8GM1kd4bBVcmC7Ri4IA3';
 
-    fetchUserDataHandler();
-  }, [uid]);
+  // if ((uid = undefined)) {
+  //   alert('로그인이 필요한 서비스입니다.');
+  //   router.push('/auth/sign-in');
+  //   return null;
+  // }
 
-  if (loading) {
-    return <div>로딩중입니다...</div>;
-  }
+  const {
+    isLoading,
+    isError,
+    error: userInfoError,
+    data: userInfo,
+  } = useUserInfo(uid);
 
-  if (error) {
-    return <div>에러메세지: {error.message}</div>;
-  }
+  const { data: myPost } = useUserPostList(uid);
 
-  if (user) {
-    return (
-      <StyledContainer>
-        {/* <div>
-          {' '}
-          <button onClick={() => auth.signOut()}>로그아웃</button>
-          <button onClick={() => console.log('유저정보', user)}>
-            유저정보 보기
-          </button>
-        </div> */}
-        <StyledDivButton>
-          <CategoryButton
-            category={category}
-            setCategory={setCategory}
-            postCount={postCount}
-            scrapCount={scrapCount}
-            followCount={followCount}
-          />
-        </StyledDivButton>
-        <StyledDivMain>
-          <StyledDivProfile>
-            <div>
-              <Image
-                className="profileImage"
-                src={user.photoURL}
-                alt="ProfileImage"
-                width={202}
-                height={202}
+  const postCount = myPost?.length;
+  const scrapCount = userInfo?.scraps?.length;
+  const followCount = userInfo?.following.length;
+
+  return (
+    <StyledContainer>
+      {isLoading && <div>Loading...</div>}
+      {isError && <div>Error: {userInfoError.message}</div>}
+      <StyledDivButton>
+        <CategoryButton
+          category={category}
+          setCategory={setCategory}
+          postCount={postCount}
+          scrapCount={scrapCount}
+          followCount={followCount}
+        />
+      </StyledDivButton>
+      <StyledDivMain>
+        <StyledDivProfile>
+          <div>
+            <Image
+              className="profileImage"
+              src={userInfo?.profileImage}
+              alt="ProfileImage"
+              width={202}
+              height={202}
+            />
+          </div>
+          <div className="firstLine">
+            <p className="userName">{userInfo?.nickname}</p>
+            <p className="nim">님</p>
+          </div>
+          <div className="secondLine">
+            <p className="introduction">{userInfo?.introduction}</p>
+          </div>
+          <div className="thirdLine">
+            <div className="followerDiv">
+              <p className="followerLetter">팔로워</p>
+              <p className="followerCount">{userInfo?.follower?.length}</p>
+            </div>
+            <div className="settingIcon">
+              <AiOutlineSetting
+                onClick={() => {
+                  setProfileEditModalOpen(true);
+                }}
+                size={24}
               />
             </div>
-            <div className="firstLine">
-              <p className="userName">{user.displayName}</p>
-              <p className="nim">님</p>
-            </div>
-            <div className="secondLine">
-              <p className="introduction">{profileData.introduction}</p>
-            </div>
-            <div className="thirdLine">
-              <div className="followerDiv">
-                <p className="followerLetter">팔로워</p>
-                <p className="followerCount">3</p>
-              </div>
-              <div className="settingIcon">
-                <AiOutlineSetting
-                  onClick={() => {
-                    setProfileEditModalOpen(true);
-                  }}
-                  size={24}
-                />
-              </div>
-            </div>
+          </div>
 
-            <div>
-              {profileEditModalOpen && (
-                <ProfileEditModal
-                  setProfileEditModalOpen={setProfileEditModalOpen}
-                  user={user}
-                  profileData={profileData}
-                />
-              )}
-            </div>
-          </StyledDivProfile>
+          <div>
+            {profileEditModalOpen && (
+              <ProfileEditModal
+                setProfileEditModalOpen={setProfileEditModalOpen}
+                user={user}
+                profileData={userInfo}
+              />
+            )}
+          </div>
+        </StyledDivProfile>
 
-          <StyledDivContents>
-            {category === 'myPost' && (
-              <MyPost myPost={myPost} postCount={postCount} />
-            )}
-            {category === 'myScrap' && (
-              <MyScrap myScrap={myScrap} scrapCount={scrapCount} />
-            )}
-            {category === 'myFollow' && (
-              <MyFollow myFollow={myFollow} followCount={followCount} />
-            )}
-          </StyledDivContents>
-        </StyledDivMain>
-      </StyledContainer>
-    );
-  } else {
-    alert('로그인이 필요한 서비스입니다.');
-    router.push('/auth/sign-in');
-    return null;
-  }
+        <StyledDivContents>
+          {category === 'myPost' && (
+            <MyPost myPost={myPost} postCount={postCount} />
+          )}
+          {category === 'myScrap' && (
+            <MyScrap myScrap={userInfo?.scraps} scrapCount={scrapCount} />
+          )}
+          {category === 'myFollow' && (
+            <MyFollow
+              myFollow={userInfo?.following}
+              followCount={followCount}
+            />
+          )}
+        </StyledDivContents>
+      </StyledDivMain>
+    </StyledContainer>
+  );
 }
 
 const StyledContainer = styled.div`
