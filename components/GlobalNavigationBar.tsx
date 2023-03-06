@@ -16,7 +16,7 @@ function GlobalNavigationBar() {
 
   //리코일 불러오기
   const userInfo = useRecoilValue(userState);
-  const userProfilImg = userInfo?.photoURL ?? '/images/Padeeffillortu.png';
+  const userProfilImg = userInfo?.photoURL ?? '/images/defaultProfile.png';
 
   return (
     <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>
