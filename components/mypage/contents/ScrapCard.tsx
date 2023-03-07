@@ -37,7 +37,7 @@ const ScrapCard = ({ postId, userInfo, currentUserId }: any) => {
             <p className="Title">{post?.postTitle}</p>
           </div>
           <div className="secondLine">
-            <p className="Text">{post?.postText}</p>
+            <p className="Text">{post?.postText.replace(/<[^>]*>?/g, '')}</p>
           </div>
           <div className="thirdLine">
             <div className="ProfileDiv">
