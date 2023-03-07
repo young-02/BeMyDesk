@@ -750,3 +750,4 @@ const DeskPhotoWrap = styled.div`
     }
   }
 `;
+// pr용 주석
