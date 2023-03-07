@@ -16,6 +16,8 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
+import { userState } from '@/shared/atom';
 
 function SnsNickname() {
   const router = useRouter();
@@ -36,6 +38,7 @@ function SnsNickname() {
   const [ageCheck, setAgeCheck] = useState(false);
   const [useCheck, setUseCheck] = useState(false);
   const [marketingCheck, setMarketingCheck] = useState(false);
+  const setUseInfo = useSetRecoilState(userState);
 
   // 닉네임 입력
   const [nickname, setNickname] = useState('');
@@ -128,7 +131,6 @@ function SnsNickname() {
           where('email', '==', user?.email),
         );
         const emailDocs = await getDocs(emailQuery);
-
         if (nickname == '') {
           setErrorNicknameEmpty(true);
           return;
@@ -159,7 +161,7 @@ function SnsNickname() {
             isSocial: true,
           };
           await setDoc(collectionRef, payload);
-          router.push('/post-list');
+          router.push('/auth/sign-in');
         }
       } catch (error) {
         console.error(error);
@@ -264,7 +266,7 @@ function SnsNickname() {
                   onChange={useBtnEvent}
                 />
                 <span className="check-custorm" />
-                개인정보 수집/이용에 동의합니다.{' '}
+                개인정보 수집/이용에 동의합니다.
                 <span className="check-custorm-right">(필수)</span>
               </label>
             </div>
