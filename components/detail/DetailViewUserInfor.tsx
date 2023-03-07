@@ -107,7 +107,7 @@ export default function DetailViewUserInfor({ post }) {
             alt="likes-icon"
             width={24}
           />
-          <p className={isLikesClicked ? 'active' : 'inactive'}>{likesCount}</p>
+          <p>{likesCount}</p>
         </div>
         {isFollowingClicked ? (
           <CustomButton
@@ -146,6 +146,11 @@ const DetailViewUserInforLayout = styled.div`
     display: flex;
     align-items: center;
     gap: 1.25rem;
+
+    > div {
+      cursor: pointer;
+    }
+
     .likes {
       display: flex;
       flex-direction: row;

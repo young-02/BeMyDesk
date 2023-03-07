@@ -147,8 +147,6 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
           queryKey: ['post', postId],
         });
 
-        console.log('postId', postId);
-
         // 기존 데이터를 snapshot 찍습니다.
         const prevPost = queryClient.getQueryData(['post', postId]);
 
@@ -178,5 +176,49 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
     },
   );
 
-  return { isLikesClicked, postListMutate, postMutate };
+  // 💚포스트 리스트 페이지 좋아요 업데이트
+  const { mutate: myPostMutate } = useMutation(
+    () => updateLikes({ post, newLikes }),
+    {
+      onMutate: async (postId: string) => {
+        // 진행되는 모든 리패치들을 취소합니다.
+        await queryClient.cancelQueries({
+          queryKey: ['my-page', 'myPost'],
+        });
+
+        // 기존 데이터를 snapshot 찍습니다.
+        const prevPost = queryClient.getQueryData(['my-page', 'myPost']);
+
+        // 기존 데이터를 변경하는 updatedPost 함수
+        const updatedPost = (data: any) => {
+          const newData = data.map((doc: PostType) => {
+            if (doc.id === postId) {
+              return {
+                ...doc,
+                ...newLikes,
+              };
+            }
+            return doc;
+          });
+          return newData;
+        };
+
+        // 성공을 가정하고 새로운 값으로 UI를 업데이트합니다.
+        queryClient.setQueryData(['my-page', 'myPost'], updatedPost(prevPost));
+
+        // 좋아요 체크 상태값을 변경합니다.
+        setIsLikesClicked(!isLikesClicked);
+      },
+
+      onError: (err, newTodo, context) => {
+        // 에러시 기존 데이터를 반환합니다.
+        queryClient.setQueryData(['my-page', 'myPost'], context.previousPost);
+      },
+
+      // 실패, 성공 여하와 상관없이 데이터를 refetching 하지 않습니다.
+      onSettled: () => {},
+    },
+  );
+
+  return { isLikesClicked, postListMutate, postMutate, myPostMutate };
 };

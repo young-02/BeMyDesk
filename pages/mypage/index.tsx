@@ -106,7 +106,11 @@ export default function MyPage({}: Props) {
 
           <StyledDivContents>
             {category === 'myPost' && (
-              <MyPost myPost={myPost} postCount={postCount} />
+              <MyPost
+                myPost={myPost}
+                postCount={postCount}
+                currentUserId={currentUserId}
+              />
             )}
             {category === 'myScrap' && (
               <MyScrap myScrap={userInfo?.scraps} scrapCount={scrapCount} />
