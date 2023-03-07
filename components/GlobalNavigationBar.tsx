@@ -15,6 +15,11 @@ function GlobalNavigationBar() {
   const userProfilImg =
     auth.currentUser?.photoURL ?? '/images/defaultProfile.png';
 
+  const handleLogOut = () => {
+    logOut();
+    router.push('/auth/sign-in');
+  };
+
   return (
     <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>
       <div>
@@ -71,7 +76,7 @@ function GlobalNavigationBar() {
                   <Link className="sub-menu" href="/mypage">
                     마이페이지
                   </Link>
-                  <p className="sub-menu" onClick={logOut}>
+                  <p className="sub-menu" onClick={handleLogOut}>
                     로그아웃
                   </p>
                 </div>

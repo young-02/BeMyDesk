@@ -12,8 +12,12 @@ import {
   where,
 } from 'firebase/firestore';
 import styled from 'styled-components';
+import { useQueryClient } from 'react-query';
 
-function ChangeProfile({ user, profileData }: any) {
+function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
+  // 프사 변경시 캐쉬 다시 불러오기 위한 쿼리 클라이언트
+  const queryClient = useQueryClient();
+
   //자기소개
   const [countCharacters, setCountCharacters] = useState(
     profileData?.introduction.length,
@@ -154,6 +158,8 @@ function ChangeProfile({ user, profileData }: any) {
         setErrorIntroductionEmpty(true);
       }
     }
+    queryClient.removeQueries('userInfo');
+    setProfileEditModalOpen(false);
   };
   // input창 enable시 자동 focus
   useEffect(() => {
