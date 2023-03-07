@@ -23,6 +23,7 @@ const useUserPostList = (userId: any) => {
     staleTime: Infinity,
     cacheTime: Infinity,
     refetchOnWindowFocus: false,
+    enabled: !!userId,
   });
 };
 

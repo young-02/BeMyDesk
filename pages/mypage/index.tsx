@@ -19,108 +19,123 @@ import useUserPostList from '../../Hooks/useUserPostList';
 type Props = {};
 
 export default function MyPage({}: Props) {
-  const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
+  const [user, loading, error] = useAuthState(auth);
   const [category, setCategory] = useState('myPost');
   const [profileEditModalOpen, setProfileEditModalOpen] = useState(false);
+  const currentUserId = auth.currentUser?.uid;
 
-  // const uid = auth.currentUser?.uid;
-  // 테스트용
-  let uid = 'fA5D0FfF8GM1kd4bBVcmC7Ri4IA3';
-
-  // if ((uid = undefined)) {
-  //   alert('로그인이 필요한 서비스입니다.');
-  //   router.push('/auth/sign-in');
-  //   return null;
-  // }
+  console.log('user', user);
+  console.log('currentUserId', currentUserId);
 
   const {
     isLoading,
     isError,
     error: userInfoError,
     data: userInfo,
-  } = useUserInfo(uid);
+  } = useUserInfo(currentUserId);
 
-  const { data: myPost } = useUserPostList(uid);
+  console.log('userInfo', userInfo);
+
+  const { data: myPost } = useUserPostList(currentUserId);
 
   const postCount = myPost?.length;
   const scrapCount = userInfo?.scraps?.length;
   const followCount = userInfo?.following.length;
 
-  return (
-    <StyledContainer>
-      {isLoading && <div>Loading...</div>}
-      {isError && <div>Error: {userInfoError.message}</div>}
-      <StyledDivButton>
-        <CategoryButton
-          category={category}
-          setCategory={setCategory}
-          postCount={postCount}
-          scrapCount={scrapCount}
-          followCount={followCount}
-        />
-      </StyledDivButton>
-      <StyledDivMain>
-        <StyledDivProfile>
-          <div>
-            <Image
-              className="profileImage"
-              src={userInfo?.profileImage}
-              alt="ProfileImage"
-              width={202}
-              height={202}
-            />
-          </div>
-          <div className="firstLine">
-            <p className="userName">{userInfo?.nickname}</p>
-            <p className="nim">님</p>
-          </div>
-          <div className="secondLine">
-            <p className="introduction">{userInfo?.introduction}</p>
-          </div>
-          <div className="thirdLine">
-            <div className="followerDiv">
-              <p className="followerLetter">팔로워</p>
-              <p className="followerCount">{userInfo?.follower?.length}</p>
-            </div>
-            <div className="settingIcon">
-              <AiOutlineSetting
-                onClick={() => {
-                  setProfileEditModalOpen(true);
-                }}
-                size={24}
+  useEffect(() => {
+    if (userInfo == undefined) {
+      router.push('/auth/sign-in');
+    }
+  }, []);
+
+  if (loading) {
+    <div>Loading...</div>;
+  }
+
+  if (error) {
+    <div>error!</div>;
+  }
+
+  if (user) {
+    return (
+      <StyledContainer>
+        {isLoading && <div>Loading...</div>}
+        {isError && <div>Error: {userInfoError.message}</div>}
+        <StyledDivButton>
+          <CategoryButton
+            category={category}
+            setCategory={setCategory}
+            postCount={postCount}
+            scrapCount={scrapCount}
+            followCount={followCount}
+          />
+        </StyledDivButton>
+        <StyledDivMain>
+          <StyledDivProfile>
+            <div>
+              <Image
+                className="profileImage"
+                src={userInfo?.profileImage}
+                alt="ProfileImage"
+                width={202}
+                height={202}
               />
             </div>
-          </div>
+            <div className="firstLine">
+              <p className="userName">{userInfo?.nickname}</p>
+              <p className="nim">님</p>
+            </div>
+            <div className="secondLine">
+              <p className="introduction">{userInfo?.introduction}</p>
+            </div>
+            <div className="thirdLine">
+              <div className="followerDiv">
+                <p className="followerLetter">팔로워</p>
+                <p className="followerCount">{userInfo?.follower?.length}</p>
+              </div>
+              <div className="settingIcon">
+                <AiOutlineSetting
+                  onClick={() => {
+                    setProfileEditModalOpen(true);
+                  }}
+                  size={24}
+                />
+              </div>
+            </div>
 
-          <div>
-            {profileEditModalOpen && (
-              <ProfileEditModal
-                setProfileEditModalOpen={setProfileEditModalOpen}
-                user={user}
-                profileData={userInfo}
+            <div>
+              {profileEditModalOpen && (
+                <ProfileEditModal
+                  setProfileEditModalOpen={setProfileEditModalOpen}
+                  user={user}
+                  profileData={userInfo}
+                />
+              )}
+            </div>
+          </StyledDivProfile>
+
+          <StyledDivContents>
+            {category === 'myPost' && (
+              <MyPost myPost={myPost} postCount={postCount} />
+            )}
+            {category === 'myScrap' && (
+              <MyScrap myScrap={userInfo?.scraps} scrapCount={scrapCount} />
+            )}
+            {category === 'myFollow' && (
+              <MyFollow
+                myFollow={userInfo?.following}
+                followCount={followCount}
               />
             )}
-          </div>
-        </StyledDivProfile>
-
-        <StyledDivContents>
-          {category === 'myPost' && (
-            <MyPost myPost={myPost} postCount={postCount} />
-          )}
-          {category === 'myScrap' && (
-            <MyScrap myScrap={userInfo?.scraps} scrapCount={scrapCount} />
-          )}
-          {category === 'myFollow' && (
-            <MyFollow
-              myFollow={userInfo?.following}
-              followCount={followCount}
-            />
-          )}
-        </StyledDivContents>
-      </StyledDivMain>
-    </StyledContainer>
-  );
+          </StyledDivContents>
+        </StyledDivMain>
+      </StyledContainer>
+    );
+  } else {
+    // router.push('/auth/sign-in', undefined, { shallow: true });
+    return null;
+  }
 }
 
 const StyledContainer = styled.div`
