@@ -37,9 +37,9 @@ const DetailWriteSearch = ({
               <span className="search" onClick={leftToggle}>
                 검색하기
               </span>
-              <span className="search" onClick={rightToggle}>
-                직접 등록하기
-              </span>
+              {/* <span className="search" onClick={rightToggle}> */}
+              {/* 직접 등록하기 */}
+              {/* </span> */}
             </div>
             <button className="closeBtn" onClick={onClose}>
               <Image
@@ -51,11 +51,11 @@ const DetailWriteSearch = ({
               />
             </button>
           </DetailWriteSearchBox>
-          {isNotData ? (
-            <p className="search_products">제품을 입력해주세요</p>
-          ) : (
-            <p className="search_products">제품을 검색해주세요</p>
-          )}
+          {/* {isNotData ? ( */}
+          {/* <p className="search_products">제품을 입력해주세요</p> */}
+          {/* ) : ( */}
+          <p className="search_products">제품을 검색해주세요</p>
+          {/* )} */}
           <SearchInputBox>
             <input
               className="searchInput"

@@ -11,8 +11,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { v4 } from 'uuid';
 import CustomButton from '../ui/CustomButton';
-
 import Image from 'next/image';
+import { relative } from 'path';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
@@ -21,6 +21,8 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
   // 모달 관리 State
   const [isModalShow, setIsModalShow] = useState(false);
+
+  // 제목 관리 state
   const [title, setTitle] = useState(initialValues?.title);
 
   // 검색어 state
@@ -36,7 +38,6 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   const [selectList, setSelectList] = useState<any[]>(
     initialValues?.selectList,
   );
-  console.log(selectList, 'selectList');
 
   // 직업 선택 state
   const [selectJob, setSelectJob] = useState(initialValues?.selectJob);
@@ -47,8 +48,12 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   // 이미지 프리뷰 state
   const [attachment, setAttachment] = useState(initialValues?.attachment);
 
-  // 직접입력 state
+  // 직접입력 토글버튼 state
   const [isNotData, setIsNotData] = useState(false);
+
+  const [enter, setEnter] = useState(false);
+
+  const [saveSearchWord, setSaveSearchWord] = useState('');
 
   // 에디터 텍스트 onchange함수
   const changeEditorText = (value: string) => {
@@ -79,7 +84,8 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         params: {
           query: searchWord,
         },
-      }).then((response) => setData(response.data))
+      })
+      .then((response) => setData(response.data))
       .catch((Error) => console.log(Error));
   };
 
@@ -110,7 +116,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   const selectedProducts = (e: any) => {
     setSelectList(list);
     hideSearchModal();
-    console.log(list, 'list');
+    // console.log(list, 'list');
   };
 
   // 글쓰기 폼 제목 입력
@@ -124,10 +130,6 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     setSelectJob(e.target.value);
   };
 
-  // const enterYourselfInput = (e: any) => {
-  //   setEnterYourself(e.target.value);
-  // };
-
   const leftToggle = () => {
     setIsNotData(false);
   };
@@ -136,52 +138,37 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     setIsNotData(true);
   };
 
-  // const fileUpload = (event: any) => {
-  //   const imageUpload = event.target.files;
-  //   const imageUrlList: string[] | any = [...imageFile];
+  const selectPreview = (event: any) => {
+    if (event.currentTarget.files) {
+      let fileArr = event.currentTarget.files;
+      // console.log(fileArr, 'fileArr');
 
-  //   for (let i = 0; i < imageUpload.length; i++) {
-  //     const currentImageUrl = URL.createObjectURL(imageUpload[i]);
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(currentImageUrl as any);
-  //     console.log(imageUpload, 'imageUpload');
-  //     reader.onloadend = () => {
-  //       const base64Data = reader.result;
-  //       console.log(base64Data);
-  //     };
-  //     imageUrlList.push(currentImageUrl);
-  //   }
+      let fileUrl: any[] = [];
+      let file = File;
 
-  //   if (imageUrlList.length > 2) {
-  //     return alert('이미지 갯수 초과');
-  //   }
+      for (let i = 0; i < fileArr.length; i++) {
+        if (fileArr.length > 2) {
+          alert('이미지는 2개까지 업로드 할 수 있습니다');
+          return;
+        }
+        let fileReader = new FileReader();
+        file = fileArr[i];
+        fileReader.onload = () => {
+          fileUrl[i] = fileReader.result;
+          setAttachment((prev: any) => [...fileUrl]);
+        };
+        fileReader.readAsDataURL(file as any);
+      }
+    }
+  };
 
-  //   setImageFile(imageUrlList);
-  // };
-
-  // const deleteImage = (image: any) => {
-  //   const imageUrlList = [...imageFile];
-  //   setImageFile(imageUrlList.filter((i) => i !== image));
-  // };
-
-  const onFileChange = (e: any) => {
-    const files = e.target.files;
-
-    const theFile = files[0];
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      const {
-        currentTarget: { result },
-      }: any = finishedEvent;
-      setAttachment(result);
-    };
-    reader.readAsDataURL(theFile);
+  const deleteImage = (image: any) => {
+    const imageUrlList = [...attachment];
+    setAttachment(imageUrlList.filter((i) => i !== image));
   };
 
   // 글쓰기 폼에서 최종적으로 등록하기 버튼을 누를 때 파이어베이스에 addDoc 되는 놈
-  const submitPostForm = async (e: any) => {
-    e.preventDefault();
-
+  const submitPostForm = async () => {
     // 유효성 검사
     if (!selectJob || selectJob === '선택해주세요') {
       alert('누구의 책상인지 골라주세요!');
@@ -190,11 +177,17 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
     if (!title) {
       alert('제목을 입력해주세요');
-      titleRef.current.focus();
+      return titleRef.current.focus();
     }
 
     if (!attachment) {
       alert('데스크테리어 사진을 선택해주세요');
+      return;
+    }
+
+    if (attachment.length < 2) {
+      alert('데스크테리어 사진을 선택해주세요');
+      return;
     }
 
     const products = list.map((item) => {
@@ -207,34 +200,40 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       };
     });
 
-    const fileRef = await ref(
-      storage,
-      `images/${auth.currentUser?.uid}/${v4()}`,
-    );
-    const uploadFile = await uploadString(fileRef, attachment, 'data_url');
-    const fileURL = await getDownloadURL(uploadFile.ref);
-
     const docRef = await addDoc(collection(dbService, 'postData'), {
       createdAt: Date.now(),
       userId: auth.currentUser?.uid,
       jobCategory: selectJob,
       postTitle: title,
       postText: content,
-      postImage1: fileURL,
-      postImage2: null,
       likes: [],
       likesCount: 0,
       products: products,
       userNickname: auth.currentUser?.displayName,
       userProfile: auth.currentUser?.photoURL,
     });
+    const imageArray: string[] = [];
+    await attachment.map((image: any) => {
+      const imageRef = ref(storage, `images/${auth.currentUser?.uid}/${v4()}`);
+
+      uploadString(imageRef, image, 'data_url').then(async (snapshot: any) => {
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        imageArray.push(downloadURL);
+        setAttachment(imageArray);
+        await updateDoc(doc(dbService, 'postData', docRef.id), {
+          postImage1: attachment[0] || null,
+          postImage2: attachment[1] || null,
+        });
+      });
+    });
+
     alert('글이 저장되었습니다');
     router.push('/post-list');
   };
 
-  // 수정 페이지에서 등록하기를 누르면 파이어베이스에 updateDoc 되는 놈
+  // 수정 페이지에서 등록하기를 누르면 파이어베이스에 updateDoc 되는 함수
   const updatePost = async (selectList: any) => {
-    console.log('selectListttt', selectList);
+    // console.log('selectListttt', selectList);
     const updateRef = doc(dbService, 'postData', router.query.id);
     const updateProducts = selectList.map((item: any) => {
       return {
@@ -246,14 +245,12 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       };
     });
 
-    console.log('updateProducts', updateProducts);
-    // const arr = [...selectList, updateProducts];
-    // console.log(arr, 'arr');
     await updateDoc(updateRef, {
       postTitle: title,
       postText: content,
       jobCategory: selectJob,
-      postImage1: attachment,
+      postImage1: attachment[0],
+      postImage2: attachment[1],
       products: updateProducts,
     });
 
@@ -280,6 +277,11 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           leftToggle={leftToggle}
           rightToggle={rightToggle}
           setIsNotData={setIsNotData}
+          // enterSearchWord={enterSearchWord}
+          enter={enter}
+          setEnter={setEnter}
+          saveSearchWord={saveSearchWord}
+          setSaveSearchWord={setSaveSearchWord}
           // enterYourselfInput={enterYourselfInput}
           onClick={selectedProducts}
         />
@@ -310,49 +312,58 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         />
         <QuillEditor onChange={changeEditorText} value={content} />
         <DetailWriteBox>
-          <div className="title_span_a">테스크테리어 이미지를 추가해주세요</div>
+          <div className="title_span_a">데스크테리어 이미지를 추가해주세요</div>
+          <div className="preview_image_wrap">
+            {attachment.length === 0 && (
+              <div className="image-container">
+                <div className="no-preview-box">
+                  <Image
+                    src={'/images/preViewImg.png'}
+                    alt="preview"
+                    width={64}
+                    height={64}
+                  />
+                </div>
+              </div>
+            )}
+
+            {attachment.length > 0 &&
+              attachment?.map((image: any) => (
+                <div className="image-container" key={image}>
+                  <Image
+                    className="preview_image"
+                    src={image}
+                    alt="preview"
+                    width={200}
+                    height={200}
+                  />
+
+                  <Image
+                    className="closeBtnImage"
+                    src={'/images/close.png'}
+                    width={15}
+                    height={15}
+                    alt="closeBtnImage"
+                    onClick={() => deleteImage(image)}
+                  />
+                </div>
+              ))}
+          </div>
+
           <DeskPhotoBox>
-            <DeskPhotoWrap>
-              <label className="deskImgLabel" htmlFor="deskImg_one">
-                <Image
-                  src={'/images/previewImg.png'}
-                  alt="preview"
-                  width={50}
-                  height={50}
-                />
-                <span>이미지를 업로드해주세요</span>
+            <div className="photo_wrap">
+              <label className="desk_label" htmlFor="deskImage">
+                이미지를 업로드해주세요 {attachment.length}/2
                 <input
                   type="file"
+                  multiple
                   accept="image/*"
-                  id="deskImg_one"
-                  name="deskImg_one"
-                  onChange={onFileChange}
-                />
-                {attachment && (
-                  <div className="preview-div">
-                    <Image src={attachment} layout="fill" alt="preview" />
-                  </div>
-                )}
-              </label>
-            </DeskPhotoWrap>
-            {/* <DeskPhotoWrap>
-              <label className="deskImgLabel" htmlFor="deskImg_one">
-                <Image
-                  src={'/images/previewImg.png'}
-                  alt="preview"
-                  width={50}
-                  height={50}
-                />
-                <span>이미지를 업로드해주세요</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="deskImg_one"
-                  name="deskImg_one"
-                  onChange={onFileChange}
+                  id="deskImage"
+                  name="deskImage"
+                  onChange={selectPreview}
                 />
               </label>
-            </DeskPhotoWrap> */}
+            </div>
           </DeskPhotoBox>
         </DetailWriteBox>
         <DetailWriteBox>
@@ -389,7 +400,13 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           )}
 
           <DetailWriteProductCardBox>
-            <DetailWriteProductCard key={selectList} selectList={selectList} />
+            <DetailWriteProductCard
+              key={selectList}
+              selectList={selectList}
+              setSelectList={setSelectList}
+              list={list}
+              setList={setList}
+            />
           </DetailWriteProductCardBox>
         </DetailWriteBox>
         <DetailWriteButtonBox>
@@ -507,7 +524,53 @@ const DetailWriteBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* margin-top: 1rem; */
+
+  .image-container {
+    position: relative;
+    width: 35%;
+    height: 15rem;
+    border: 1px solid #868e96;
+    border-radius: 1.25rem;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-right: 1rem;
+  }
+
+  .no-preview-box {
+    position: relative;
+    left: 42%;
+    top: 36%;
+
+    > img {
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+
+  .preview_image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .closeBtnImage {
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    cursor: pointer;
+  }
+
+  .preview_image_wrap {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .test_image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
 
   .title_span_box {
     display: flex;
@@ -530,55 +593,41 @@ const DetailWriteBox = styled.div`
   }
 
   .title_span_b {
-    /* margin-bottom: 1rem; */
     font-weight: 700;
     font-size: 1.5rem;
     color: #17171c;
     line-height: 2rem;
-    /* margin-right: 1rem; */
-    /* margin-top: 3rem; */
     align-content: center;
   }
 `;
 
 const DeskPhotoBox = styled.div`
-  display: flex;
+  position: relative;
   width: 100%;
-  gap: 1rem;
+  height: 5rem;
+  flex-direction: column;
 
-  input {
-    display: none;
-  }
-
-  .deskImgLabel {
-    display: flex;
+  .photo_wrap {
+    position: relative;
+    width: 100%;
+    height: 3.25rem;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    font-weight: 700;
-    padding: 1rem;
-    width: 45%;
-    height: 15rem;
-
-    :nth-child(1) {
-      margin: 0 1.25rem 0 0;
-    }
-  }
-
-  span {
     margin-top: 1rem;
-  }
 
-  .preview_image {
-    border-radius: 1.25rem;
-    margin-bottom: 1.5rem;
-  }
+    .desk_label {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #868e96;
+      border-radius: 1.25rem;
+      font-size: 1.25rem;
+      justify-content: center;
+      align-items: center;
 
-  .no_preview_image {
-    border-radius: 1.25rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid #868e96;
+      > input {
+        display: none;
+      }
+    }
   }
 `;
 const DetailWriteProductCardBox = styled.div`
@@ -664,10 +713,3 @@ const DeskPhotoWrap = styled.div`
     }
   }
 `;
-
-// const PreviewBox = styled.div`
-/* background-size: 10rem 10rem;
-  background-image: url('/images/previewImage.png');
-  background-repeat: no-repeat;
-  background-position: center center;
-`; */
