@@ -56,7 +56,7 @@ const PostCard = ({ post, currentUserId }: any) => {
         </div>
 
         <div className="secondLine">
-          <p className="Text">{post.postText}</p>
+          <p className="Text">{post.postText.replace(/<[^>]*>?/g, '')}</p>
         </div>
         <div className="thirdLine">
           <div className="LikesDiv" onClick={() => updateLikes(post.id)}>

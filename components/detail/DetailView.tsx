@@ -24,8 +24,6 @@ export default function DetailView({}) {
   const { isLoading, isError, data: post, error } = usePost(postId);
   const [isEdit, setIsEdit] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [isDelete, setIsDelete] = useState(false);
 
   const deletePost = async () => {
     await deleteDoc(doc(dbService, `postData/${postId}`));
@@ -46,10 +44,6 @@ export default function DetailView({}) {
           <div className="detail-header">
             {auth.currentUser?.uid === post?.userId && (
               <>
-                <button onClick={() => setIsDelete((prev) => !prev)}>
-                  삭제
-                </button>
-                <button onClick={() => setIsEdit((prev) => !prev)}>수정</button>
                 <button onClick={() => setIsDelete((prev) => !prev)}>
                   삭제
                 </button>
