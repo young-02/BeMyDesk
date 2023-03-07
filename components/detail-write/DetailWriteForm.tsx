@@ -7,11 +7,11 @@ import QuillEditor from './DetailWriteFormEditor';
 import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { dbService, auth, storage } from '../../shared/firebase';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { v4 } from 'uuid';
 import CustomButton from '../ui/CustomButton';
 import Image from 'next/image';
+import imageCompression from 'browser-image-compression';
 import { relative } from 'path';
 axios.defaults.withCredentials = true;
 
@@ -80,7 +80,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
    */
   const getNaverData = async () => {
     const response = await axios
-      .get('https://be-my-desk-git-dev-young-02.vercel.app/api/naverData', {
+      .get('http://localhost:3000/api/naverData', {
         params: {
           query: searchWord,
         },
@@ -159,6 +159,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         };
         fileReader.readAsDataURL(file as any);
       }
+      console.log('attachment', attachment);
     }
   };
 
@@ -212,20 +213,26 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       userNickname: auth.currentUser?.displayName,
       userProfile: auth.currentUser?.photoURL,
     });
+
     const imageArray: string[] = [];
-    await attachment.map((image: any) => {
+    for (const image of attachment) {
       const imageRef = ref(storage, `images/${auth.currentUser?.uid}/${v4()}`);
 
-      uploadString(imageRef, image, 'data_url').then(async (snapshot: any) => {
+      try {
+        const snapshot = await uploadString(imageRef, image, 'data_url');
         const downloadURL = await getDownloadURL(snapshot.ref);
         imageArray.push(downloadURL);
-        setAttachment(imageArray);
-        await updateDoc(doc(dbService, 'postData', docRef.id), {
-          postImage1: attachment[0] || null,
-          postImage2: attachment[1] || null,
-        });
+      } catch (error) {
+        console.error('error', error);
+      }
+
+      await updateDoc(doc(dbService, 'postData', docRef.id), {
+        postImage1: imageArray[0] || null,
+        postImage2: imageArray[1] || null,
       });
-    });
+
+      setAttachment([]);
+    }
 
     alert('글이 저장되었습니다');
     router.push('/post-list');
@@ -623,6 +630,14 @@ const DeskPhotoBox = styled.div`
       font-size: 1.25rem;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #206efb;
+        color: #fff;
+        border: none;
+        transition-duration: 0.2s;
+      }
 
       > input {
         display: none;
