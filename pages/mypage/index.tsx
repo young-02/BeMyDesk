@@ -38,6 +38,7 @@ export default function MyPage({}: Props) {
 
   const [profileData, setProfileData] = useState({});
   const uid = auth.currentUser?.uid;
+  console.log('uid', uid);
 
   useEffect(() => {
     if (!uid) {
