@@ -138,26 +138,38 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     setIsNotData(true);
   };
 
-  const selectPreview = (event: any) => {
+  const selectPreview = async (event: any) => {
     if (event.currentTarget.files) {
       let fileArr = event.currentTarget.files;
-      // console.log(fileArr, 'fileArr');
+      let compressedImages = [];
+
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
 
       let fileUrl: any[] = [];
       let file = File;
 
       for (let i = 0; i < fileArr.length; i++) {
+        const compressedImage = await imageCompression(fileArr[i], options);
+        compressedImages.push(compressedImage);
+        console.log(compressedImages, 'compressedImages');
         if (fileArr.length > 2) {
           alert('이미지는 2개까지 업로드 할 수 있습니다');
           return;
         }
-        let fileReader = new FileReader();
-        file = fileArr[i];
-        fileReader.onload = () => {
-          fileUrl[i] = fileReader.result;
-          setAttachment((prev: any) => [...fileUrl]);
-        };
-        fileReader.readAsDataURL(file as any);
+
+        for (let i = 0; i < compressedImages.length; i++) {
+          let fileReader = new FileReader();
+          file = fileArr[i];
+          fileReader.onload = () => {
+            fileUrl[i] = fileReader.result;
+            setAttachment((prev: any) => [...fileUrl]);
+          };
+          fileReader.readAsDataURL(file as any);
+        }
       }
       console.log('attachment', attachment);
     }
