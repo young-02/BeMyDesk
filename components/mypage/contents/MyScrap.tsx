@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ScrapCard from './ScrapCard';
 
-function MyScrap({ myScrap, scrapCount }: any) {
+function MyScrap({ userInfo, scrapCount, currentUserId }: any) {
   return (
     <>
       {scrapCount == '0' && (
@@ -20,8 +20,13 @@ function MyScrap({ myScrap, scrapCount }: any) {
           <p className="errorSecondLine">마음에 드시는 공간을 저장해 볼까요?</p>
         </StyledErrorDiv>
       )}
-      {myScrap?.map((postId: any) => (
-        <ScrapCard key={postId} postId={postId} />
+      {userInfo?.scraps?.map((postId: any) => (
+        <ScrapCard
+          key={postId}
+          postId={postId}
+          userInfo={userInfo}
+          currentUserId={currentUserId}
+        />
       ))}
     </>
   );

@@ -45,7 +45,7 @@ export const useUpdateScrap = (userInfo: any, postId: string) => {
       },
       onSettled: () => {
         // DetailView 에서 좋아요 값이 변하면, post 캐쉬를 모두 제거합니다.
-        queryClient.removeQueries('userInfo');
+        queryClient.invalidateQueries('userInfo');
         queryClient.removeQueries('my-page');
       },
     },

@@ -2,9 +2,21 @@ import React from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import usePost from '@/Hooks/usePost';
+import { useUpdateScrap } from '@/Hooks/useUpdateScrap';
+import activeScrap from '../../../public/images/userReaction/activeScrap.png';
+import inactiveScrap from '../../../public/images/userReaction/inactiveScrap.png';
+import { useQueryClient } from 'react-query';
 
-const ScrapCard = (postId: any) => {
-  const { isLoading, isError, error, data: post } = usePost(postId.postId);
+const ScrapCard = ({ postId, userInfo, currentUserId }: any) => {
+  const queryClient = useQueryClient();
+  const { isLoading, isError, error, data: post } = usePost(postId);
+  const { postMutate: updateScrap } = useUpdateScrap(userInfo, postId);
+
+  const handleScrap = async () => {
+    updateScrap(userInfo);
+    queryClient.removeQueries(['post', postId]);
+  };
+
   return (
     <>
       {isLoading && <div>Loading...</div>}
@@ -39,13 +51,9 @@ const ScrapCard = (postId: any) => {
               </div>
               <p className="ProfileNickname">{post?.userNickname}</p>
             </div>
-            <Image
-              src="/images/BLUE_scrap.png"
-              alt="bookmarkIcon"
-              width={20}
-              height={25}
-            />
-            {/* <HiOutlineTrash className="deleteButton" /> */}
+            <div onClick={handleScrap} style={{ cursor: 'pointer' }}>
+              <Image src={activeScrap} alt="scrap-icon" width={24} />
+            </div>
           </div>
         </StyledRightDiv>
       </StyledContainer>

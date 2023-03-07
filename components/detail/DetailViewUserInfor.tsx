@@ -32,9 +32,7 @@ export default function DetailViewUserInfor({ post }) {
   const follower = following?.includes(userId) ? true : false;
   const userProfileImg = userProfile ?? '/images/defaultProfile.png';
 
-  // 테스트용
-  let currentUserId = 'fA5D0FfF8GM1kd4bBVcmC7Ri4IA3';
-
+  const currentUserId = auth.currentUser?.uid;
   const { data: userInfo } = useUserInfo(currentUserId);
 
   // 스크랩

@@ -113,7 +113,11 @@ export default function MyPage({}: Props) {
               />
             )}
             {category === 'myScrap' && (
-              <MyScrap myScrap={userInfo?.scraps} scrapCount={scrapCount} />
+              <MyScrap
+                userInfo={userInfo}
+                scrapCount={scrapCount}
+                currentUserId={currentUserId}
+              />
             )}
             {category === 'myFollow' && (
               <MyFollow
