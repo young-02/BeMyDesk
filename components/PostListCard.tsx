@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
-import activeLikes from '../public/images/activeLikes.png';
-import inactiveLikes from '../public/images/inactiveLikes.png';
+import activeLikes from '../public/images/userReaction/activeLikes.png';
+import inactiveLikes from '../public/images/userReaction/inactiveLikes.png';
 import { doc, updateDoc } from 'firebase/firestore';
 import { dbService } from '../shared/firebase';
 import Link from 'next/link';

@@ -12,7 +12,7 @@ import { v4 } from 'uuid';
 import CustomButton from '../ui/CustomButton';
 import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
-import { relative } from 'path';
+import { useQueryClient } from 'react-query';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
@@ -85,6 +85,11 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           query: searchWord,
         },
       })
+      // .get('http://localhost:3000/api/naverData', {
+      //   params: {
+      //     query: searchWord,
+      //   },
+      // })
       .then((response) => setData(response.data))
       .catch((Error) => console.log(Error));
   };
@@ -180,6 +185,9 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     setAttachment(imageUrlList.filter((i) => i !== image));
   };
 
+  // 쿼리 캐시 삭제위한 쿼리 클라이언트 선언
+  const queryClient = useQueryClient();
+
   // 글쓰기 폼에서 최종적으로 등록하기 버튼을 누를 때 파이어베이스에 addDoc 되는 놈
   const submitPostForm = async () => {
     // 유효성 검사
@@ -247,6 +255,8 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     }
 
     alert('글이 저장되었습니다');
+    queryClient.removeQueries('post-list');
+    queryClient.removeQueries(['my-page', 'myPost']);
     router.push('/post-list');
   };
 

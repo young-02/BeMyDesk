@@ -58,3 +58,13 @@ declare interface RouterQuery {
   order: string;
   select: string;
 }
+
+declare interface UserInfoType {
+  userId: string;
+  profileImage: string;
+  nickname: string;
+  scraps: string[];
+  following: string[];
+  follower: string[];
+  introduction: string;
+}
