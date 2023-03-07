@@ -6,17 +6,42 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import PostListItem from '../post-list/PostListItem';
 
 const parse = require('html-react-parser');
 
 // 모달창에서 선택한 제품이 들어가는 카드
-const DetailWriteProductCard = ({ selectList }: any) => {
+const DetailWriteProductCard = ({
+  selectList,
+  setSelectList,
+  list,
+  setList,
+}: any) => {
+  const deleteCard = (i: any) => {
+    const deletedSelectList = selectList;
+    const deleteList = list;
+    setSelectList(
+      deletedSelectList.filter((item: any) => item.productId !== i.productId),
+    );
+    setList(deleteList.filter((item: any) => item.productId !== i.productId));
+  };
+
   return (
     <DetailWriteCardLayout>
       {selectList.length < 3 ? (
         selectList.map((i: any) => (
           <DetailWriteCardBox key={i.productId}>
             <CardBox>
+              <div className="close_box">
+                <Image
+                  className="close"
+                  src={'/images/close.png'}
+                  alt="closeBtn"
+                  width={24}
+                  height={24}
+                  onClick={() => deleteCard(i)}
+                />
+              </div>
               <div className="card">
                 <Image
                   src={i.image}
@@ -47,8 +72,18 @@ const DetailWriteProductCard = ({ selectList }: any) => {
           {selectList?.map((i: any) => (
             <SwiperSlide key={i.productId}>
               {
-                <DetailWriteCardBox>
+                <DetailWriteCardBox key={i.productId}>
                   <CardBox>
+                    <div className="close_box">
+                      <Image
+                        className="close"
+                        src={'/images/close.png'}
+                        alt="closeBtn"
+                        width={24}
+                        height={24}
+                        onClick={() => deleteCard(i)}
+                      />
+                    </div>
                     <div className="card">
                       <Image
                         src={i.image}
@@ -71,7 +106,6 @@ const DetailWriteProductCard = ({ selectList }: any) => {
     </DetailWriteCardLayout>
   );
 };
-//pr위한 주석...
 
 const DetailWriteCardLayout = styled.div`
   display: flex;
@@ -97,6 +131,11 @@ const DetailWriteCardLayout = styled.div`
 const DetailWriteCardBox = styled.div`
   display: flex;
   flex-direction: column;
+
+  .close {
+    display: flex;
+    justify-content: end;
+  }
 `;
 
 const CardBox = styled.div`
@@ -105,6 +144,11 @@ const CardBox = styled.div`
   border-radius: 0.625rem;
   margin: 1.5rem;
   padding: 1rem;
+
+  .close_box {
+    display: flex;
+    justify-content: end;
+  }
 
   .card {
     display: flex;
