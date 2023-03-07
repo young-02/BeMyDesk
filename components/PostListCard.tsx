@@ -10,9 +10,6 @@ import { useRouter } from 'next/router';
 import { transDate } from '../utils/transDate';
 import { auth } from '@/shared/firebase';
 import { useUpdateLikes } from '../Hooks/useUpdateLikes';
-import { useRecoilValue,  } from 'recoil';
-import { userState } from '@/shared/atom';
-
 
 const PostListCard = ({ post }: { post: PostType }) => {
   const router = useRouter();
@@ -28,10 +25,8 @@ const PostListCard = ({ post }: { post: PostType }) => {
     userProfile,
   } = post;
 
-  const userInfo = useRecoilValue(userState);
-
   // 현재 로그인한 유저 정보 가져오기
-  const currentUserId: any = userInfo?.uid;
+  const currentUserId: any = auth.currentUser?.uid;
 
   const { isLikesClicked, postListMutate: updateLikes } = useUpdateLikes(
     currentUserId,

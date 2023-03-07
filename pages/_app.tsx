@@ -8,9 +8,6 @@ import GlobalNavigationBar from '../components/GlobalNavigationBar';
 import styled from 'styled-components';
 import Footer from '@/components/Footer';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { RecoilRoot } from 'recoil';
-import { useEffect } from 'react';
-import { auth } from '@/shared/firebase';
 
 declare global {
   interface Window {
@@ -31,19 +28,17 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <GlobalNavigationBar />
       <Script
         defer
         src="https://developers.kakao.com/sdk/js/kakao.js"
         onLoad={kakaoInit}
       ></Script>
-      <RecoilRoot>
-        <GlobalNavigationBar />
-        <QueryClientProvider client={client}>
-          <Component {...pageProps} />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-        <Footer />
-      </RecoilRoot>
+      <QueryClientProvider client={client}>
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+      <Footer />
     </>
   );
 }

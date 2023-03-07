@@ -7,16 +7,13 @@ import { ProfileImg, WriteInformationDiv } from './CommentList';
 import useCheckLogin from '../../../Hooks/useCheckLogin';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { useRecoilValue } from 'recoil';
-import { userState, userLoginState } from '@/shared/atom';
 
 export default function CommentWrite({ path }) {
   const [commentText, setCommnetText] = useState('');
-  const userInfo = useRecoilValue(userState);
-  const isLogin = useRecoilValue(userLoginState);
-  const userNickName = userInfo?.displayName ?? '';
-  const userProfile = userInfo?.photoURL ?? '/images/defaultProfile.png';
-  // const { isLogin } = useCheckLogin();
+  const userNickName = auth.currentUser?.displayName ?? '';
+  const userProfile =
+    auth.currentUser?.photoURL ?? '/images/defaultProfile.png';
+  const { isLogin } = useCheckLogin();
   const router = useRouter();
 
   const createdAt = Date.now();
