@@ -9,19 +9,20 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
-// import { useAuthState } from 'react-firebase-hooks/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { userLoginState, userState } from '@/shared/atom';
+import useGetReaction from '../../../Hooks/useGetReaction';
 import useCheckUser from '@/Hooks/useCheckUser';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { userState } from '@/shared/atom';
 type Props = {};
 
 export default function SignIn({}: Props) {
   // 유저 상태 체크
-  useCheckUser();
+  // useCheckUser();
 
   const router = useRouter();
   // const emailRef = useRef<HTMLInputElement>(null);
@@ -38,14 +39,13 @@ export default function SignIn({}: Props) {
   const [emailEmptyError, setEmailEmptyError] = useState(false);
   const [pwEmptyError, setPwEmptyError] = useState(false);
   const [stayLoginisChecked, setStayLoginIsChecked] = useState(false);
-  const [userInfo, setUserInfo] = useRecoilState(userState);
-  const setIsLogin = useSetRecoilState(userLoginState);
+
+  const setUseInfo = useSetRecoilState(userState);
 
   // 로그인유지 버튼
   const handleRadioChange = (e: any) => {
     setStayLoginIsChecked(e.target.checked);
   };
-
   // 이메일 유효성검사
   const handleEmail = function (event: any) {
     setEmail(event.target.value);
@@ -86,10 +86,10 @@ export default function SignIn({}: Props) {
       signInWithEmailAndPassword(auth, email, pw)
         .then(() => {
           alert('로그인 성공');
-          setIsLogin(true);
-          setUserInfo(auth?.currentUser);
+          setUseInfo(auth.currentUser);
           console.log('login sucess', auth.currentUser);
-          router.push('/post-list');
+          history.back();
+          // router.push('/post-list');
         })
         .catch((error) => {
           console.log('error message: ', error.message);
@@ -158,7 +158,7 @@ export default function SignIn({}: Props) {
   const googleLogin = async () => {
     try {
       const result_google = await signInWithPopup(auth, googleAuth);
-      const collectionRef = doc(dbService, `userInfo/${userInfo?.uid}`);
+      const collectionRef = doc(dbService, `userInfo/${auth.currentUser?.uid}`);
       const docSnap = await getDoc(collectionRef);
       const isFirstLogin = !docSnap.exists();
 
@@ -166,21 +166,10 @@ export default function SignIn({}: Props) {
         await updateProfile(result_google.user, {
           photoURL: '/images/defaultProfile.png',
         });
-        // const payload = {
-        //   profileImage: '/images/defaultProfile.png',
-        //   nickname: auth.currentUser?.displayName,
-        //   userId: auth.currentUser?.uid,
-        //   scraps: [],
-        //   following: [],
-        //   introduction: '안녕하세요!',
-        // };
-
-        // await setDoc(collectionRef, payload);
 
         router.push('/auth/sns-nickname');
       } else {
-        setUserInfo(auth.currentUser);
-        setIsLogin(true);
+        setUseInfo(auth.currentUser);
         router.push('/post-list');
       }
     } catch (error) {
@@ -214,18 +203,32 @@ export default function SignIn({}: Props) {
         // await setDoc(collectionRef, payload);
         router.push('/auth/sns-nickname');
       } else {
-        setUserInfo(auth.currentUser);
-        setIsLogin(true);
-        router.push('/post-list');
+        setUseInfo(auth.currentUser);
+        // router.push('/post-list');
+        location.reload();
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  // useEffect(() => {
-  //   console.log('userInfo', auth?.currentUser);
-  // }, [auth?.currentUser]);
+  useEffect(() => {
+    const checkUser = async () => {
+      if (auth.currentUser?.uid) {
+        const uid = auth.currentUser.uid;
+        const docRef = doc(dbService, 'userInfo', uid);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+          alert('유저 정보를 설정하세요');
+          router.push('/auth/sns-nickname');
+        }
+      } else {
+        // alert('잘못된 접근입니다.');
+        // router.push('/main');
+      }
+    };
+    checkUser();
+  }, []);
 
   return (
     <StyledBackground>

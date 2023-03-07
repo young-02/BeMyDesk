@@ -1,5 +1,4 @@
 import CustomButton from '@/components/ui/CustomButton';
-import { userLoginState, userState } from '@/shared/atom';
 import { auth, dbService } from '@/shared/firebase';
 import { updateProfile } from 'firebase/auth';
 import {
@@ -16,8 +15,9 @@ import {
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
+import { userState } from '@/shared/atom';
 
 function SnsNickname() {
   const router = useRouter();
@@ -38,13 +38,10 @@ function SnsNickname() {
   const [ageCheck, setAgeCheck] = useState(false);
   const [useCheck, setUseCheck] = useState(false);
   const [marketingCheck, setMarketingCheck] = useState(false);
+  const setUseInfo = useSetRecoilState(userState);
 
   // 닉네임 입력
   const [nickname, setNickname] = useState('');
-
-  //유저정보
-  const [userInfo, setUserInfo] = useRecoilState(userState);
-  const setIsLogin = useSetRecoilState(userLoginState);
 
   // 전체동의 버튼
   const allBtnEvent = () => {
@@ -115,7 +112,10 @@ function SnsNickname() {
     const nicknameSet = async () => {
       try {
         //해당 문서 경로
-        const collectionRef = doc(dbService, `userInfo/${userInfo?.uid}`);
+        const collectionRef = doc(
+          dbService,
+          `userInfo/${auth.currentUser?.uid}`,
+        );
 
         // 닉네임 중복검사
         const nicknameRegex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$/;
@@ -131,7 +131,6 @@ function SnsNickname() {
           where('email', '==', user?.email),
         );
         const emailDocs = await getDocs(emailQuery);
-
         if (nickname == '') {
           setErrorNicknameEmpty(true);
           return;
@@ -154,18 +153,15 @@ function SnsNickname() {
           const payload = {
             profileImage: '/images/defaultProfile.png',
             nickname: nickname,
-            userId: userInfo?.uid,
+            userId: auth.currentUser?.uid,
             scraps: [],
             following: [],
             introduction: '안녕하세요!',
             email: user?.email,
             isSocial: true,
           };
-          setIsLogin(true);
-          setUserInfo(auth.currentUser);
           await setDoc(collectionRef, payload);
-
-          router.push('/post-list');
+          router.push('/auth/sign-in');
         }
       } catch (error) {
         console.error(error);
@@ -270,7 +266,7 @@ function SnsNickname() {
                   onChange={useBtnEvent}
                 />
                 <span className="check-custorm" />
-                개인정보 수집/이용에 동의합니다.{' '}
+                개인정보 수집/이용에 동의합니다.
                 <span className="check-custorm-right">(필수)</span>
               </label>
             </div>

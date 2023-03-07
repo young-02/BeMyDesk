@@ -17,7 +17,7 @@ export default function useCheckLogin() {
     await signOut(auth);
     userInfo();
     isLogout();
-    router.push('/main');
+    window.location.reload();
   };
 
   return { logOut };
