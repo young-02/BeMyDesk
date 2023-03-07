@@ -19,14 +19,11 @@ import useUserPostList from '../../Hooks/useUserPostList';
 type Props = {};
 
 export default function MyPage({}: Props) {
-  const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
+  const router = useRouter();
   const [category, setCategory] = useState('myPost');
   const [profileEditModalOpen, setProfileEditModalOpen] = useState(false);
   const currentUserId = auth.currentUser?.uid;
-
-  console.log('user', user);
-  console.log('currentUserId', currentUserId);
 
   const {
     isLoading,
@@ -35,26 +32,18 @@ export default function MyPage({}: Props) {
     data: userInfo,
   } = useUserInfo(currentUserId);
 
-  console.log('userInfo', userInfo);
-
   const { data: myPost } = useUserPostList(currentUserId);
 
   const postCount = myPost?.length;
   const scrapCount = userInfo?.scraps?.length;
   const followCount = userInfo?.following.length;
 
-  useEffect(() => {
-    if (userInfo == undefined) {
-      router.push('/auth/sign-in');
-    }
-  }, []);
-
   if (loading) {
-    <div>Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    <div>error!</div>;
+    return <div>error!</div>;
   }
 
   if (user) {
@@ -133,7 +122,7 @@ export default function MyPage({}: Props) {
       </StyledContainer>
     );
   } else {
-    // router.push('/auth/sign-in', undefined, { shallow: true });
+    router.push('/auth/sign-in');
     return null;
   }
 }
