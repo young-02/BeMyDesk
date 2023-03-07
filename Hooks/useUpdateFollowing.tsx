@@ -12,7 +12,6 @@ const updateFollowing = async ({
   userInfo,
   newFollowing,
 }: UpdateLikesProps) => {
-  console.log('newFollowing', newFollowing);
   return updateDoc(doc(dbService, 'userInfo', userInfo.userId), newFollowing);
 };
 
@@ -49,7 +48,7 @@ export const useUpdateFollowing = (userInfo: any, postUserId: string) => {
       },
       onSettled: () => {
         // DetailView 에서 좋아요 값이 변하면, userInfo 캐쉬를 모두 제거합니다.
-        queryClient.removeQueries('userInfo');
+        queryClient.invalidateQueries('userInfo');
       },
     },
   );

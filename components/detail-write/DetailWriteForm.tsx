@@ -232,6 +232,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     });
     alert('글이 저장되었습니다');
     queryClient.removeQueries('post-list');
+    queryClient.removeQueries(['my-page', 'myPost']);
     router.push('/post-list');
   };
 

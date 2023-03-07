@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import FollowingCard from './FollowingCard';
 
-function MyFollow({ myFollow, followCount }: any) {
+function MyFollow({ userInfo, followCount }: any) {
   return (
     <>
       {followCount == '0' && (
@@ -24,8 +24,8 @@ function MyFollow({ myFollow, followCount }: any) {
           </p>
         </StyledErrorDiv>
       )}
-      {myFollow?.map((userId: any) => (
-        <FollowingCard key={userId} userId={userId} />
+      {userInfo?.following?.map((userId: any) => (
+        <FollowingCard key={userId} postUserId={userId} userInfo={userInfo} />
       ))}
     </>
   );

@@ -121,7 +121,7 @@ export default function MyPage({}: Props) {
             )}
             {category === 'myFollow' && (
               <MyFollow
-                myFollow={userInfo?.following}
+                userInfo={userInfo}
                 followCount={followCount}
               />
             )}

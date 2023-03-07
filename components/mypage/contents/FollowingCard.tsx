@@ -2,27 +2,45 @@ import React from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import useUserInfo from '@/Hooks/useUserInfo';
+import { useUpdateFollowing } from '@/Hooks/useUpdateFollowing';
+import { useQueryClient } from 'react-query';
+import CustomButton from '@/components/ui/CustomButton';
 
 type Props = {};
 
-const FollowingCard = (userId: any) => {
-  console.log('userId', userId);
+const FollowingCard = ({ postUserId, userInfo }: any) => {
+  const queryClient = useQueryClient();
   const {
     isLoading,
     isError,
     error,
-    data: userInfo,
-  } = useUserInfo(userId.userId);
+    data: postUserInfo,
+  } = useUserInfo(postUserId);
+
+  // 팔로우
+  const { postMutate: updateFollowing } = useUpdateFollowing(
+    userInfo,
+    postUserId,
+  );
+
+  const handleUpdateFollowing = async () => {
+    updateFollowing(userInfo);
+    queryClient.removeQueries(['userInfo', postUserId]);
+  };
+
   return (
     <>
       {isLoading && <div>Loading...</div>}
       {isError && <div>Error: {error.message}</div>}
-      <StyledContainer key={userInfo?.id} style={{ border: '1px solid black' }}>
+      <StyledContainer
+        key={postUserInfo?.id}
+        style={{ border: '1px solid black' }}
+      >
         <StyledDivLeft>
-          {userInfo?.profileImage ? (
+          {postUserInfo?.profileImage ? (
             <Image
               className="profileImage"
-              src={userInfo?.profileImage}
+              src={postUserInfo?.profileImage}
               alt="Image"
               width={202}
               height={202}
@@ -39,15 +57,21 @@ const FollowingCard = (userId: any) => {
         </StyledDivLeft>
         <StyledDivRight>
           <div className="firstLine">
-            <button className="followingButton">
-              <span className="followingButtonText">팔로잉</span>
-            </button>
+            <CustomButton
+              border="1px solid #206EFB"
+              fontColor="#206EFB"
+              paddingColumns="0.5"
+              paddingRow="1"
+              onClick={handleUpdateFollowing}
+            >
+              팔로잉 취소
+            </CustomButton>
           </div>
           <div className="secondLine">
-            <p className="nickname">{userInfo?.nickname}</p>
+            <p className="nickname">{postUserInfo?.nickname}</p>
           </div>
           <div className="thirdLine">
-            <p className="inroduction">{userInfo?.introduction}</p>
+            <p className="inroduction">{postUserInfo?.introduction}</p>
           </div>
         </StyledDivRight>
       </StyledContainer>
