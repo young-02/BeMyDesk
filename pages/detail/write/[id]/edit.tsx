@@ -15,13 +15,15 @@ const Edit = (props: Props) => {
     if (id) {
       getDoc(doc(dbService, 'postData', router.query.id)).then((doc) => {
         const data = doc.data();
-        // console.log(data, 'data');
+
         setInitialValues(data as any);
       });
     }
   }, [id, router.query.id]);
 
-
+  const initialArray = [];
+  initialArray.push(initialValues?.postImage1);
+  initialArray.push(initialValues?.postImage2);
   return (
     <>
       {initialValues && (
@@ -30,7 +32,7 @@ const Edit = (props: Props) => {
             title: initialValues?.postTitle,
             content: initialValues?.postText,
             selectJob: initialValues?.jobCategory,
-            attachment: initialValues?.postImage1,
+            attachment: initialArray,
             list: initialValues?.products,
             selectList: initialValues?.products,
           }}

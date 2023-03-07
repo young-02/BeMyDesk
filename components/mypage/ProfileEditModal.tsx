@@ -30,7 +30,9 @@ export function ProfileEditModal({
     toggleEditMenu;
 
   //프로필사진
-  const [profileImageUrl, setProfileImageUrl] = useState(user.photoURL);
+  const [profileImageUrl, setProfileImageUrl] = useState(
+    profileData.profileImage,
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -243,6 +245,9 @@ const StyledEditProfileModalContainer = styled.div`
       border-top-left-radius: 20px;
       border-bottom-left-radius: 20px;
       .modalFirstLine {
+        :hover {
+          opacity: 90%;
+        }
         margin-top: 40px;
         .modalProfileImage {
           border-radius: 10px;
@@ -286,6 +291,9 @@ const StyledEditProfileModalContainer = styled.div`
       }
       .modalSecondLine {
         .modalSecondLineButton {
+          :hover {
+            opacity: 70%;
+          }
           /* Pretendard Bold 12 */
 
           font-family: 'Pretendard';
@@ -327,9 +335,12 @@ const StyledEditProfileModalContainer = styled.div`
           background: #f1f3f5;
           font-family: 'Pretendard';
           font-style: normal;
-          font-weight: 700;
+          font-weight: 500;
           font-size: 16px;
           line-height: 20px;
+          :hover {
+            opacity: 80%;
+          }
 
           /* identical to box height, or 125% */
 
@@ -341,7 +352,9 @@ const StyledEditProfileModalContainer = styled.div`
       .modalFourthLine {
         margin-top: 200px;
         margin-right: 160px;
-
+        :hover {
+          opacity: 45%;
+        }
         .deleteAccountText {
           font-family: 'Pretendard';
           font-style: normal;
@@ -388,6 +401,9 @@ const StyledEditProfileModalContainer = styled.div`
       background-color: transparent;
       border: none;
       cursor: pointer;
+      :hover {
+        opacity: 50%;
+      }
     }
   }
 

@@ -183,7 +183,9 @@ function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
             }`}
             type="text"
             placeholder={
-              !nicknameInputEnable ? user.displayName : '닉네임을 입력하세요'
+              !nicknameInputEnable
+                ? profileData.nickname
+                : '닉네임을 입력하세요'
             }
             disabled={!nicknameInputEnable}
             onChange={nickNameEditonChangeHandler}
@@ -389,6 +391,9 @@ const ProfileEdit = styled.div`
       }
     }
     .ProfileEditThirdLineApplyButtonDiv {
+      :hover {
+        opacity: 90%;
+      }
       .ProfileEditThirdLineApplyButton {
         width: 132px;
         height: 48px;

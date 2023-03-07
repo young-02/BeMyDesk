@@ -13,7 +13,7 @@ function GlobalNavigationBar() {
   const { isLogin, logOut } = useCheckLogin();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const userProfilImg =
-    auth.currentUser?.photoURL ?? '/images/Padeeffillortu.png';
+    auth.currentUser?.photoURL ?? '/images/defaultProfile.png';
 
   const handleLogOut = () => {
     logOut();

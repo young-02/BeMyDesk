@@ -15,9 +15,13 @@ import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import useGetReaction from '../../../Hooks/useGetReaction';
+import useCheckUser from '@/Hooks/useCheckUser';
 type Props = {};
 
 export default function SignIn({}: Props) {
+  // 유저 상태 체크
+  useCheckUser();
+
   const router = useRouter();
   // const emailRef = useRef<HTMLInputElement>(null);
   // const pwRef = useRef<HTMLInputElement>(null);
@@ -405,6 +409,11 @@ const StyledDiv = styled.div`
     padding: 15px 8px 0 8px;
     border-bottom: 2px solid #adb5bd;
     min-height: 60px;
+
+    :hover {
+      border-bottom: 2px solid #6d7379;
+    }
+
     .iconSpan {
       margin-right: 1rem;
       display: flex;
@@ -487,6 +496,9 @@ const StyledDiv = styled.div`
     color: white;
     margin-bottom: 16px;
     cursor: pointer;
+    :hover {
+      opacity: 90%;
+    }
   }
 
   .buttonBottomWrap {
@@ -531,6 +543,9 @@ const StyledDiv = styled.div`
 
     color: #495057;
     text-decoration: none;
+    :hover {
+      opacity: 80%;
+    }
   }
 
   .SNSWrap {
@@ -555,6 +570,9 @@ const StyledDiv = styled.div`
         font-size: 30px;
         padding: 10px;
         cursor: pointer;
+        :hover {
+          opacity: 80%;
+        }
       }
     }
   }
@@ -582,5 +600,9 @@ const StyledDiv = styled.div`
 
     color: #868e96;
     text-decoration: none;
+
+    :hover {
+      opacity: 70%;
+    }
   }
 `;

@@ -26,10 +26,15 @@ export default function DetailViewSlide({ post }) {
             objectFit="cover"
           />
         </SwiperSlide>
-        {/* <SwiperSlide>
-          <Image className="post-img" src={detail.postImage2} alt="postImage1"  layout="fill"
-            objectFit="cover"/>
-        </SwiperSlide> */}
+        <SwiperSlide>
+          <Image
+            className="post-img"
+            src={post.postImage2}
+            alt="postImage1"
+            layout="fill"
+            objectFit="cover"
+          />
+        </SwiperSlide>
       </Swiper>
     </DetailViewSlideLayout>
   );

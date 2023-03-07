@@ -120,10 +120,7 @@ export default function MyPage({}: Props) {
               />
             )}
             {category === 'myFollow' && (
-              <MyFollow
-                userInfo={userInfo}
-                followCount={followCount}
-              />
+              <MyFollow userInfo={userInfo} followCount={followCount} />
             )}
           </StyledDivContents>
         </StyledDivMain>
@@ -237,6 +234,9 @@ const StyledDivProfile = styled.div`
 
     .settingIcon {
       cursor: pointer;
+      :hover {
+        opacity: 50%;
+      }
     }
   }
 `;

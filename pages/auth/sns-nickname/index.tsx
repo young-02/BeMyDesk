@@ -26,6 +26,8 @@ function SnsNickname() {
   const [errorNicknameRegex, setErrorNicknameRegex] = useState(false);
   const [errorNicknameduDlication, setErrorNicknameDuplication] =
     useState(false);
+  // 닉네임 중복검사
+  const [errorEmailDuplication, setErrorEmailDuplication] = useState(false);
 
   // 약관동의 오류처리
   const [errorAllCheck, setErrorAllCheck] = useState(false);
@@ -83,6 +85,7 @@ function SnsNickname() {
     setErrorNicknameEmpty(false);
     setErrorNicknameRegex(false);
     setErrorNicknameDuplication(false);
+    setErrorEmailDuplication(false);
   };
 
   // 동의 체크박스 확인 useEffect
@@ -96,6 +99,7 @@ function SnsNickname() {
   }, [ageCheck, useCheck, marketingCheck]);
 
   if (error) {
+    console.log(error);
     alert('잘못된 접근 입니다');
     router.push('/post-list');
     return <div>Error</div>;
@@ -112,13 +116,18 @@ function SnsNickname() {
 
         // 닉네임 중복검사
         const nicknameRegex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$/;
-        const nicknameRef = collection(dbService, 'userInfo');
+        const userInfoRef = collection(dbService, 'userInfo');
         const nicknameQuery = query(
-          nicknameRef,
+          userInfoRef,
           where('nickname', '==', nickname),
-          where('userId', '!=', auth.currentUser?.uid),
         );
         const nicknameDocs = await getDocs(nicknameQuery);
+        // 이메일 중복검사
+        const emailQuery = query(
+          userInfoRef,
+          where('email', '==', user?.email),
+        );
+        const emailDocs = await getDocs(emailQuery);
 
         if (nickname == '') {
           setErrorNicknameEmpty(true);
@@ -132,6 +141,8 @@ function SnsNickname() {
         } else if (!allCheck) {
           setErrorAllCheck(true);
           return;
+        } else if (!emailDocs.empty) {
+          setErrorEmailDuplication(true);
         } else {
           await updateProfile(user, {
             displayName: nickname,
@@ -144,9 +155,10 @@ function SnsNickname() {
             scraps: [],
             following: [],
             introduction: '안녕하세요!',
+            email: user?.email,
+            isSocial: true,
           };
           await setDoc(collectionRef, payload);
-
           router.push('/post-list');
         }
       } catch (error) {
@@ -184,7 +196,8 @@ function SnsNickname() {
                 className={
                   errorNicknameEmpty ||
                   errorNicknameRegex ||
-                  errorNicknameduDlication
+                  errorNicknameduDlication ||
+                  errorEmailDuplication
                     ? 'error'
                     : null
                 }
@@ -201,6 +214,11 @@ function SnsNickname() {
               ) : null}
               {errorNicknameduDlication ? (
                 <p className="errorMessageText">중복된 닉네임 입니다.</p>
+              ) : null}
+              {errorEmailDuplication ? (
+                <p className="errorMessageText">
+                  해당 이메일 계정이 이미 존재합니다.
+                </p>
               ) : null}
             </div>
           </div>
@@ -349,6 +367,9 @@ const StyledDiv = styled.div`
     margin-top: 2.5rem;
     > button {
       width: 100%;
+      :hover {
+        opacity: 90%;
+      }
     }
   }
 
