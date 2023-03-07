@@ -19,10 +19,8 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-
+import { getAuth } from 'firebase/auth';
 import { AiOutlineSetting } from 'react-icons/ai';
-import { userState } from '@/shared/atom';
-import { useRecoilValue } from 'recoil';
 
 type Props = {};
 
@@ -37,9 +35,9 @@ export default function MyPage({}: Props) {
   const postCount = myPost.length;
   const scrapCount = myScrap.length;
   const followCount = myFollow.length;
-  const userInfo = useRecoilValue(userState);
+
   const [profileData, setProfileData] = useState({});
-  const uid = userInfo?.uid;
+  const uid = auth.currentUser?.uid;
 
   useEffect(() => {
     if (!uid) {

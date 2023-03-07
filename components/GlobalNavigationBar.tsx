@@ -4,31 +4,16 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Search from './Search';
-import useCheckLogin from '../Hooks/useCheckLogin';
-import { userLoginState, userState } from '@/shared/atom';
-import { useRecoilValue, useRecoilState } from 'recoil';
 import { auth } from '@/shared/firebase';
+import useCheckLogin from '../Hooks/useCheckLogin';
 
 function GlobalNavigationBar() {
-  const [isLogin, setIsLogin] = useState(false);
   const router = useRouter();
   const { pathname } = router;
-  const { logOut } = useCheckLogin();
+  const { isLogin, logOut } = useCheckLogin();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-
-  //리코일 불러오기
-  const userInfo = useRecoilValue(userState);
-  const userProfilImg = userInfo?.photoURL ?? '/images/defaultProfile.png';
-
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        setIsLogin(true);
-      } else {
-        setIsLogin(false);
-      }
-    });
-  }, []);
+  const userProfilImg =
+    auth.currentUser?.photoURL ?? '/images/defaultProfile.png';
 
   return (
     <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>
@@ -39,17 +24,15 @@ function GlobalNavigationBar() {
         <Link href="/post-list" className="button">
           포스트
         </Link>
-        <>
-          {isLogin ? (
-            <Link href="/detail/write" className="button">
-              글쓰기
-            </Link>
-          ) : (
-            <Link href="/auth/sign-in" className="button">
-              글쓰기
-            </Link>
-          )}
-        </>
+        {isLogin ? (
+          <Link href="/detail/write" className="button">
+            글쓰기
+          </Link>
+        ) : (
+          <Link href="/auth/sign-in" className="button">
+            글쓰기
+          </Link>
+        )}
       </div>
       <div>
         <Search pathname={pathname} />
