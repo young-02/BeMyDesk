@@ -43,7 +43,25 @@ function GlobalNavigationBar() {
               pathname === '/main' ? 'mobile-icon dark' : 'mobile-icon light'
             }
           />
-          <Link href="/main">BE MY DESK</Link>
+
+          <Link href="/main" className="logo mobile">
+            {pathname === '/main' ? (
+              <Image
+                src="/images/logo_white.png"
+                layout="fill"
+                object-fit="contain"
+                alt="logo"
+              />
+            ) : (
+              <Image
+                src="/images/logo_black.png"
+                layout="fill"
+                object-fit="contain"
+                alt="logo"
+              />
+            )}
+          </Link>
+
           <Search pathname={pathname} />
           {isOpen && <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />}
         </div>
@@ -68,6 +86,7 @@ function GlobalNavigationBar() {
                 />
               )}
             </Link>
+
             <Link href="/post-list" className="button">
               포스트
             </Link>
@@ -149,19 +168,20 @@ const GNBLayout = styled.div`
   display: flex;
   position: fixed;
   top: 0rem;
+  left: 50%;
+  padding: 0 8.5rem;
+  transform: translateX(-50%);
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 6.25rem 0px;
-  /* background-color: ${(props) =>
-    props.theme === 'light' ? 'white' : 'none'}; */
+  background-color: ${(props) => (props.theme === 'light' ? 'white' : 'none')};
   font-family: 'Pretendard Variable';
   color: ${(props) => (props.theme === 'light' ? '#17171C' : 'white')};
   z-index: 999;
   transition: all 0.2s ease;
 
-  @media (max-width: 1100px) {
-    padding: 0px 1.25rem;
+  @media (max-width: 1480px) {
+    padding: 0 1rem;
   }
 
   > div {
@@ -174,6 +194,7 @@ const GNBLayout = styled.div`
 
     @media (max-width: 1100px) {
       gap: 1rem;
+      width: 100%;
     }
 
     .logo {
@@ -184,8 +205,8 @@ const GNBLayout = styled.div`
       flex: 1;
       cursor: pointer;
 
-      &.active {
-        opacity: 0;
+      > img {
+        object-fit: contain;
       }
     }
 
