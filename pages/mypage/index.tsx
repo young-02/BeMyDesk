@@ -38,7 +38,6 @@ export default function MyPage({}: Props) {
 
   const [profileData, setProfileData] = useState({});
   const uid = auth.currentUser?.uid;
-  console.log('uid', uid);
 
   useEffect(() => {
     if (!uid) {
@@ -106,23 +105,20 @@ export default function MyPage({}: Props) {
   }, [uid]);
 
   if (loading) {
-    return <div>로딩중입니다...</div>;
+    return <StyledContainer></StyledContainer>;
   }
 
   if (error) {
-    return <div>에러메세지: {error.message}</div>;
+    return (
+      <StyledContainer>
+        <div>에러메세지: {error.message}</div>
+      </StyledContainer>
+    );
   }
 
   if (user) {
     return (
       <StyledContainer>
-        {/* <div>
-          {' '}
-          <button onClick={() => auth.signOut()}>로그아웃</button>
-          <button onClick={() => console.log('유저정보', user)}>
-            유저정보 보기
-          </button>
-        </div> */}
         <StyledDivButton>
           <CategoryButton
             category={category}
