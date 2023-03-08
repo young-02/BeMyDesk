@@ -15,16 +15,17 @@ import { AiOutlineSetting } from 'react-icons/ai';
 import { useQuery } from 'react-query';
 import { useUserInfo } from '../../Hooks/useUserInfo';
 import useUserPostList from '../../Hooks/useUserPostList';
+import useCheckUser from '@/Hooks/useCheckUser';
 
 type Props = {};
 
 export default function MyPage({}: Props) {
+  useCheckUser();
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
   const [category, setCategory] = useState('myPost');
   const [profileEditModalOpen, setProfileEditModalOpen] = useState(false);
   const currentUserId = auth.currentUser?.uid;
-
 
   const {
     isLoading,
@@ -32,7 +33,6 @@ export default function MyPage({}: Props) {
     error: userInfoError,
     data: userInfo,
   } = useUserInfo(currentUserId);
-
 
   const { data: myPost } = useUserPostList(currentUserId);
 
@@ -50,13 +50,11 @@ export default function MyPage({}: Props) {
         <div>에러메세지: {error.message}</div>
       </StyledContainer>
     );
-
   }
 
   if (user) {
     return (
       <StyledContainer>
-
         {isLoading && <div>Loading...</div>}
         {isError && <div>Error: {userInfoError.message}</div>}
 

@@ -4,14 +4,27 @@ import PostListFilterBar from '../../components/PostListFilterBar';
 import PostListCard from '../../components/PostListCard';
 import useFilter from '../../Hooks/useFilter';
 
+import SignUpModal from '@/components/post-list/SignUpModal';
+import { useEffect, useState } from 'react';
+
 export default function PostList() {
   // 현재 페이지의 query 값을 가져옵니다.
   const router = useRouter();
+  const isSignUpRoute = router.query.isSignUpRoute;
   const { query: currentQuery }: any = router;
   const { isLoading, isError, data: postList, error } = useFilter(currentQuery);
 
+  const [isModalOn, setIsModalOn] = useState(false);
+
+  useEffect(() => {
+    if (isSignUpRoute) {
+      setIsModalOn(true);
+    }
+  }, []);
+
   return (
     <PostListLayout>
+      <SignUpModal isModalOn={isModalOn} setIsModalOn={setIsModalOn} />
       <Header>
         <PostListFilterBar />
       </Header>
