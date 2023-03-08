@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import editor from './detail-write/DetailWriteFormEditor';
+import dropDown from '../public/images/lightThemeDropdown.png';
 
 const PostListFilterBar = () => {
   const router = useRouter();
@@ -52,7 +52,7 @@ const PostListFilterBar = () => {
             >
               <Image
                 alt="dropdown-icon"
-                src={`/images/LightThemeDropdown.png`}
+                src={dropDown}
                 width={12}
                 height={12}
               />
