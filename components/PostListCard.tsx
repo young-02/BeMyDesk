@@ -48,45 +48,47 @@ const PostListCard = ({ post }: { post: PostType }) => {
 
   return (
     <PostListCardLayout key={id}>
-      <Link href={`/detail/${id}`}>
-        <div
-          className="post-image"
-          style={{
-            backgroundImage: `url(${postImage1})`,
-          }}
-        />
-      </Link>
-      <CardContentBox>
-        <div
-          className="profile-image"
-          style={{
-            backgroundImage: `url(${userProfileImg} )`,
-          }}
-        />
-        <div className="top">
-          <h4>{userNickname ?? '닉네임'}</h4>
-          <p>{nowDate}</p>
-        </div>
+      <div className="post">
         <Link href={`/detail/${id}`}>
-          <div className="middle">
-            <h3>{postTitle}</h3>
-            <p>{postText?.replace(/(<([^>]+)>)/gi, '')}</p>
-          </div>
+          <div
+            className="post-image"
+            style={{
+              backgroundImage: `url(${postImage1})`,
+            }}
+          />
         </Link>
-        <div className="bottom">
-          <p>{jobCategory}의 책상</p>
-          <div onClick={handleUpdateLikes}>
-            <Image
-              src={isLikesClicked ? activeLikes : inactiveLikes}
-              alt="likes-icon"
-              width={24}
-            />
-            <p className={isLikesClicked ? 'active' : 'inactive'}>
-              {likesCount}
-            </p>
+        <CardContentBox>
+          <div
+            className="profile-image"
+            style={{
+              backgroundImage: `url(${userProfileImg} )`,
+            }}
+          />
+          <div className="top">
+            <h4>{userNickname ?? '닉네임'}</h4>
+            <p>{nowDate}</p>
           </div>
-        </div>
-      </CardContentBox>
+          <Link href={`/detail/${id}`}>
+            <div className="middle">
+              <h3>{postTitle}</h3>
+              <p>{postText?.replace(/(<([^>]+)>)/gi, '')}</p>
+            </div>
+          </Link>
+          <div className="bottom">
+            <p>{jobCategory}의 책상</p>
+            <div onClick={handleUpdateLikes}>
+              <Image
+                src={isLikesClicked ? activeLikes : inactiveLikes}
+                alt="likes-icon"
+                width={24}
+              />
+              <p className={isLikesClicked ? 'active' : 'inactive'}>
+                {likesCount}
+              </p>
+            </div>
+          </div>
+        </CardContentBox>
+      </div>
     </PostListCardLayout>
   );
 };
@@ -102,10 +104,23 @@ const PostListCardLayout = styled.div`
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   cursor: pointer;
 
+  @media (max-width: 1300px) {
+    width: calc(100% / 3 - 11px);
+  }
+
+  @media (max-width: 927px) {
+    width: calc(100% / 2 - 8px);
+  }
+
+  @media (max-width: 520px) {
+    width: 100%;
+  }
+
   .post-image {
     width: 100%;
     height: 16rem;
-    background-size: 18rem;
+    background-size: cover;
+    background-repeat: no-repeat;
     background-position: center center;
     border-radius: 0.625rem 0.625rem 0rem 0rem;
     :hover {
@@ -127,7 +142,8 @@ const CardContentBox = styled.div`
     position: absolute;
     top: 0%;
     left: 1.25rem;
-    width: 2.125rem;
+    max-width: 2.125rem;
+    width: 100%;
     transform: translate(0%, -60%);
     height: 2.125rem;
     border-radius: 100%;

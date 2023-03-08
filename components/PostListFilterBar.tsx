@@ -101,17 +101,22 @@ const PostListFilterBar = () => {
 export default PostListFilterBar;
 
 const PostListFilterBarLayout = styled.div`
-  width: 100vw;
+  width: 100%;
+
   margin-top: 5rem;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   gap: 2.75rem;
-  padding-left: 21rem;
+
   font-size: 1rem;
   font-weight: 500;
   background-color: white;
   color: #17171c;
+
+  @media (max-width: 1200px) {
+    padding: 0 1rem;
+  }
 `;
 
 const FilterLink = styled(Link)`
