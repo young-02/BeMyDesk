@@ -12,6 +12,7 @@ export default function DetailWrite({}: Props) {
           content: '',
           selectJob: '',
           attachment: [],
+          url: [],
           postImage: [],
           list: [],
           selectList: [],

@@ -1,4 +1,5 @@
 import CustomButton from '@/components/ui/CustomButton';
+import useCheckUser from '@/Hooks/useCheckUser';
 import { auth, dbService } from '@/shared/firebase';
 import { updateProfile } from 'firebase/auth';
 import {
@@ -98,11 +99,18 @@ function SnsNickname() {
     }
   }, [ageCheck, useCheck, marketingCheck]);
 
+  if (loading) {
+    return (
+      <StyledBackground>
+        <StyledDiv></StyledDiv>
+      </StyledBackground>
+    );
+  }
   if (error) {
     console.log(error);
     alert('잘못된 접근 입니다');
     router.push('/post-list');
-    return <div>Error</div>;
+    return null;
   }
 
   if (user) {
@@ -182,14 +190,12 @@ function SnsNickname() {
           <div className="nicknameDiv">
             <div className="nicknameDivFirstLine">
               <p className="subheadingText">닉네임</p>
-              <p className="description">
-                닉네임은 특수문자를 포함할수 없고 2글자 이상 8자
-                이하이어야합니다.
-              </p>
+              <p className="description">닉네임 8글자 이내</p>
             </div>
             <div className="nicknameDivSecondLine">
               <input
                 type="text"
+                placeholder="닉네임을 입력해주세요."
                 onChange={(event) => {
                   setNickname(event.target.value);
                 }}
@@ -320,18 +326,18 @@ const StyledDiv = styled.div`
   display: flex;
   /* justify-content: center; */
   flex-direction: column;
-  width: 36.75rem;
-  height: 36rem;
+  width: 466px;
+  height: 518px;
   background: #ffffff;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
-  padding: 40px 60px;
+  padding: 20px 40px;
 
   .headingDiv {
     font-style: normal;
     font-weight: 700;
-    font-size: 34px;
-    line-height: 48px;
+    font-size: 24px;
+    line-height: 32px;
     text-align: center;
     justify-content: center;
   }
@@ -364,9 +370,13 @@ const StyledDiv = styled.div`
 
   .ButtonDiv {
     display: flex;
-    margin-top: 2.5rem;
+    margin-top: 2rem;
+
     > button {
       width: 100%;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
       :hover {
         opacity: 90%;
       }
@@ -403,6 +413,9 @@ const StyledDiv = styled.div`
     padding: 0.8125rem 1.25rem;
     border: 0.0625rem solid #adb5bd;
     width: 90%;
+    font-weight: 500;
+    font-size: 14px;
+
     &.error {
       border: 1px solid red;
     }

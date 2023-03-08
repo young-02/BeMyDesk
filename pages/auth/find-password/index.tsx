@@ -132,13 +132,14 @@ function FindPassword() {
             전송하기
           </CustomButton>
         </div>
-        <div
-          className="buttonBottomDiv"
-          onClick={() => {
-            router.push('/auth/sign-in');
-          }}
-        >
-          <p>로그인 페이지로 돌아가기</p>
+        <div className="buttonBottomDiv">
+          <p
+            onClick={() => {
+              router.push('/auth/sign-in');
+            }}
+          >
+            로그인 페이지로 돌아가기
+          </p>
         </div>
       </StyledDiv>
     </StyledBackground>
@@ -164,18 +165,18 @@ const StyledDiv = styled.div`
   display: flex;
   /* justify-content: center; */
   flex-direction: column;
-  width: 36.75rem;
-  height: 25.75rem;
+  width: 466px;
+  height: 351px;
   background: #ffffff;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
 
   .headingDiv {
-    margin-top: 40px;
+    margin-top: 25px;
     font-style: normal;
     font-weight: 700;
-    font-size: 34px;
-    line-height: 48px;
+    font-size: 24px;
+    line-height: 32px;
     text-align: center;
     justify-content: center;
   }
@@ -186,7 +187,7 @@ const StyledDiv = styled.div`
       font-family: 'Pretendard';
       font-style: normal;
       font-weight: 400;
-      font-size: 16px;
+      font-size: 14px;
       line-height: 20px;
       /* or 125% */
 
@@ -200,7 +201,7 @@ const StyledDiv = styled.div`
   .emailDiv {
     display: flex;
     flex-direction: column;
-    margin-top: 30px;
+    margin-top: 25px;
     padding: 0px 60px 0 60px;
   }
 
@@ -209,6 +210,8 @@ const StyledDiv = styled.div`
     padding: 0px 60px 0 60px;
     > button {
       width: 100%;
+      font-size: 16px;
+      line-height: 20px;
       :hover {
         opacity: 90%;
       }
@@ -219,15 +222,12 @@ const StyledDiv = styled.div`
     display: flex;
     justify-content: center;
     padding-top: 17px;
-    cursor: pointer;
-    :hover {
-      opacity: 70%;
-    }
+
     p {
       font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
-      font-size: 13px;
+      font-size: 12px;
       line-height: 16px;
       /* or 133% */
 
@@ -238,6 +238,10 @@ const StyledDiv = styled.div`
       color: #868e96;
       border-bottom: 1.5px solid #868e96;
       padding-bottom: 2px;
+      cursor: pointer;
+      :hover {
+        opacity: 70%;
+      }
     }
   }
 
@@ -273,7 +277,7 @@ const StyledDiv = styled.div`
   //인풋창
   .inputWrap {
     display: flex;
-    padding: 15px 8px 0 8px;
+    padding: 20px 8px 0 8px;
     border-bottom: 2px solid #adb5bd;
     min-height: 60px;
 
@@ -292,7 +296,7 @@ const StyledDiv = styled.div`
       font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
-      font-size: 16px;
+      font-size: 14px;
       line-height: 20px;
       /* identical to box height, or 111% */
 

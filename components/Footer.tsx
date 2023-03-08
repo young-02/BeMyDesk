@@ -41,7 +41,7 @@ function Footer({}: Props) {
               <p>직업별 페이지</p>
             </div>
             <div>
-              <h4>Be my desk</h4>
+              <h4>My page</h4>
               <p>프로필 설정</p>
               <p>나의 게시글</p>
             </div>

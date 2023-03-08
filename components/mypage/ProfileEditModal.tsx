@@ -10,6 +10,7 @@ import { BiCamera } from 'react-icons/bi';
 import { AiOutlineClose } from 'react-icons/ai';
 import Image from 'next/image';
 import DeleteAccount from './editProfile/DeleteAccount';
+import { useQueryClient } from 'react-query';
 
 export function ProfileEditModal({
   setProfileEditModalOpen,
@@ -21,6 +22,9 @@ export function ProfileEditModal({
     changePasswordToggle: false,
     deleteAccountToggle: false,
   });
+  // 프사 변경시 캐쉬 다시 불러오기 위한 쿼리 클라이언트
+  const queryClient = useQueryClient();
+
   // 구조분해 할당
   const { profileEditToggle, changePasswordToggle, deleteAccountToggle } =
     toggleEditMenu;
@@ -53,6 +57,7 @@ export function ProfileEditModal({
       profileImage: downloadURL,
     };
     updateDoc(collectionRef, payload);
+    queryClient.removeQueries('userInfo');
   };
 
   //프사삭제
@@ -69,6 +74,7 @@ export function ProfileEditModal({
       profileImage: default_Image,
     };
     updateDoc(collectionRef, payload);
+    queryClient.removeQueries('userInfo');
   };
 
   return (
@@ -185,7 +191,11 @@ export function ProfileEditModal({
           </div>
           <div>
             {profileEditToggle && (
-              <ChangeProfile user={user} profileData={profileData} />
+              <ChangeProfile
+                user={user}
+                profileData={profileData}
+                setProfileEditModalOpen={setProfileEditModalOpen}
+              />
             )}
             {changePasswordToggle && <ChangePassword user={user} />}
             {deleteAccountToggle && <DeleteAccount />}

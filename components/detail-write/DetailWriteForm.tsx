@@ -7,12 +7,12 @@ import QuillEditor from './DetailWriteFormEditor';
 import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { dbService, auth, storage } from '../../shared/firebase';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { v4 } from 'uuid';
 import CustomButton from '../ui/CustomButton';
 import Image from 'next/image';
-import { relative } from 'path';
+import imageCompression from 'browser-image-compression';
+import { useQueryClient } from 'react-query';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
@@ -85,6 +85,11 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           query: searchWord,
         },
       })
+      // .get('http://localhost:3000/api/naverData', {
+      //   params: {
+      //     query: searchWord,
+      //   },
+      // })
       .then((response) => setData(response.data))
       .catch((Error) => console.log(Error));
   };
@@ -138,27 +143,40 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     setIsNotData(true);
   };
 
-  const selectPreview = (event: any) => {
+  const selectPreview = async (event: any) => {
     if (event.currentTarget.files) {
       let fileArr = event.currentTarget.files;
-      // console.log(fileArr, 'fileArr');
+      let compressedImages = [];
+
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
 
       let fileUrl: any[] = [];
       let file = File;
 
       for (let i = 0; i < fileArr.length; i++) {
+        const compressedImage = await imageCompression(fileArr[i], options);
+        compressedImages.push(compressedImage);
+        console.log(compressedImages, 'compressedImages');
         if (fileArr.length > 2) {
           alert('이미지는 2개까지 업로드 할 수 있습니다');
           return;
         }
-        let fileReader = new FileReader();
-        file = fileArr[i];
-        fileReader.onload = () => {
-          fileUrl[i] = fileReader.result;
-          setAttachment((prev: any) => [...fileUrl]);
-        };
-        fileReader.readAsDataURL(file as any);
+
+        for (let i = 0; i < compressedImages.length; i++) {
+          let fileReader = new FileReader();
+          file = fileArr[i];
+          fileReader.onload = () => {
+            fileUrl[i] = fileReader.result;
+            setAttachment((prev: any) => [...fileUrl]);
+          };
+          fileReader.readAsDataURL(file as any);
+        }
       }
+      console.log('attachment', attachment);
     }
   };
 
@@ -166,6 +184,9 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     const imageUrlList = [...attachment];
     setAttachment(imageUrlList.filter((i) => i !== image));
   };
+
+  // 쿼리 캐시 삭제위한 쿼리 클라이언트 선언
+  const queryClient = useQueryClient();
 
   // 글쓰기 폼에서 최종적으로 등록하기 버튼을 누를 때 파이어베이스에 addDoc 되는 놈
   const submitPostForm = async () => {
@@ -212,22 +233,30 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       userNickname: auth.currentUser?.displayName,
       userProfile: auth.currentUser?.photoURL,
     });
+
     const imageArray: string[] = [];
-    await attachment.map((image: any) => {
+    for (const image of attachment) {
       const imageRef = ref(storage, `images/${auth.currentUser?.uid}/${v4()}`);
 
-      uploadString(imageRef, image, 'data_url').then(async (snapshot: any) => {
+      try {
+        const snapshot = await uploadString(imageRef, image, 'data_url');
         const downloadURL = await getDownloadURL(snapshot.ref);
         imageArray.push(downloadURL);
-        setAttachment(imageArray);
-        await updateDoc(doc(dbService, 'postData', docRef.id), {
-          postImage1: attachment[0] || null,
-          postImage2: attachment[1] || null,
-        });
+      } catch (error) {
+        console.error('error', error);
+      }
+
+      await updateDoc(doc(dbService, 'postData', docRef.id), {
+        postImage1: imageArray[0] || null,
+        postImage2: imageArray[1] || null,
       });
-    });
+
+      setAttachment([]);
+    }
 
     alert('글이 저장되었습니다');
+    queryClient.removeQueries('post-list');
+    queryClient.removeQueries(['my-page', 'myPost']);
     router.push('/post-list');
   };
 
@@ -623,6 +652,14 @@ const DeskPhotoBox = styled.div`
       font-size: 1.25rem;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #206efb;
+        color: #fff;
+        border: none;
+        transition-duration: 0.2s;
+      }
 
       > input {
         display: none;
@@ -713,3 +750,4 @@ const DeskPhotoWrap = styled.div`
     }
   }
 `;
+// pr용 주석
