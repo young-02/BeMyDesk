@@ -80,7 +80,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
    */
   const getNaverData = async () => {
     const response = await axios
-      .get('https://be-my-desk-git-dev-young-02.vercel.app/api/naverData', {
+      .get('https://be-my-desk.vercel.app//api/naverData', {
         params: {
           query: searchWord,
         },
