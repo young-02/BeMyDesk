@@ -170,20 +170,39 @@ const UserProfile = styled.div`
     height: 4rem;
     border-radius: 100%;
     overflow: hidden;
+
+    @media (max-width:820px){
+      width:2.5rem;
+      height:2.5rem;
+    }
   }
   .user-information {
     margin-left: 2.5rem;
+
+    @media (max-width:820px){
+      margin-left: 14px;
+    }
 
     .user-id {
       margin-bottom: 0.5rem;
       font-weight: 700;
       font-size: 1.5rem;
       line-height: 2rem;
+
+      @media (max-width:820px){
+        margin-bottom: .125rem;
+        font-size:.875rem
+      }
     }
     .user-job {
       font-weight: 500;
       font-size: 1.25rem;
       color: #868e96;
+
+
+      @media (max-width:820px){
+     font-size:12px
+    }
     }
   }
 `;

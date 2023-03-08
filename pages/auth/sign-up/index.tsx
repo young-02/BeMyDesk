@@ -203,9 +203,11 @@ export default function SignUp({}: Props) {
           introduction: '안녕하세요!',
         };
 
-        await setDoc(collectionRef, payload).then(router.push('/post-list'));
-
-        alert('회원가입 성공');
+        await setDoc(collectionRef, payload);
+        router.push({
+          pathname: '/post-list',
+          query: { isSignUpRoute: true },
+        });
       } catch (error: any) {
         console.error(error);
         if (error.message.includes('auth/invalid-email')) {
@@ -317,7 +319,7 @@ export default function SignUp({}: Props) {
                 {selectBox && (
                   <ul className="select-list">
                     <li onClick={selectTarget}>naver.com</li>
-                    <li onClick={selectTarget}>google.com</li>
+                    <li onClick={selectTarget}>gmail.com</li>
                     <li onClick={selectTarget}>hanmail.net</li>
                     <li onClick={selectTarget}>daum.net</li>
                     <li onClick={selectTarget}>kakao.com</li>

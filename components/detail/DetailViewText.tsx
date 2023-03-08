@@ -65,6 +65,10 @@ const DetailViewTextLayout = styled.div`
     font-size: 1.5rem;
     line-height: 2rem;
     font-weight: 700;
+
+    @media (max-width:820px){
+      font-size:1.125rem;
+    }
   }
 
   .detail-view-text {
@@ -72,6 +76,11 @@ const DetailViewTextLayout = styled.div`
     font-size: 1.125rem;
     line-height: 1.5rem;
     color: #343a40;
+
+    @media (max-width:820px){
+      margin: 1rem 0;
+      font-size:.875rem;
+    }
   }
 `;
 

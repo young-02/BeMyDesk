@@ -269,7 +269,6 @@ const StyledEditProfileModalContainer = styled.div`
             height: 20px;
           }
           .modalProfileImageOverlayText {
-            font-family: 'Pretendard';
             font-style: normal;
             font-weight: 500;
             font-size: 12px;
@@ -296,7 +295,6 @@ const StyledEditProfileModalContainer = styled.div`
           }
           /* Pretendard Bold 12 */
 
-          font-family: 'Pretendard';
           font-style: normal;
           font-weight: 700;
           font-size: 12px;
@@ -316,7 +314,6 @@ const StyledEditProfileModalContainer = styled.div`
           width: 282px;
           height: 40px;
           background: #ffffff;
-          font-family: 'Pretendard';
           font-style: normal;
           font-weight: 700;
           font-size: 16px;
@@ -333,7 +330,6 @@ const StyledEditProfileModalContainer = styled.div`
           height: 40px;
 
           background: #f1f3f5;
-          font-family: 'Pretendard';
           font-style: normal;
           font-weight: 500;
           font-size: 16px;
@@ -356,8 +352,7 @@ const StyledEditProfileModalContainer = styled.div`
           opacity: 45%;
         }
         .deleteAccountText {
-          font-family: 'Pretendard';
-          font-style: normal;
+         font-style: normal;
           font-weight: 700;
           font-size: 16px;
           line-height: 20px;
@@ -382,8 +377,7 @@ const StyledEditProfileModalContainer = styled.div`
       justify-content: space-between;
       margin-bottom: 60px;
       .RightModalTitle {
-        font-family: 'Pretendard';
-        font-style: normal;
+       font-style: normal;
         font-weight: 700;
         font-size: 24px;
         line-height: 32px;
@@ -407,8 +401,7 @@ const StyledEditProfileModalContainer = styled.div`
     }
   }
 
-  .modalThirdLineButton2Warning {
-    font-family: 'Pretendard';
+  .modalThirdLineButton2Warning 
     font-style: normal;
     font-weight: 500;
     font-size: 13px;
