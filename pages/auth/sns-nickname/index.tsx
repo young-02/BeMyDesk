@@ -1,4 +1,6 @@
+import SignUpModal from '@/components/post-list/SignUpModal';
 import CustomButton from '@/components/ui/CustomButton';
+import CustomModal from '@/components/ui/CustomModal';
 import useCheckUser from '@/Hooks/useCheckUser';
 import { auth, dbService } from '@/shared/firebase';
 import { updateProfile } from 'firebase/auth';
@@ -19,6 +21,9 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import styled from 'styled-components';
 
 function SnsNickname() {
+  // 모달 관리
+  const [isModalOn, setIsModalOn] = useState(false);
+
   const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
 
@@ -167,12 +172,14 @@ function SnsNickname() {
             isSocial: true,
           };
           await setDoc(collectionRef, payload);
-          router.push('/post-list');
+          router.push({
+            pathname: '/post-list',
+            query: { isSignUpRoute: true },
+          });
         }
       } catch (error) {
         console.error(error);
         alert('잘못된 접근 입니다');
-        router.push('/post-list');
       }
     };
 
