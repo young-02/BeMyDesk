@@ -10,17 +10,11 @@ import MyScrap from '@/components/mypage/contents/MyScrap';
 import MyFollow from '@/components/mypage/contents/MyFollow';
 import CategoryButton from '@/components/mypage/CategoryButton';
 import ProfileEditModal from '@/components/mypage/ProfileEditModal';
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { AiOutlineSetting } from 'react-icons/ai';
+import { useQuery } from 'react-query';
+import { useUserInfo } from '../../Hooks/useUserInfo';
+import useUserPostList from '../../Hooks/useUserPostList';
 
 type Props = {};
 
@@ -28,81 +22,23 @@ export default function MyPage({}: Props) {
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
   const [category, setCategory] = useState('myPost');
-  const [myPost, setMyPost] = useState([]);
-  const [myScrap, setMyScrap] = useState([]);
-  const [myFollow, setMyFollow] = useState([]);
   const [profileEditModalOpen, setProfileEditModalOpen] = useState(false);
-  const postCount = myPost.length;
-  const scrapCount = myScrap.length;
-  const followCount = myFollow.length;
+  const currentUserId = auth.currentUser?.uid;
 
-  const [profileData, setProfileData] = useState({});
-  const uid = auth.currentUser?.uid;
 
-  useEffect(() => {
-    if (!uid) {
-      return;
-    }
-    // 유저정보 문서 가져오기
-    const fetchUserDataHandler = async () => {
-      const docRef = doc(dbService, 'userInfo', uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const fetchedProfile = docSnap.data();
-        setProfileData(docSnap.data());
-        // 마이 포스트 불러오기 (getdocs로 리팩토링 추천)
-        onSnapshot(
-          query(collection(dbService, 'postData'), where('userId', '==', uid)),
-          (snapshot) => {
-            const fetchedMyPostData = snapshot.docs.map((doc) => ({
-              ...doc.data(),
-            }));
-            setMyPost(fetchedMyPostData);
-            console.log('마이포스트 데이터 불러오기 완료');
-          },
-        );
-        // 스크랩한 글 가져오기 (getdocs로 리팩토링 추천)
-        if (fetchedProfile.scraps && fetchedProfile.scraps.length > 0) {
-          onSnapshot(
-            query(
-              collection(dbService, 'postData'),
-              where('__name__', 'in', fetchedProfile.scraps),
-            ),
-            (snapshot) => {
-              const fetchedScrapData = snapshot.docs.map((doc) => ({
-                ...doc.data(),
-              }));
-              setMyScrap(fetchedScrapData);
-              console.log('스크랩 데이터 불러오기 완료');
-            },
-          );
-        }
-        // 팔로우 유저 가져오기 (getdocs로 리팩토링 추천)
-        if (fetchedProfile.following && fetchedProfile.following.length > 0) {
-          onSnapshot(
-            query(
-              collection(dbService, 'userInfo'),
-              where('__name__', 'in', fetchedProfile.following),
-            ),
-            (snapshot) => {
-              const fetchedFollowingData = snapshot.docs.map((doc) => ({
-                ...doc.data(),
-              }));
-              setMyFollow(fetchedFollowingData);
-              console.log('팔로우 유저 데이터 불러오기 완료');
-            },
-          );
-        }
-      } else {
-        // sns 로그인유저 추가정보 입력 안했을때
-        alert('유저 정보를 설정하세요');
-        router.push('/auth/sns-nickname');
-        return null;
-      }
-    };
+  const {
+    isLoading,
+    isError,
+    error: userInfoError,
+    data: userInfo,
+  } = useUserInfo(currentUserId);
 
-    fetchUserDataHandler();
-  }, [uid]);
+
+  const { data: myPost } = useUserPostList(currentUserId);
+
+  const postCount = myPost?.length;
+  const scrapCount = userInfo?.scraps?.length;
+  const followCount = userInfo?.following.length;
 
   if (loading) {
     return <StyledContainer></StyledContainer>;
@@ -114,11 +50,16 @@ export default function MyPage({}: Props) {
         <div>에러메세지: {error.message}</div>
       </StyledContainer>
     );
+
   }
 
   if (user) {
     return (
       <StyledContainer>
+
+        {isLoading && <div>Loading...</div>}
+        {isError && <div>Error: {userInfoError.message}</div>}
+
         <StyledDivButton>
           <CategoryButton
             category={category}
@@ -133,23 +74,23 @@ export default function MyPage({}: Props) {
             <div>
               <Image
                 className="profileImage"
-                src={profileData.profileImage}
+                src={userInfo?.profileImage}
                 alt="ProfileImage"
                 width={202}
                 height={202}
               />
             </div>
             <div className="firstLine">
-              <p className="userName">{profileData.nickname}</p>
+              <p className="userName">{userInfo?.nickname}</p>
               <p className="nim">님</p>
             </div>
             <div className="secondLine">
-              <p className="introduction">{profileData.introduction}</p>
+              <p className="introduction">{userInfo?.introduction}</p>
             </div>
             <div className="thirdLine">
               <div className="followerDiv">
                 <p className="followerLetter">팔로워</p>
-                <p className="followerCount">3</p>
+                <p className="followerCount">{userInfo?.follower?.length}</p>
               </div>
               <div className="settingIcon">
                 <AiOutlineSetting
@@ -166,7 +107,7 @@ export default function MyPage({}: Props) {
                 <ProfileEditModal
                   setProfileEditModalOpen={setProfileEditModalOpen}
                   user={user}
-                  profileData={profileData}
+                  profileData={userInfo}
                 />
               )}
             </div>
@@ -177,29 +118,24 @@ export default function MyPage({}: Props) {
               <MyPost
                 myPost={myPost}
                 postCount={postCount}
-                profileData={profileData}
+                currentUserId={currentUserId}
               />
             )}
             {category === 'myScrap' && (
               <MyScrap
-                myScrap={myScrap}
+                userInfo={userInfo}
                 scrapCount={scrapCount}
-                profileData={profileData}
+                currentUserId={currentUserId}
               />
             )}
             {category === 'myFollow' && (
-              <MyFollow
-                myFollow={myFollow}
-                followCount={followCount}
-                profileData={profileData}
-              />
+              <MyFollow userInfo={userInfo} followCount={followCount} />
             )}
           </StyledDivContents>
         </StyledDivMain>
       </StyledContainer>
     );
   } else {
-    alert('로그인이 필요한 서비스입니다.');
     router.push('/auth/sign-in');
     return null;
   }
