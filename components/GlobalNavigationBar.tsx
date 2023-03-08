@@ -194,7 +194,7 @@ const GNBLayout = styled.div`
 
     @media (max-width: 1100px) {
       gap: 1rem;
-      width: 100%;
+      /* width: 100%; */
     }
 
     .logo {
