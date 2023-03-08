@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import useSearch from '../Hooks/useSearch';
 import PostListItem from './post-list/PostListItem';
-// import useSearch from '../hook/useSearch'
 import styled from 'styled-components';
 
 export default function Search({ pathname }: { pathname: string }) {
@@ -45,10 +44,16 @@ const SearchLayout = styled.form<{ theme: string }>`
   justify-content: space-between;
   align-items: center;
   gap: 2.5rem;
-  font-family: 'Pretendard Variable';
   font-size: 1.125rem;
   font-weight: 500;
 
+  @media (max-width: 1100px) {
+    gap: 0.5rem;
+  }
+  @media (max-width: 690px) {
+    position: fixed;
+    right: 1rem;
+  }
   /* > div {
     position: absolute;
     right: 1.25rem;
@@ -92,6 +97,11 @@ const SearchLayout = styled.form<{ theme: string }>`
       padding: 0.625rem 1.25rem;
       opacity: 1;
       transition: all 0.5s ease;
+      z-index: 99999;
+
+      @media (max-width: 1100px) {
+        width: 11.25rem;
+      }
     }
 
     ::placeholder {

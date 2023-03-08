@@ -101,28 +101,31 @@ const PostListFilterBar = () => {
 export default PostListFilterBar;
 
 const PostListFilterBarLayout = styled.div`
-  width: 100vw;
+  width: 100%;
+
   margin-top: 5rem;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 1.875rem;
-  padding-left: 21rem;
-  font-family: 'Pretendard Variable';
+  gap: 2.75rem;
+
   font-size: 1rem;
   font-weight: 500;
   background-color: white;
-  color: black;
+  color: #17171c;
+
+  @media (max-width: 1200px) {
+    padding: 0 1rem;
+  }
 `;
 
 const FilterLink = styled(Link)`
-  width: 2.9375rem;
+  width: fit-content;
   height: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  /* background-color: rebeccapurple; */
   :hover {
     font-weight: 700;
   }
@@ -139,6 +142,7 @@ const DropdownBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-left: -1.25rem;
 
   &.selected {
     font-weight: 700;
@@ -151,7 +155,7 @@ const DropdownBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.625rem 1.25rem 0.625rem;
+    padding: 0.625rem 1.25rem 0.625rem 1.25rem;
     cursor: pointer;
 
     :hover {
@@ -182,7 +186,6 @@ const DropdownBox = styled.div`
     background-color: white;
     border-radius: 0.625rem;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 6px;
-    /* background-color: red; */
   }
 `;
 
@@ -196,10 +199,9 @@ const DropdownFilterLink = styled(Link)`
   cursor: pointer;
   font-weight: 500;
   color: ${(props) =>
-    props.selected === props.children ? '#206EFB' : 'black'};
+    props.selected === props.children ? '#206EFB' : '#17171C'};
 
   :hover {
-    font-weight: 700;
     background-color: #f1f3f5;
   }
 `;

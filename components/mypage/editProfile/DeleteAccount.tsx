@@ -147,9 +147,6 @@ const DeleteAccountContainer = styled.div`
     background: #f1f3f5;
     border-radius: 10px;
     > ul {
-      /* Pretendard Medium 14 */
-
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
@@ -219,7 +216,7 @@ const DeleteAccountContainer = styled.div`
       background: #ac3939;
       border: 1px solid #ced4da;
       border-radius: 10px;
-      font-family: 'Pretendard';
+
       font-style: normal;
       font-weight: 500;
       font-size: 20px;
@@ -246,7 +243,6 @@ const DeleteAccountContainer = styled.div`
     margin-top: 5px;
     min-height: 20px;
     .errorMessageText {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 12px;

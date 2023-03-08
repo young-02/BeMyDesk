@@ -273,7 +273,6 @@ const ProfileEdit = styled.div`
   .ProfileEditHeadTitle {
     /* Pretendard Bold 20 */
 
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
@@ -290,7 +289,7 @@ const ProfileEdit = styled.div`
     .inputNickname {
       width: 87%;
       height: 42px;
-      font-family: 'Pretendard';
+
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -305,7 +304,6 @@ const ProfileEdit = styled.div`
       padding: 0 20px;
     }
     .inputNickname:focus-within {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -330,7 +328,6 @@ const ProfileEdit = styled.div`
       width: 87%;
       height: 60px;
 
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
@@ -356,7 +353,6 @@ const ProfileEdit = styled.div`
       min-height: 35px;
     }
     .ProfileEditIntroductionCount {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 12px;
@@ -381,7 +377,6 @@ const ProfileEdit = styled.div`
 
     .profileChangeDoneMessageDiv {
       .profileChangeDoneMessage {
-        font-family: 'Pretendard';
         font-style: normal;
         font-weight: 500;
         font-size: 14px;
@@ -399,7 +394,7 @@ const ProfileEdit = styled.div`
         height: 48px;
         background: #206efb;
         border-radius: 10px;
-        font-family: 'Pretendard';
+
         font-style: normal;
         font-weight: 700;
         font-size: 20px;
@@ -413,7 +408,6 @@ const ProfileEdit = styled.div`
   }
 
   .errorMessage {
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
