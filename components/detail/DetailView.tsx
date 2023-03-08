@@ -13,6 +13,7 @@ import { usePost } from '../../Hooks/usePost';
 import { QueryClient, useQueryClient } from 'react-query';
 import CustomModal from '../ui/CustomModal';
 import CustomButton from '../ui/CustomButton';
+import { useMediaQuery } from 'react-responsive';
 
 type Props = {};
 
@@ -34,6 +35,17 @@ export default function DetailView({}) {
   const updatePost = async () => {
     router.push(`/detail/write/${postId}/edit`);
   };
+  //반응형
+  const [isMobile, setIsMobile] = useState<number>(0);
+  const [isDesktop, setIsDesktop] = useState<number>(0);
+  const isMobileSize = useMediaQuery({ maxWidth: 820 });
+  const isDesktopSize = useMediaQuery({ minWidth: 821 });
+
+  //서버사이드렌더링
+  useEffect(() => {
+    setIsMobile(isMobileSize);
+    setIsDesktop(isDesktopSize);
+  }, [isMobileSize, isDesktopSize]);
 
   return (
     <>
@@ -155,11 +167,18 @@ export default function DetailView({}) {
             <div className="detail-view">
               <DetailViewSlide post={post} />
               <DetailViewText post={post} />
+              {isMobile && (
+                <div className="detail-product">
+                  <DetailViewProducts post={post} />
+                </div>
+              )}
               <Comment path={`postData/${postId}/comments`} />
             </div>
-            <div className="detail-product">
-              <DetailViewProducts post={post} />
-            </div>
+            {isDesktop && (
+              <div className="detail-product">
+                <DetailViewProducts post={post} />
+              </div>
+            )}
           </DetailViewDiv>
         </DetailViewLayout>
       )}
@@ -184,15 +203,31 @@ const DetailViewDiv = styled.div`
   align-items: flex-start;
   gap: 1.5rem;
 
+  @media (max-width: 820px) {
+    flex-direction: column;
+  }
+
   .detail-view {
-    width: 100%;
+    width: 70%;
     max-width: 55.875rem;
+
+    @media (max-width: 820px) {
+      width: 100%;
+    }
   }
 
   .detail-product {
-    width: calc(100% - 55.875rem);
+    max-width: 20.125rem;
+    width: 40%;
     background-color: #f1f3f5;
     padding: 1.25rem;
     border-radius: 0.625rem;
+
+    @media (max-width: 820px) {
+      width: 100%;
+      min-width: 100%;
+      background-color: #fff;
+      padding: 0 1rem;
+    }
   }
 `;
