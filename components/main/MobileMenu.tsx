@@ -74,7 +74,7 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           </li>
           <li>
             <Link
-              href="/post-list"
+              href="/detail/write"
               onClick={() => setActive('글쓰기')}
               className={active === '글쓰기' ? 'active' : ''}
             >
