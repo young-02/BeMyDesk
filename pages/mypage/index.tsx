@@ -25,12 +25,14 @@ export default function MyPage({}: Props) {
   const [profileEditModalOpen, setProfileEditModalOpen] = useState(false);
   const currentUserId = auth.currentUser?.uid;
 
+
   const {
     isLoading,
     isError,
     error: userInfoError,
     data: userInfo,
   } = useUserInfo(currentUserId);
+
 
   const { data: myPost } = useUserPostList(currentUserId);
 
@@ -39,18 +41,25 @@ export default function MyPage({}: Props) {
   const followCount = userInfo?.following.length;
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <StyledContainer></StyledContainer>;
   }
 
   if (error) {
-    return <div>error!</div>;
+    return (
+      <StyledContainer>
+        <div>에러메세지: {error.message}</div>
+      </StyledContainer>
+    );
+
   }
 
   if (user) {
     return (
       <StyledContainer>
+
         {isLoading && <div>Loading...</div>}
         {isError && <div>Error: {userInfoError.message}</div>}
+
         <StyledDivButton>
           <CategoryButton
             category={category}

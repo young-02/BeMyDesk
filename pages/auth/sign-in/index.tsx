@@ -369,8 +369,8 @@ const StyledDiv = styled.div`
   display: flex;
   /* justify-content: center; */
   flex-direction: column;
-  width: 36.75rem;
-  height: 44.75rem;
+  width: 466px;
+  height: 570px;
   background: #ffffff;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
@@ -381,7 +381,7 @@ const StyledDiv = styled.div`
     font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 20px;
     /* identical to box height, or 111% */
 
@@ -393,8 +393,8 @@ const StyledDiv = styled.div`
     padding-top: 2.5rem;
     font-style: normal;
     font-weight: 700;
-    font-size: 34px;
-    line-height: 48px;
+    font-size: 24px;
+    line-height: 32px;
     text-align: center;
     justify-content: center;
   }
@@ -406,7 +406,7 @@ const StyledDiv = styled.div`
   }
   .inputWrap {
     display: flex;
-    padding: 15px 8px 0 8px;
+    padding: 25px 8px 0 8px;
     border-bottom: 2px solid #adb5bd;
     min-height: 60px;
 
@@ -428,15 +428,11 @@ const StyledDiv = styled.div`
 
   .inputTitle {
     /* Pretendard Medium 18 */
-
     font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
-    /* identical to box height, or 111% */
-
-    /* Gray 09 */
 
     color: #17171c;
   }
@@ -469,9 +465,9 @@ const StyledDiv = styled.div`
     border-color: red;
   }
   .errorMessageWrapContainer {
-    padding-top: 8px;
+    padding-top: 6px;
     padding-left: 5px;
-    min-height: 25px;
+    min-height: 18px;
   }
   .errorMessageWrap {
     color: #ef0000;
@@ -482,14 +478,14 @@ const StyledDiv = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 1.875rem;
+    padding-top: 1.5rem;
   }
   .LoginButton {
-    width: 480px;
+    width: 386px;
     height: 48px;
     border: none;
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 16px;
     line-height: 1.25rem;
     background: #206efb;
     border-radius: 10px;
@@ -505,7 +501,7 @@ const StyledDiv = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0px 54px;
+    margin: 0px 50px;
     p {
       /* Pretendard Medium 14 */
 
@@ -553,16 +549,16 @@ const StyledDiv = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 85px;
+    margin-top: 35px;
     p {
       font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
-      font-size: 16px;
+      font-size: 14px;
       line-height: 20px;
       /* or 125% */
 
-      color: #000000;
+      color: #868e96;
     }
     .SNSLoginContainer {
       display: flex;
@@ -581,7 +577,7 @@ const StyledDiv = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 85px;
+    margin-top: 30px;
   }
   .LinkSignUpMessage {
     /* Pretendard Medium 12 */

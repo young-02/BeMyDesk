@@ -17,9 +17,6 @@ import CustomButton from '../../../components/ui/CustomButton';
 type Props = {};
 
 export default function SignUp({}: Props) {
-  // 유저 상태 체크
-  useCheckUser();
-
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
@@ -242,7 +239,7 @@ export default function SignUp({}: Props) {
           <div>
             <div className="inputTitleWrap">
               <p className="title">닉네임</p>
-              <p className="description">2~8자리 / 특수문자 불가</p>
+              <p className="description">닉네임 8글자 이내</p>
             </div>
             <div className="inputWrap">
               <input
@@ -478,12 +475,13 @@ const SignUpLayout = styled.div`
   display: flex;
   /* justify-content: center; */
   flex-direction: column;
-  width: 36.75rem;
-  height: 45.5rem;
+  width: 466px;
+  height: 740px;
   background: #ffffff;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
-  padding: 2.375rem 2.5rem;
+  margin-top: 50px;
+  padding: 1.5rem 2.5rem;
 
   /* max-width: 36.75rem;
   width: 100%;
@@ -497,8 +495,9 @@ const SignUpLayout = styled.div`
   // 개별항목 헤딩 + 맨위 '회원가입'
   .title {
     text-align: center;
-    font-size: 2.125rem;
     font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
     margin-left: 10px;
   }
   // 인풋창 전체 묶기
@@ -507,12 +506,12 @@ const SignUpLayout = styled.div`
     flex-direction: column;
     gap: 10px;
     margin-top: 40px;
+
     // 개별항목 헤딩 Div
     .inputTitleWrap {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
 
       > .title {
         font-size: 1.25rem;
@@ -532,6 +531,8 @@ const SignUpLayout = styled.div`
       gap: 10px;
       width: 100%;
       color: #adb5bd;
+      font-weight: 500;
+      font-size: 14px;
 
       > input {
         flex: 1;
@@ -555,6 +556,7 @@ const SignUpLayout = styled.div`
 
     > button {
       width: 100%;
+      font-size: 16px;
       :hover {
         opacity: 90%;
       }
@@ -631,7 +633,7 @@ const SelectBox = styled.div`
   }
 `;
 const SignUpAgreeDiv = styled.div`
-  margin-top: 1rem;
+  margin-top: 2rem;
 
   .agree-input-wrap {
     margin-bottom: 0.5rem;
