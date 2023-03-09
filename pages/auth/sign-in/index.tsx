@@ -17,6 +17,7 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import useGetReaction from '../../../Hooks/useGetReaction';
 import useCheckUser from '@/Hooks/useCheckUser';
 import { setAmplitudeUserId } from '@/amplitude/amplitude';
+import HeadSeo from '@/components/ui/HeadSeo';
 type Props = {};
 
 export default function SignIn({}: Props) {
@@ -223,6 +224,7 @@ export default function SignIn({}: Props) {
 
   return (
     <StyledBackground>
+      <HeadSeo title="로그인 | be-my-desk" />
       <StyledDiv>
         <div className="titleWrap">로그인</div>
 

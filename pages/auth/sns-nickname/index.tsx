@@ -1,6 +1,7 @@
 import CustomAuthUI from '@/components/ui/authUi/CustomAuthUI';
 import CustomInput from '@/components/ui/authUi/CustomInput';
 import CustomButton from '@/components/ui/CustomButton';
+import HeadSeo from '@/components/ui/HeadSeo';
 
 import { auth, dbService } from '@/shared/firebase';
 import { updateProfile } from 'firebase/auth';
@@ -174,121 +175,124 @@ function SnsNickname() {
         alert('잘못된 접근 입니다');
       }
     };
-    console.log(nickname);
+
     return (
-      <CustomAuthUI headingTitle="추가 정보 입력" height="32rem">
-        <CustomInput
-          subHeadingText="이메일"
-          placeholder={user?.email}
-          disabled={true}
-        />
+      <>
+        <HeadSeo title="닉네임설정 | be-my-desk" />
+        <CustomAuthUI headingTitle="추가 정보 입력" height="32rem">
+          <CustomInput
+            subHeadingText="이메일"
+            placeholder={user?.email}
+            disabled={true}
+          />
 
-        <CustomInput
-          type="text"
-          placeholder="닉네임을 입력해주세요."
-          subHeadingText="닉네임"
-          descriptionText="닉네임 8글자 이내, 특수문자 불가"
-          onChange={(event: any) => {
-            setNickname(event.target.value);
-          }}
-          className={
-            errorNicknameEmpty ||
-            errorNicknameRegex ||
-            errorNicknameduDlication ||
-            errorEmailDuplication
-              ? 'error'
-              : undefined
-          }
-          onFocus={nicknameInputFocus}
-          errorMessageText={
-            errorNicknameEmpty
-              ? '필수 입력 항목입니다.'
-              : errorNicknameRegex
-              ? '닉네임 양식을 확인해주세요.'
-              : errorNicknameduDlication
-              ? '중복된 닉네임 입니다.'
-              : errorEmailDuplication
-              ? '해당 이메일 계정이 이미 존재합니다.'
-              : undefined
-          }
-        />
+          <CustomInput
+            type="text"
+            placeholder="닉네임을 입력해주세요."
+            subHeadingText="닉네임"
+            descriptionText="닉네임 8글자 이내, 특수문자 불가"
+            onChange={(event: any) => {
+              setNickname(event.target.value);
+            }}
+            className={
+              errorNicknameEmpty ||
+              errorNicknameRegex ||
+              errorNicknameduDlication ||
+              errorEmailDuplication
+                ? 'error'
+                : undefined
+            }
+            onFocus={nicknameInputFocus}
+            errorMessageText={
+              errorNicknameEmpty
+                ? '필수 입력 항목입니다.'
+                : errorNicknameRegex
+                ? '닉네임 양식을 확인해주세요.'
+                : errorNicknameduDlication
+                ? '중복된 닉네임 입니다.'
+                : errorEmailDuplication
+                ? '해당 이메일 계정이 이미 존재합니다.'
+                : undefined
+            }
+          />
 
-        <SignUpAgreeDiv>
-          <div className="agree-input-wrap">
-            <div className="allCheckLine">
-              <label htmlFor="all-check" className="agree-title">
-                <input
-                  type="checkbox"
-                  id="all-check"
-                  checked={allCheck}
-                  onChange={allBtnEvent}
-                />
-                <span className="check-custorm" />
-                전체동의
-              </label>
+          <SignUpAgreeDiv>
+            <div className="agree-input-wrap">
+              <div className="allCheckLine">
+                <label htmlFor="all-check" className="agree-title">
+                  <input
+                    type="checkbox"
+                    id="all-check"
+                    checked={allCheck}
+                    onChange={allBtnEvent}
+                  />
+                  <span className="check-custorm" />
+                  전체동의
+                </label>
 
-              <div className="errorMessageDiv">
-                {errorAllCheck ? (
-                  <p className="errorMessageText">약관에 동의해주세요</p>
-                ) : null}
+                <div className="errorMessageDiv">
+                  {errorAllCheck ? (
+                    <p className="errorMessageText">약관에 동의해주세요</p>
+                  ) : null}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="agree-input-wrap">
-            <label htmlFor="check1">
-              <input
-                type="checkbox"
-                id="check1"
-                checked={ageCheck}
-                onChange={ageBtnEvent}
-              />
-              <span className="check-custorm" />만 14세 이상입니다
-              <span className="check-custorm-right">(필수)</span>
-            </label>
-          </div>
-          <div className="agree-input-wrap">
-            <label htmlFor="check2">
-              <input
-                type="checkbox"
-                id="check2"
-                checked={useCheck}
-                onChange={useBtnEvent}
-              />
-              <span className="check-custorm" />
-              개인정보 수집/이용에 동의합니다.{' '}
-              <span className="check-custorm-right">(필수)</span>
-            </label>
-          </div>
+            <div className="agree-input-wrap">
+              <label htmlFor="check1">
+                <input
+                  type="checkbox"
+                  id="check1"
+                  checked={ageCheck}
+                  onChange={ageBtnEvent}
+                />
+                <span className="check-custorm" />만 14세 이상입니다
+                <span className="check-custorm-right">(필수)</span>
+              </label>
+            </div>
+            <div className="agree-input-wrap">
+              <label htmlFor="check2">
+                <input
+                  type="checkbox"
+                  id="check2"
+                  checked={useCheck}
+                  onChange={useBtnEvent}
+                />
+                <span className="check-custorm" />
+                개인정보 수집/이용에 동의합니다.{' '}
+                <span className="check-custorm-right">(필수)</span>
+              </label>
+            </div>
 
-          <div className="agree-input-wrap">
-            <label htmlFor="check3">
-              <input
-                type="checkbox"
-                id="check3"
-                checked={marketingCheck}
-                onChange={marketingBtnEvent}
-              />
-              <span className="check-custorm" />
-              서비스 이용약관에 동의합니다.
-              <span className="check-custorm-right">(필수)</span>
-            </label>
-          </div>
-        </SignUpAgreeDiv>
-        <ButtonDiv>
-          <CustomButton
-            backgroundColor="#206EFB"
-            fontColor="#fff"
-            paddingColumns="0.875"
-            paddingRow="0.875"
-            fontSize="1"
-            onClick={nicknameSet}
-            hover="90"
-            active="70"
-          >
-            회원가입
-          </CustomButton>
-        </ButtonDiv>
-      </CustomAuthUI>
+            <div className="agree-input-wrap">
+              <label htmlFor="check3">
+                <input
+                  type="checkbox"
+                  id="check3"
+                  checked={marketingCheck}
+                  onChange={marketingBtnEvent}
+                />
+                <span className="check-custorm" />
+                서비스 이용약관에 동의합니다.
+                <span className="check-custorm-right">(필수)</span>
+              </label>
+            </div>
+          </SignUpAgreeDiv>
+          <ButtonDiv>
+            <CustomButton
+              backgroundColor="#206EFB"
+              fontColor="#fff"
+              paddingColumns="0.875"
+              paddingRow="0.875"
+              fontSize="1"
+              onClick={nicknameSet}
+              hover="90"
+              active="70"
+            >
+              회원가입
+            </CustomButton>
+          </ButtonDiv>
+        </CustomAuthUI>
+      </>
     );
   }
 }
