@@ -3,14 +3,13 @@ import styled from 'styled-components';
 declare interface AuthUITypeProps {
   children?: React.ReactNode;
   headingTitle?: string;
-  width?: number;
-  height?: number;
+  height?: any;
 }
 
-function CustomAuthUI({ headingTitle, children }: AuthUITypeProps) {
+function CustomAuthUI({ headingTitle, children, height }: AuthUITypeProps) {
   return (
     <StyledBackground>
-      <StyledDiv>
+      <StyledDiv height={height}>
         <div className="headingDiv">
           <p>{headingTitle}</p>
         </div>
@@ -30,16 +29,24 @@ const StyledBackground = styled.div`
   background-size: cover;
 `;
 
-const StyledDiv = styled.div<{ width?: number; height?: number }>`
+const StyledDiv = styled.div<AuthUITypeProps>`
+  margin-top: 100px;
   display: flex;
   flex-direction: column;
-  width: ${(props) => props.width}rem;
-  height: ${(props) => props.height}rem;
+  height: ${(props) => props.height};
+  width: 466px;
+  /* height: 32rem; */
   background: #ffffff;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
   padding: 20px 40px;
-
+  @media (max-width: 466px) {
+    margin-top: 20px;
+    height: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    width: 466px;
+  }
   .headingDiv {
     font-style: normal;
     font-weight: 700;
@@ -47,6 +54,7 @@ const StyledDiv = styled.div<{ width?: number; height?: number }>`
     line-height: 32px;
     text-align: center;
     justify-content: center;
+    margin-bottom: 35px;
   }
 `;
 

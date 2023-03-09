@@ -170,7 +170,13 @@ const StyledDiv = styled.div`
   background: #ffffff;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
-
+  @media (max-width: 466px) {
+    margin-top: 130px;
+    height: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    width: 466px;
+  }
   .headingDiv {
     margin-top: 25px;
     font-style: normal;
@@ -208,6 +214,9 @@ const StyledDiv = styled.div`
   .ButtonDiv {
     margin-top: 5px;
     padding: 0px 60px 0 60px;
+    @media (max-width: 466px) {
+      padding: 0 1.5rem 0 1.5rem;
+    }
     > button {
       width: 100%;
       font-size: 16px;
