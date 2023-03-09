@@ -43,7 +43,7 @@ export default function DetailViewUserInfor({ post }) {
 
   const handleUpdateScrap = async () => {
     if (currentUserId === undefined) {
-      router.push('auth/sign-in');
+      router.push('/auth/sign-in');
     } else {
       updateScrap(id);
     }
@@ -57,7 +57,7 @@ export default function DetailViewUserInfor({ post }) {
 
   const handleUpdateLikes = async () => {
     if (currentUserId === undefined) {
-      router.push('auth/sign-in');
+      router.push('/auth/sign-in');
     } else {
       updateLikes(id);
     }
@@ -69,7 +69,7 @@ export default function DetailViewUserInfor({ post }) {
 
   const handleUpdateFollowing = async () => {
     if (currentUserId === undefined) {
-      router.push('auth/sign-in');
+      router.push('/auth/sign-in');
     } else {
       updateFollowing(id);
     }
