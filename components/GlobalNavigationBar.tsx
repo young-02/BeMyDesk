@@ -34,19 +34,24 @@ function GlobalNavigationBar() {
     setIsDesktop(isDesktopSize);
   }, [isMobileSize, isDesktopSize]);
 
+  const mainPath = router.route === '/';
+  console.log(router, mainPath);
+
   return (
-    <GNBLayout theme={pathname === '/main' || '/' ? 'dark' : 'light'}>
+    <GNBLayout theme={pathname === '/main' || mainPath ? 'dark' : 'light'}>
       {isMobile && (
         <div>
           <span
             onClick={() => setIsOpen(!isOpen)}
             className={
-              pathname === '/main' ? 'mobile-icon dark' : 'mobile-icon light'
+              pathname === '/main' || mainPath
+                ? 'mobile-icon dark'
+                : 'mobile-icon light'
             }
           />
 
           <Link href="/main" className="logo mobile">
-            {pathname === '/main' ? (
+            {pathname === '/main' || mainPath ? (
               <Image
                 src="/images/logo_white.png"
                 layout="fill"
@@ -70,8 +75,8 @@ function GlobalNavigationBar() {
       {isDesktop && (
         <>
           <div className="button-wrapper">
-            <Link href='/main' className="logo">
-              {pathname === '/main' || '/' ? (
+            <Link href="/main" className="logo">
+              {pathname === '/main' || mainPath ? (
                 <Image
                   src="/images/logo_white.png"
                   layout="fill"
@@ -118,7 +123,7 @@ function GlobalNavigationBar() {
                   className="login-menu"
                   onClick={() => setIsOpenMenu((prev) => !prev)}
                 >
-                  {pathname === '/main' ? (
+                  {pathname === '/main' || mainPath ? (
                     <Image
                       src="/images/mainLoginGNB.png"
                       alt="loginGNB"
