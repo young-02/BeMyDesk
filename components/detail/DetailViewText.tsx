@@ -14,6 +14,8 @@ export default function DetailViewText({ post }) {
     setSocialSharing((prev) => !prev);
   };
   const currentUrl = window.location.href;
+  const kakaoShardUrl = `https://be-my-desk.vercel.app/detail/${post.id}`;
+  console.log(kakaoShardUrl);
 
   const status = useGetKakao('https://developers.kakao.com/sdk/js/kakao.js');
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function DetailViewText({ post }) {
 
   const handleKakaoButton = () => {
     window.Kakao.Link.sendScrap({
-      requestUrl: currentUrl,
+      requestUrl: kakaoShardUrl,
     });
   };
 
