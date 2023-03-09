@@ -6,6 +6,10 @@ import Image from 'next/image';
 import styled from 'styled-components';
 
 function SignUpModal({ isModalOn, setIsModalOn }: any) {
+  const modalButtonHandler = () => {
+    setIsModalOn(false);
+    localStorage.clear();
+  };
   return (
     <>
       {isModalOn && (
@@ -27,7 +31,7 @@ function SignUpModal({ isModalOn, setIsModalOn }: any) {
               paddingColumns="0.575"
               paddingRow="0.575"
               fontSize="1"
-              onClick={() => setIsModalOn(false)}
+              onClick={modalButtonHandler}
             >
               확인
             </CustomButton>
