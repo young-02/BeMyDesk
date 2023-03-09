@@ -93,7 +93,7 @@ export default function CommentList({ comment, path }) {
             <CustomButton
               paddingRow="0"
               paddingColumns="0.5"
-              backgoundColor="#F83E4B"
+              backgroundColor="#F83E4B"
               fontColor="#fff"
               onClick={() => deleteComment(id)}
             >
@@ -102,7 +102,7 @@ export default function CommentList({ comment, path }) {
             <CustomButton
               paddingRow="0"
               paddingColumns="0.5"
-              backgoundColor="#fff"
+              backgroundColor="#fff"
               fontColor="#868E96"
               onClick={() => setIsOpen((prev) => !prev)}
             >

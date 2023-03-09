@@ -47,7 +47,6 @@ const StyledErrorDiv = styled.div`
     height: 164px;
   }
   .errorFirstLine {
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 700;
     font-size: 32px;
@@ -63,7 +62,6 @@ const StyledErrorDiv = styled.div`
     color: #495057;
   }
   .errorSecondLine {
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 16px;

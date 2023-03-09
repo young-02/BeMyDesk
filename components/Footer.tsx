@@ -55,20 +55,37 @@ function Footer({}: Props) {
 export default Footer;
 
 const FooterLayout = styled.div`
+  position: static;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: 200px;
+  padding: 1.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Pretendard Variable';
   border-top: 0.0625rem solid #868e96;
+  background: #17171c;
+
+  @media (max-width: 520px) {
+    position: unset;
+  }
 `;
 
 const FooterInfo = styled.div`
-  width: 1200px;
+  max-width: 1200px;
+  width: 100%;
   display: flex;
-  flex-direction: row;
   gap: 120px;
+  /* paadin */
+
+  @media (max-width: 900px) {
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+    padding: 1rem;
+  }
 
   > div {
     width: fit-content;
@@ -76,16 +93,28 @@ const FooterInfo = styled.div`
     flex-direction: column;
     gap: 20px;
 
+    @media (max-width: 800px) {
+      gap: 0.75rem;
+    }
+
     > h4 {
-      font-size: 20px;
+      font-size: 1.25rem;
       font-weight: 600;
       color: #ced4da;
+
+      @media (max-width: 800px) {
+        font-size: 0.875rem;
+      }
     }
 
     > p {
       font-size: 16px;
       font-weight: 400;
       color: #868e96;
+
+      @media (max-width: 800px) {
+        font-size: 0.75rem;
+      }
     }
 
     > div {
@@ -98,6 +127,10 @@ const FooterInfo = styled.div`
         font-size: 16px;
         font-weight: 400;
         color: #868e96;
+
+        @media (max-width: 800px) {
+          font-size: 0.75rem;
+        }
       }
     }
   }

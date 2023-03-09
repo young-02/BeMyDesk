@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ReactHtmlParser from 'html-react-parser';
 import { useGetKakao } from '@/Hooks/useGetKakao';
+
 type Props = {};
 
 export default function DetailViewText({ post }) {
@@ -15,8 +16,13 @@ export default function DetailViewText({ post }) {
   const currentUrl = window.location.href;
 
   const status = useGetKakao('https://developers.kakao.com/sdk/js/kakao.js');
+
+  console.log(post);
+  // kakao sdk 초기화하기
+  // status가 변경될 때마다 실행되며, status가 ready일 때 초기화를 시도합니다.
   useEffect(() => {
     if (status === 'ready' && window.Kakao) {
+      // 중복 initialization 방지
       if (!window.Kakao.isInitialized()) {
         // 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
         window.Kakao.init('a81b3af974c17b5fc4088249f10e7f77');
@@ -25,8 +31,27 @@ export default function DetailViewText({ post }) {
   }, [status]);
 
   const handleKakaoButton = () => {
-    window.Kakao.Link.sendScrap({
-      requestUrl: currentUrl,
+    const txt = post.postText.substr(2, 30);
+
+    window.Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: `${post.postTitle}`,
+        // description: txt,
+        imageUrl: `${post.postImage1}`,
+        link: {
+          mobileWebUrl: currentUrl,
+          androidExecParams: currentUrl,
+        },
+      },
+      buttons: [
+        {
+          title: '웹으로 이동',
+          link: {
+            mobileWebUrl: currentUrl,
+          },
+        },
+      ],
     });
   };
 
@@ -65,6 +90,10 @@ const DetailViewTextLayout = styled.div`
     font-size: 1.5rem;
     line-height: 2rem;
     font-weight: 700;
+
+    @media (max-width: 820px) {
+      font-size: 1.125rem;
+    }
   }
 
   .detail-view-text {
@@ -72,6 +101,11 @@ const DetailViewTextLayout = styled.div`
     font-size: 1.125rem;
     line-height: 1.5rem;
     color: #343a40;
+
+    @media (max-width: 820px) {
+      margin: 1rem 0;
+      font-size: 0.875rem;
+    }
   }
 `;
 

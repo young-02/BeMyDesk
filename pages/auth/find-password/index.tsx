@@ -110,7 +110,8 @@ function FindPassword() {
 
             {errorEmailSnsUser ? (
               <p className="errorMessageText">
-                비밀번호 찾기는 '이메일 가입하기'로 가입한 경우에만 가능합니다.
+                비밀번호 찾기는 &#34;이메일 가입하기&#34;로 가입한 경우에만
+                가능합니다.
               </p>
             ) : null}
 

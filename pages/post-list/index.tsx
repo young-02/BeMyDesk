@@ -48,15 +48,19 @@ const PostListLayout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100vw;
+  /* width: 100vw; */
+  height: 100vh;
   margin-top: 8rem;
-  overflow-x: hidden;
 `;
 
 const Header = styled.div`
   position: fixed;
   top: 0rem;
+  left: 50%;
   z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  transform: translateX(-50%);
 `;
 
 const PostListBox = styled.div`
@@ -64,7 +68,8 @@ const PostListBox = styled.div`
   margin-top: 1.25rem;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 75rem;
+  max-width: 75rem;
+  width: 100%;
   height: fit-content;
   padding-bottom: 2rem;
   gap: 1rem;

@@ -405,7 +405,6 @@ const StyledDiv = styled.div`
     margin-top: 5px;
     min-height: 20px;
     .errorMessageText {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 500;
       font-size: 12px;
@@ -448,7 +447,6 @@ const SignUpAgreeDiv = styled.div`
         min-height: 0px;
         margin-left: 10px;
         .errorMessageText {
-          font-family: 'Pretendard';
           font-style: normal;
           font-weight: 500;
           font-size: 12px;

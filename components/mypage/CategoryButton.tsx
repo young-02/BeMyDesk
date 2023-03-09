@@ -52,7 +52,6 @@ const StyledButtonContainer = styled.div`
 
     height: 54px;
     width: 150px;
-    font-family: 'Pretendard';
     font-style: normal;
     font-weight: 500;
     font-size: 24px;
@@ -66,7 +65,6 @@ const StyledButtonContainer = styled.div`
     color: #ced4da;
     border-bottom: 2px solid #ced4da;
     .countNumber {
-      font-family: 'Pretendard';
       font-style: normal;
       font-weight: 700;
       font-size: 24px;

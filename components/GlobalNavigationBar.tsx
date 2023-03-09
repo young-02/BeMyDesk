@@ -6,6 +6,9 @@ import { useRouter } from 'next/router';
 import Search from './Search';
 import { auth } from '@/shared/firebase';
 import useCheckLogin from '../Hooks/useCheckLogin';
+import { useMediaQuery } from 'react-responsive';
+import useSearch from '@/Hooks/useSearch';
+import MobileMenu from './main/MobileMenu';
 
 function GlobalNavigationBar() {
   const router = useRouter();
@@ -15,85 +18,145 @@ function GlobalNavigationBar() {
   const userProfilImg =
     auth.currentUser?.photoURL ?? '/images/defaultProfile.png';
 
-  const handleLogOut = () => {
-    logOut();
-    router.push('/auth/sign-in');
-  };
+  // 반응응형 사이즈
+  const [isMobile, setIsMobile] = useState<number>(0);
+  const [isDesktop, setIsDesktop] = useState<number>(0);
+  const isMobileSize = useMediaQuery({ maxWidth: 690 });
+  const isDesktopSize = useMediaQuery({ minWidth: 691 });
+
+  //모바일 서브메뉴
+  const [isOpen, setIsOpen] = useState(false);
+
+  //서버사이드렌더링
+  useEffect(() => {
+    setIsMobile(isMobileSize);
+    setIsDesktop(isDesktopSize);
+  }, [isMobileSize, isDesktopSize]);
 
   return (
-    <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>
-      <div>
-        <Link href="/main" className="logo">
-          BE MY DESK
-        </Link>
-        <Link href="/post-list" className="button">
-          포스트
-        </Link>
-        {isLogin ? (
-          <Link href="/detail/write" className="button">
-            글쓰기
-          </Link>
-        ) : (
-          <Link href="/auth/sign-in" className="button">
-            글쓰기
-          </Link>
-        )}
-      </div>
-      <div>
-        <Search pathname={pathname} />
+    <GNBLayout theme={pathname === '/main' || '/' ? 'dark' : 'light'}>
+      {isMobile && (
+        <div>
+          <span
+            onClick={() => setIsOpen(!isOpen)}
+            className={
+              pathname === '/main' ? 'mobile-icon dark' : 'mobile-icon light'
+            }
+          />
 
-        {isLogin ? (
-          <LoginGNBDiv>
-            <div className="profile-img">
+          <Link href="/main" className="logo mobile">
+            {pathname === '/main' ? (
               <Image
-                src={userProfilImg}
-                alt="profilImg"
+                src="/images/logo_white.png"
                 layout="fill"
-                objectFit="cover"
+                object-fit="contain"
+                alt="logo"
               />
-            </div>
-            <div
-              className="login-menu"
-              onClick={() => setIsOpenMenu((prev) => !prev)}
-            >
-              {pathname === '/main' ? (
+            ) : (
+              <Image
+                src="/images/logo_black.png"
+                layout="fill"
+                object-fit="contain"
+                alt="logo"
+              />
+            )}
+          </Link>
+
+          <Search pathname={pathname} />
+          {isOpen && <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />}
+        </div>
+      )}
+      {isDesktop && (
+        <>
+          <div className="button-wrapper">
+            <Link href='/main' className="logo">
+              {pathname === '/main' || '/' ? (
                 <Image
-                  src="/images/mainLoginGNB.png"
-                  alt="loginGNB"
+                  src="/images/logo_white.png"
                   layout="fill"
-                  objectFit="contain"
+                  object-fit="contain"
+                  alt="logo"
                 />
               ) : (
                 <Image
-                  src="/images/loginGNB.png"
-                  alt="loginGNB"
+                  src="/images/logo_black.png"
                   layout="fill"
-                  objectFit="contain"
+                  object-fit="contain"
+                  alt="logo"
                 />
               )}
-              {isOpenMenu && (
-                <div className="login-sub-menu">
-                  <Link className="sub-menu" href="/mypage">
-                    마이페이지
-                  </Link>
-                  <p className="sub-menu" onClick={handleLogOut}>
-                    로그아웃
-                  </p>
+            </Link>
+
+            <Link href="/post-list" className="button">
+              포스트
+            </Link>
+            {isLogin ? (
+              <Link href="/detail/write" className="button">
+                글쓰기
+              </Link>
+            ) : (
+              <Link href="/auth/sign-in" className="button">
+                글쓰기
+              </Link>
+            )}
+          </div>
+          <div>
+            <Search pathname={pathname} />
+
+            {isLogin ? (
+              <LoginGNBDiv>
+                <div className="profile-img">
+                  <Image
+                    src={userProfilImg}
+                    alt="profilImg"
+                    layout="fill"
+                    objectFit="cover"
+                  />
                 </div>
-              )}
-            </div>
-          </LoginGNBDiv>
-        ) : (
-          <LogOutGNBDiv>
-            <Link href="/auth/sign-in" className="button">
-              로그인
-            </Link>
-            <Link href="/auth/sign-up" className="button">
-              회원가입
-            </Link>
-          </LogOutGNBDiv>
-        )}
-      </div>
+                <div
+                  className="login-menu"
+                  onClick={() => setIsOpenMenu((prev) => !prev)}
+                >
+                  {pathname === '/main' ? (
+                    <Image
+                      src="/images/mainLoginGNB.png"
+                      alt="loginGNB"
+                      layout="fill"
+                      objectFit="contain"
+                    />
+                  ) : (
+                    <Image
+                      src="/images/loginGNB.png"
+                      alt="loginGNB"
+                      layout="fill"
+                      objectFit="contain"
+                    />
+                  )}
+                  {isOpenMenu && (
+                    <div className="login-sub-menu">
+                      <Link className="sub-menu" href="/mypage">
+                        마이페이지
+                      </Link>
+                      <p className="sub-menu" onClick={logOut}>
+                        로그아웃
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </LoginGNBDiv>
+            ) : (
+              <LogOutGNBDiv>
+                <Link href="/auth/sign-in" className="button">
+                  로그인
+                </Link>
+                <Link href="/auth/sign-up" className="button">
+                  회원가입
+                </Link>
+              </LogOutGNBDiv>
+            )}
+          </div>
+        </>
+      )}
     </GNBLayout>
   );
 }
@@ -105,15 +168,21 @@ const GNBLayout = styled.div`
   display: flex;
   position: fixed;
   top: 0rem;
+  left: 50%;
+  padding: 0 8.5rem;
+  transform: translateX(-50%);
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 6.25rem 0px;
   background-color: ${(props) => (props.theme === 'light' ? 'white' : 'none')};
   font-family: 'Pretendard Variable';
   color: ${(props) => (props.theme === 'light' ? '#17171C' : 'white')};
   z-index: 999;
   transition: all 0.2s ease;
+
+  @media (max-width: 1480px) {
+    padding: 0 1rem;
+  }
 
   > div {
     height: 5rem;
@@ -123,10 +192,28 @@ const GNBLayout = styled.div`
     align-items: center;
     gap: 2.5rem;
 
+    @media (max-width: 1100px) {
+      gap: 1rem;
+      /* width: 100%; */
+    }
+
     .logo {
-      font-size: 2.125rem;
-      font-weight: 700;
+      position: relative;
+      min-width: 11.25rem;
+      width: 100%;
+      height: 1.5rem;
+      flex: 1;
       cursor: pointer;
+
+      > img {
+        object-fit: contain;
+      }
+    }
+
+    .button-wrapper {
+      display: flex;
+      flex-direction: row;
+      gap: 1.875rem;
     }
 
     .button {
@@ -140,6 +227,21 @@ const GNBLayout = styled.div`
       :hover {
         font-weight: 700;
         color: ${(props) => (props.theme === 'light' ? '#17171C' : 'white')};
+      }
+    }
+
+    .mobile-icon {
+      display: block;
+      width: 1.5rem;
+      height: 1.5rem;
+      background: url('/images/mobile_icon.jpg') no-repeat;
+
+      &.dark {
+        background-position: 0 0;
+      }
+
+      &.light {
+        background-position: -28px 0;
       }
     }
   }
@@ -168,22 +270,22 @@ const LoginGNBDiv = styled.div`
       top: 200%;
       right: 0;
       background: #fff;
-      box-shadow: 0px 0.25rem 0.375rem 0px #00000040;
-      min-width: 7.375rem;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 6px;
+      width: 6.875rem;
       border-radius: 0.625rem;
       padding: 0.625rem 0;
 
       .sub-menu {
         display: block;
         padding: 0.625rem 1.25rem;
-        color: #868e96;
-        font-size: 1.125rem;
+        color: #17171c;
+        font-size: 1rem;
+        font-weight: 500;
         cursor: pointer;
 
         :hover {
           color: #206efb;
           background: #f1f3f5;
-          font-weight: 700;
         }
       }
     }

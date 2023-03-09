@@ -5,15 +5,17 @@
 
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/variable/pretendardvariable-dynamic-subset.css');
 
+html,
 body {
   font-family: 'Pretendard Variable', Pretendard, -apple-system,
     BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI',
     'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-html,
-body,
 div,
 span,
 applet,
@@ -143,13 +145,16 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
 input {
   outline: none;
 }
+
 a {
   text-decoration: none;
   color: inherit;
 }
+
 button {
   border: none;
   background: none;
