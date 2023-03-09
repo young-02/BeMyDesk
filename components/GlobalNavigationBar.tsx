@@ -34,7 +34,7 @@ function GlobalNavigationBar() {
   }, [isMobileSize, isDesktopSize]);
 
   return (
-    <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>
+    <GNBLayout theme={pathname === '/main' || '/' ? 'dark' : 'light'}>
       {isMobile && (
         <div>
           <span
@@ -69,8 +69,8 @@ function GlobalNavigationBar() {
       {isDesktop && (
         <>
           <div className="button-wrapper">
-            <Link href="/main" className="logo">
-              {pathname === '/main' ? (
+            <Link href='/main' className="logo">
+              {pathname === '/main' || '/' ? (
                 <Image
                   src="/images/logo_white.png"
                   layout="fill"
