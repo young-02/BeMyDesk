@@ -43,7 +43,7 @@ export default function DetailViewUserInfor({ post }) {
 
   const handleUpdateScrap = async () => {
     if (currentUserId === undefined) {
-      router.push('auth/sign-in');
+      router.push('/auth/sign-in');
     } else {
       updateScrap(id);
     }
@@ -57,7 +57,7 @@ export default function DetailViewUserInfor({ post }) {
 
   const handleUpdateLikes = async () => {
     if (currentUserId === undefined) {
-      router.push('auth/sign-in');
+      router.push('/auth/sign-in');
     } else {
       updateLikes(id);
     }
@@ -69,7 +69,7 @@ export default function DetailViewUserInfor({ post }) {
 
   const handleUpdateFollowing = async () => {
     if (currentUserId === undefined) {
-      router.push('auth/sign-in');
+      router.push('/auth/sign-in');
     } else {
       updateFollowing(id);
     }
@@ -171,15 +171,15 @@ const UserProfile = styled.div`
     border-radius: 100%;
     overflow: hidden;
 
-    @media (max-width:820px){
-      width:2.5rem;
-      height:2.5rem;
+    @media (max-width: 820px) {
+      width: 2.5rem;
+      height: 2.5rem;
     }
   }
   .user-information {
     margin-left: 2.5rem;
 
-    @media (max-width:820px){
+    @media (max-width: 820px) {
       margin-left: 14px;
     }
 
@@ -189,9 +189,9 @@ const UserProfile = styled.div`
       font-size: 1.5rem;
       line-height: 2rem;
 
-      @media (max-width:820px){
-        margin-bottom: .125rem;
-        font-size:.875rem
+      @media (max-width: 820px) {
+        margin-bottom: 0.125rem;
+        font-size: 0.875rem;
       }
     }
     .user-job {
@@ -199,10 +199,9 @@ const UserProfile = styled.div`
       font-size: 1.25rem;
       color: #868e96;
 
-
-      @media (max-width:820px){
-     font-size:12px
-    }
+      @media (max-width: 820px) {
+        font-size: 12px;
+      }
     }
   }
 `;
