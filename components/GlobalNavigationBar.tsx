@@ -18,7 +18,7 @@ function GlobalNavigationBar() {
   const userProfilImg =
     auth.currentUser?.photoURL ?? '/images/defaultProfile.png';
 
-  // 반응응형 사이즈
+  // 반응형 사이즈
   const [isMobile, setIsMobile] = useState<number>(0);
   const [isDesktop, setIsDesktop] = useState<number>(0);
   const isMobileSize = useMediaQuery({ maxWidth: 690 });

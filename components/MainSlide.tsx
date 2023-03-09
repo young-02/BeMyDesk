@@ -272,7 +272,7 @@ const MainSlide = () => {
               <p>직업별 페이지</p>
             </div>
             <div>
-              <h4>Be my desk</h4>
+              <h4>My page</h4>
               <p>프로필 설정</p>
               <p>나의 게시글</p>
             </div>
@@ -295,6 +295,10 @@ const MainPageLayout = styled.div`
   color: white;
   background-color: none;
   font-size: 320px;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Slide = styled.div`
@@ -303,6 +307,7 @@ const Slide = styled.div`
   position: relative;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   scroll-snap-align: center;
@@ -508,18 +513,46 @@ const SlideContentBottom = styled.div`
   align-items: center;
   overflow: hidden;
 
+  @media (max-width: 900px) {
+    margin-bottom: 7rem;
+  }
+
   > div {
-    width: 1200px;
-    height: 100%;
+    width: 75rem;
+    height: fit-content;
+    margin: 0rem 20rem;
+
+    @media (max-width: 1200px) {
+      width: calc(100vw - 2.5rem);
+    }
+
     > h3 {
-      font-size: 204.8px;
+      font-size: calc(19vw - 2.5rem);
       font-weight: 700;
+      margin-left: -0.7vw;
+
+      @media (min-width: 1201px) {
+        font-size: 12.5rem;
+      }
+      @media (max-width: 468px) {
+        font-size: 3rem;
+      }
     }
 
     > p {
-      font-size: 18px;
-      margin-left: 16px;
+      font-size: 1.5vw;
       margin-bottom: 40px;
+      margin-top: 0.125rem;
+
+      @media (min-width: 1201px) {
+        font-size: 1.125rem;
+        margin-top: 0rem;
+      }
+
+      @media (max-width: 800px) {
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+      }
     }
   }
 
@@ -541,22 +574,37 @@ const SlideContentBottom = styled.div`
 `;
 
 const FooterBox = styled.div`
-  z-index: -1;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
   height: 200px;
-  position: absolute;
+  z-index: -1;
   display: flex;
   justify-content: center;
   align-items: center;
-  bottom: 0%;
   border-top: 0.0625rem solid #868e96;
+  background: #17171c;
+
+  @media (max-width: 900px) {
+    height: fit-content;
+  }
 `;
 
 const FooterInfo = styled.div`
-  width: 1200px;
+  max-width: 1200px;
+  width: 100%;
   display: flex;
-  flex-direction: row;
   gap: 120px;
+  margin: 1.25rem;
+
+  @media (max-width: 900px) {
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
 
   > div {
     width: fit-content;
@@ -564,16 +612,28 @@ const FooterInfo = styled.div`
     flex-direction: column;
     gap: 20px;
 
+    @media (max-width: 900px) {
+      gap: 0.75rem;
+    }
+
     > h4 {
-      font-size: 20px;
+      font-size: 1.25rem;
       font-weight: 600;
       color: #ced4da;
+
+      @media (max-width: 900px) {
+        font-size: 0.875rem;
+      }
     }
 
     > p {
       font-size: 16px;
       font-weight: 400;
       color: #868e96;
+
+      @media (max-width: 900px) {
+        font-size: 0.75rem;
+      }
     }
 
     > div {
@@ -586,6 +646,10 @@ const FooterInfo = styled.div`
         font-size: 16px;
         font-weight: 400;
         color: #868e96;
+
+        @media (max-width: 900px) {
+          font-size: 0.75rem;
+        }
       }
     }
   }

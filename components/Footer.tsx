@@ -55,19 +55,20 @@ function Footer({}: Props) {
 export default Footer;
 
 const FooterLayout = styled.div`
+  // 🔥position 위치 가려지는 오류 수정해야 함!
   position: static;
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 1.25rem;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-top: 0.0625rem solid #868e96;
   background: #17171c;
 
-  @media (max-width: 520px) {
-    position: unset;
+  @media (max-width: 900px) {
+    height: fit-content;
   }
 `;
 
@@ -76,15 +77,14 @@ const FooterInfo = styled.div`
   width: 100%;
   display: flex;
   gap: 120px;
-  /* paadin */
+  margin: 1.25rem;
 
   @media (max-width: 900px) {
     gap: 1.25rem;
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 900px) {
     flex-direction: column;
-    padding: 1rem;
   }
 
   > div {
@@ -93,7 +93,7 @@ const FooterInfo = styled.div`
     flex-direction: column;
     gap: 20px;
 
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
       gap: 0.75rem;
     }
 
@@ -102,7 +102,7 @@ const FooterInfo = styled.div`
       font-weight: 600;
       color: #ced4da;
 
-      @media (max-width: 800px) {
+      @media (max-width: 900px) {
         font-size: 0.875rem;
       }
     }
@@ -112,7 +112,7 @@ const FooterInfo = styled.div`
       font-weight: 400;
       color: #868e96;
 
-      @media (max-width: 800px) {
+      @media (max-width: 900px) {
         font-size: 0.75rem;
       }
     }
@@ -128,7 +128,7 @@ const FooterInfo = styled.div`
         font-weight: 400;
         color: #868e96;
 
-        @media (max-width: 800px) {
+        @media (max-width: 900px) {
           font-size: 0.75rem;
         }
       }
