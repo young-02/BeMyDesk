@@ -21,8 +21,8 @@ declare global {
 const client = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
-  // const kakaoInit = () => {
-  //   const kakao = (window as any).Kakao;
+  // // const kakaoInit = () => {
+  // //   const kakao = (window as any).Kakao;
 
   //   kakao.init('2e25b083ca47e600eb159f496a652513');
 
