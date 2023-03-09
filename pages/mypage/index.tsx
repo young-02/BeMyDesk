@@ -88,7 +88,9 @@ export default function MyPage({}: Props) {
             <div className="thirdLine">
               <div className="followerDiv">
                 <p className="followerLetter">팔로워</p>
-                <p className="followerCount">{userInfo?.follower?.length}</p>
+                <p className="followerCount">
+                  {userInfo?.follower?.length ? userInfo.follower.length : '0'}
+                </p>
               </div>
               <div className="settingIcon">
                 <AiOutlineSetting
@@ -197,10 +199,13 @@ const StyledDivProfile = styled.div`
   .secondLine {
     height: 80px;
     .introduction {
+      height: 80px;
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
       line-height: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     margin-bottom: 10px;
   }

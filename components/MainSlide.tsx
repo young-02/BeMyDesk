@@ -13,6 +13,7 @@ import developer from '../public/images/category/developer.jpg';
 import student from '../public/images/category/student.jpg';
 import gamer from '../public/images/category/gamer.jpg';
 import { useRouter } from 'next/router';
+import { logEvent } from '@/amplitude/amplitude';
 
 const text = {
   inactive: { opacity: 0, translateY: 120 },
@@ -145,6 +146,9 @@ const MainSlide = () => {
               <p>당신만의 공간을 찾아 당신다움을 빛내보세요.</p>
               <button
                 onClick={() => {
+                  logEvent('메인에서 클릭', {
+                    from: 'main / 시작하기 버튼',
+                  });
                   router.push('/post-list');
                 }}
               >
@@ -187,6 +191,9 @@ const MainSlide = () => {
         <SlideContentMiddle>
           <CategoryCardBox
             onClick={() => {
+              logEvent('메인 디자이너 클릭', {
+                from: 'main / 카테고리박스 디자이너',
+              });
               router.push('/post-list?order=category&select=designer');
             }}
           >
@@ -202,6 +209,9 @@ const MainSlide = () => {
           </CategoryCardBox>
           <CategoryCardBox
             onClick={() => {
+              logEvent('메인 개발자 클릭', {
+                from: 'main / 카테고리박스 개발자',
+              });
               router.push('/post-list?order=category&select=developer');
             }}
           >
@@ -217,6 +227,9 @@ const MainSlide = () => {
           </CategoryCardBox>
           <CategoryCardBox
             onClick={() => {
+              logEvent('메인 학생 클릭', {
+                from: 'main / 카테고리박스 학생',
+              });
               router.push('/post-list?order=category&select=student');
             }}
           >
@@ -232,6 +245,9 @@ const MainSlide = () => {
           </CategoryCardBox>
           <CategoryCardBox
             onClick={() => {
+              logEvent('메인 게이머 클릭', {
+                from: 'main / 카테고리박스 게이머',
+              });
               router.push('/post-list?order=category&select=gamer');
             }}
           >

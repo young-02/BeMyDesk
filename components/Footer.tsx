@@ -14,7 +14,9 @@ function Footer({}: Props) {
     if (
       pathname === '/main' ||
       pathname === '/auth/sign-in' ||
-      pathname === '/auth/sign-up'
+      pathname === '/auth/sign-up' ||
+      pathname === '/auth/sns-nickname' ||
+      pathname === '/auth/find-password'
     ) {
       setIsActive(false);
     } else {

@@ -16,6 +16,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import useGetReaction from '../../../Hooks/useGetReaction';
 import useCheckUser from '@/Hooks/useCheckUser';
+import { setAmplitudeUserId } from '@/amplitude/amplitude';
 type Props = {};
 
 export default function SignIn({}: Props) {
@@ -77,12 +78,14 @@ export default function SignIn({}: Props) {
   }
 
   //로그인 버튼동작
-  const onClickLoginButton = () => {
+  const onClickLoginButton = async () => {
     if (emailValid && pwValid) {
-      signInWithEmailAndPassword(auth, email, pw)
-        .then(() => {
+      await signInWithEmailAndPassword(auth, email, pw)
+        .then((UserCredential) => {
+          console.log('UserCredential', UserCredential.user.uid);
+          setAmplitudeUserId(UserCredential.user.uid);
           alert('로그인 성공');
-          console.log('login sucess', auth.currentUser);
+
           router.push('/post-list');
         })
         .catch((error) => {
@@ -170,6 +173,7 @@ export default function SignIn({}: Props) {
         // };
 
         // await setDoc(collectionRef, payload);
+
         router.push('/auth/sns-nickname');
       } else {
         router.push('/post-list');
@@ -203,6 +207,7 @@ export default function SignIn({}: Props) {
         // };
 
         // await setDoc(collectionRef, payload);
+
         router.push('/auth/sns-nickname');
       } else {
         router.push('/post-list');
@@ -356,6 +361,7 @@ const StyledBackground = styled.div`
   align-items: center;
 
   height: 100vh;
+
   background: url(https://images.pexels.com/photos/251225/pexels-photo-251225.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)
     no-repeat center;
   background-size: cover;
@@ -374,6 +380,13 @@ const StyledDiv = styled.div`
   background: #ffffff;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
+  @media (max-width: 466px) {
+    margin-top: 7rem;
+    height: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    width: 466px;
+  }
   input {
     width: 100%;
     outline: none;
@@ -481,10 +494,9 @@ const StyledDiv = styled.div`
     padding-top: 1.5rem;
   }
   .LoginButton {
-    width: 386px;
+    width: 90%;
     height: 48px;
     border: none;
-    font-weight: 700;
     font-size: 16px;
     line-height: 1.25rem;
     background: #206efb;
