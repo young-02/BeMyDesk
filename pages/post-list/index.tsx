@@ -46,7 +46,6 @@ const PostListLayout = styled.div`
   /* width: 100vw; */
   height: 100vh;
   margin-top: 8rem;
-  overflow-x: hidden;
 `;
 
 const Header = styled.div`

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ReactHtmlParser from 'html-react-parser';
 import { useGetKakao } from '@/Hooks/useGetKakao';
+import { kakaoInit } from '../../api.d';
 type Props = {};
 
 export default function DetailViewText({ post }) {
@@ -66,8 +67,8 @@ const DetailViewTextLayout = styled.div`
     line-height: 2rem;
     font-weight: 700;
 
-    @media (max-width:820px){
-      font-size:1.125rem;
+    @media (max-width: 820px) {
+      font-size: 1.125rem;
     }
   }
 
@@ -77,9 +78,9 @@ const DetailViewTextLayout = styled.div`
     line-height: 1.5rem;
     color: #343a40;
 
-    @media (max-width:820px){
+    @media (max-width: 820px) {
       margin: 1rem 0;
-      font-size:.875rem;
+      font-size: 0.875rem;
     }
   }
 `;
