@@ -16,8 +16,8 @@ function MyPost({ myPost, postCount, currentUserId }: any) {
           className="errorIcon"
           src="/images/QuestionMark.png"
           alt="QuestionMark"
-          width={48}
-          height={48}
+          width={1000}
+          height={1000}
         />
         <p className="errorFirstLine">작성한 게시물이 없어요</p>
         <p className="errorSecondLine">첫 게시물을 작성해주세요!</p>
