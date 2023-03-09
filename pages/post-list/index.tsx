@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import PostListFilterBar from '../../components/PostListFilterBar';
 import PostListCard from '../../components/PostListCard';
 import useFilter from '../../Hooks/useFilter';
-
 import SignUpModal from '@/components/post-list/SignUpModal';
 import { useEffect, useState } from 'react';
+import HeadSeo from '@/components/ui/HeadSeo';
 
 export default function PostList() {
   // 현재 페이지의 query 값을 가져옵니다.
@@ -29,6 +29,7 @@ export default function PostList() {
 
   return (
     <PostListLayout>
+      <HeadSeo title="포스트 | 내가 꾸민 데스크테리어 자랑 커뮤니티" />
       <SignUpModal isModalOn={isModalOn} setIsModalOn={setIsModalOn} />
       <Header>
         <PostListFilterBar />
@@ -49,7 +50,7 @@ const PostListLayout = styled.div`
   flex-direction: column;
   align-items: center;
   /* width: 100vw; */
-  height: 100vh;
+  /* height: 100vh; */
   margin-top: 8rem;
 `;
 

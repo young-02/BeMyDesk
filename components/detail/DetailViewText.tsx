@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ReactHtmlParser from 'html-react-parser';
 import { useGetKakao } from '@/Hooks/useGetKakao';
+import HeadSeo from '../ui/HeadSeo';
 
 type Props = {};
 
@@ -55,8 +56,10 @@ export default function DetailViewText({ post }) {
     });
   };
 
+  console.log(post);
   return (
     <>
+      <HeadSeo title={`${post.userNickname}님의 ${post.postTitle} | 데스크테리어`} />
       <DetailViewTextLayout>
         <div className="detail-view-title">{post.postTitle}</div>
         <div className="detail-view-text">{ReactHtmlParser(post.postText)}</div>
