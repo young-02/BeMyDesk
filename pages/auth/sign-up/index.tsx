@@ -16,7 +16,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
+import CustomButton from '../../../components/ui/CustomButton';
+import { logEvent } from '@/amplitude/amplitude';
 type Props = {};
 
 export default function SignUp({}: Props) {
@@ -384,19 +385,77 @@ export default function SignUp({}: Props) {
             <span className="check-custorm-right">(필수)</span>
           </label>
         </div>
+        <SignUpAgreeDiv>
+          <div className="agree-input-wrap">
+            <label htmlFor="all-check" className="agree-title">
+              <input
+                type="checkbox"
+                id="all-check"
+                checked={allCheck}
+                onChange={allBtnEvent}
+              />
+              <span className="check-custorm" />
+              전체동의
+            </label>
+          </div>
+          <div className="agree-input-wrap">
+            <label htmlFor="check1">
+              <input
+                type="checkbox"
+                id="check1"
+                checked={ageCheck}
+                onChange={ageBtnEvent}
+              />
+              <span className="check-custorm" />만 14세 이상입니다
+              <span className="check-custorm-right">(필수)</span>
+            </label>
+          </div>
+          <div className="agree-input-wrap">
+            <label htmlFor="check2">
+              <input
+                type="checkbox"
+                id="check2"
+                checked={useCheck}
+                onChange={useBtnEvent}
+              />
+              <span className="check-custorm" />
+              개인정보 수집/이용에 동의합니다.{' '}
+              <span className="check-custorm-right">(필수)</span>
+            </label>
+          </div>
 
-        <div className="agree-input-wrap">
-          <label htmlFor="check3">
-            <input
-              type="checkbox"
-              id="check3"
-              checked={marketingCheck}
-              onChange={marketingBtnEvent}
-            />
-            <span className="check-custorm" />
-            서비스 이용약관에 동의합니다.
-            <span className="check-custorm-right">(필수)</span>
-          </label>
+          <div className="agree-input-wrap">
+            <label htmlFor="check3">
+              <input
+                type="checkbox"
+                id="check3"
+                checked={marketingCheck}
+                onChange={marketingBtnEvent}
+              />
+              <span className="check-custorm" />
+              서비스 이용약관에 동의합니다.
+              <span className="check-custorm-right">(필수)</span>
+            </label>
+          </div>
+        </SignUpAgreeDiv>
+
+        <div className="buttonWrap">
+          <CustomButton
+            backgroundColor="#206EFB"
+            fontColor="#fff"
+            paddingColumns="0.875"
+            paddingRow="0.875"
+            fontSize="1.25"
+            onClick={() => {
+              onClickConfirmButton();
+              logEvent('회원가입버튼', {
+                from: 'auth/sign-up / 직접회원가입',
+              });
+            }}
+            disabled={notAllow}
+          >
+            회원가입
+          </CustomButton>
         </div>
       </SignUpAgreeDiv>
 

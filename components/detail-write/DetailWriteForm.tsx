@@ -13,6 +13,7 @@ import CustomButton from '../ui/CustomButton';
 import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import { useQueryClient } from 'react-query';
+import { logEvent } from '@/amplitude/amplitude';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
@@ -80,16 +81,11 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
    */
   const getNaverData = async () => {
     const response = await axios
-      .get('https://be-my-desk.vercel.app//api/naverData', {
+      .get('http://localhost:3000/api/naverData', {
         params: {
           query: searchWord,
         },
       })
-      // .get('http://localhost:3000/api/naverData', {
-      //   params: {
-      //     query: searchWord,
-      //   },
-      // })
       .then((response) => setData(response.data))
       .catch((Error) => console.log(Error));
   };
@@ -108,7 +104,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   };
 
   // 모달 보이게 하기
-  const showSearchModal = (event: any) => {
+  const showSearchModal = () => {
     setIsModalShow(true);
   };
 
@@ -191,8 +187,9 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   // 글쓰기 폼에서 최종적으로 등록하기 버튼을 누를 때 파이어베이스에 addDoc 되는 놈
   const submitPostForm = async () => {
     // 유효성 검사
+
     if (!selectJob || selectJob === '선택해주세요') {
-      alert('누구의 책상인지 골라주세요!');
+      alert('누구의 책상인지 골라주세요');
       return jobRef.current.focus();
     }
 
@@ -262,7 +259,6 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
   // 수정 페이지에서 등록하기를 누르면 파이어베이스에 updateDoc 되는 함수
   const updatePost = async (selectList: any) => {
-    // console.log('selectListttt', selectList);
     const updateRef = doc(dbService, 'postData', router.query.id);
     const updateProducts = selectList.map((item: any) => {
       return {
@@ -306,12 +302,10 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           leftToggle={leftToggle}
           rightToggle={rightToggle}
           setIsNotData={setIsNotData}
-          // enterSearchWord={enterSearchWord}
           enter={enter}
           setEnter={setEnter}
           saveSearchWord={saveSearchWord}
           setSaveSearchWord={setSaveSearchWord}
-          // enterYourselfInput={enterYourselfInput}
           onClick={selectedProducts}
         />
       )}
@@ -373,7 +367,10 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
                     width={15}
                     height={15}
                     alt="closeBtnImage"
-                    onClick={() => deleteImage(image)}
+                    onClick={() => {
+                      logEvent('image delete', { from: 'detailWrite' });
+                      deleteImage(image);
+                    }}
                   />
                 </div>
               ))}
@@ -399,7 +396,12 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           <div className="title_span_box">
             <div className="title_span_b">사용하신 제품을 선택해주세요</div>
             <CustomButton
-              onClick={showSearchModal}
+              onClick={() => {
+                showSearchModal();
+                logEvent('search product', {
+                  from: 'detailWrite / 기기검색버튼',
+                });
+              }}
               color="#206efb"
               border="1"
               paddingColumns="1"
@@ -414,7 +416,14 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
             </CustomButton>
           </div>
           {selectList.length === 0 && (
-            <NoPreviewImageBox>
+            <NoPreviewImageBox
+              onClick={() => {
+                showSearchModal();
+                logEvent('click no Product', {
+                  from: 'detailWrite / 제품없음이미지',
+                });
+              }}
+            >
               <div className="laptop_box">
                 <Image
                   src={'/images/laptop.png'}
@@ -448,8 +457,18 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
             fontSize="1.25"
             onClick={
               mode === 'update'
-                ? () => router.push(`/detail/${router.query.id}`)
-                : () => router.push('/post-list')
+                ? () => {
+                    logEvent('글 수정 취소', {
+                      from: 'detailWrite / 글 수정 취소버튼',
+                    });
+                    router.push(`/detail/${router.query.id}`);
+                  }
+                : () => {
+                    logEvent('글 작성 취소', {
+                      from: 'detailWrite /글 작성 취소버튼',
+                    });
+                    router.push('/post-list');
+                  }
             }
           >
             취소
@@ -462,7 +481,19 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
             fontWeight="700"
             fontSize="1.25"
             onClick={
-              mode === 'update' ? () => updatePost(selectList) : submitPostForm
+              mode === 'update'
+                ? () => {
+                    updatePost(selectList);
+                    logEvent('글 수정완료', {
+                      from: 'detailWrite / 글 수정완료 버튼',
+                    });
+                  }
+                : () => {
+                    submitPostForm();
+                    logEvent('글 작성 완료', {
+                      from: 'detailWrite / 글 작성완료 버튼',
+                    });
+                  }
             }
           >
             완료
@@ -675,6 +706,7 @@ const DetailWriteProductCardBox = styled.div`
 const NoPreviewImageBox = styled.div`
   display: flex;
   width: 100%;
+  cursor: pointer;
 
   .laptop_box {
     position: relative;
@@ -750,4 +782,3 @@ const DeskPhotoWrap = styled.div`
     }
   }
 `;
-// pr용 주석

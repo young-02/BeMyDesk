@@ -162,9 +162,11 @@ function SnsNickname() {
             isSocial: true,
           };
           await setDoc(collectionRef, payload);
+          localStorage.setItem('isSignUpRoute', 'true');
           router.push({
             pathname: '/post-list',
-            query: { isSignUpRoute: true },
+            // asPath: '/post-list',
+            // query: { isSignUpRoute: true },
           });
         }
       } catch (error) {

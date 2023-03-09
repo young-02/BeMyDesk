@@ -10,16 +10,21 @@ import { useEffect, useState } from 'react';
 export default function PostList() {
   // 현재 페이지의 query 값을 가져옵니다.
   const router = useRouter();
-  const isSignUpRoute = router.query.isSignUpRoute;
+
   const { query: currentQuery }: any = router;
   const { isLoading, isError, data: postList, error } = useFilter(currentQuery);
 
   const [isModalOn, setIsModalOn] = useState(false);
 
   useEffect(() => {
-    if (isSignUpRoute) {
+    if (localStorage.getItem('isSignUpRoute')) {
       setIsModalOn(true);
     }
+
+    return () => {
+      setIsModalOn(false);
+      localStorage.clear();
+    };
   }, []);
 
   return (
