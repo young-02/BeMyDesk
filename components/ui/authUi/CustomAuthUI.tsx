@@ -40,7 +40,13 @@ const StyledDiv = styled.div<AuthUITypeProps>`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
   padding: 20px 40px;
-
+  @media (max-width: 466px) {
+    margin-top: 20px;
+    height: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    width: 466px;
+  }
   .headingDiv {
     font-style: normal;
     font-weight: 700;

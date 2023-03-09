@@ -14,7 +14,7 @@ function SignUpModal({ isModalOn, setIsModalOn }: any) {
             <p className="headerText">회원가입을 축하드려요!</p>
             <Image
               className="profileImage"
-              src="/images/laptop.png"
+              src="/images/workingDesk.png"
               alt="ProfileImage"
               width={150}
               height={150}

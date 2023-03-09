@@ -439,7 +439,9 @@ const SelectBox = styled.div`
     font-weight: 500;
     font-size: 14px;
     color: #5b5b5b;
-
+    @media (max-width: 420px) {
+      font-size: 10px;
+    }
     &.active {
       border: 0.0625rem solid #206efb;
       color: #206efb;
@@ -451,6 +453,9 @@ const SelectBox = styled.div`
         border-right: 6px solid transparent;
         border-top: 0;
         border-bottom: 6px solid #206efb;
+        @media (max-width: 420px) {
+          margin-left: 0;
+        }
       }
     }
     &.error {
@@ -474,7 +479,10 @@ const SelectBox = styled.div`
     background: #fff;
     box-shadow: 0px 4px 6px 0px #00000040;
     overflow: hidden;
-
+    @media (max-width: 420px) {
+      font-size: 13px;
+      width: 120%;
+    }
     > li {
       padding: 20px;
 
