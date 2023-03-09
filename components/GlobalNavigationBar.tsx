@@ -9,6 +9,7 @@ import useCheckLogin from '../Hooks/useCheckLogin';
 import { useMediaQuery } from 'react-responsive';
 import useSearch from '@/Hooks/useSearch';
 import MobileMenu from './main/MobileMenu';
+import { logEvent, resetAmplitude } from '@/amplitude/amplitude';
 
 function GlobalNavigationBar() {
   const router = useRouter();
@@ -146,12 +147,28 @@ function GlobalNavigationBar() {
               </LoginGNBDiv>
             ) : (
               <LogOutGNBDiv>
-                <Link href="/auth/sign-in" className="button">
+                <p
+                  onClick={() => {
+                    router.push('/auth/sign-in');
+                    logEvent('GNB 로그인', {
+                      from: 'globalNavigationBar / 로그인',
+                    });
+                  }}
+                  className="button"
+                >
                   로그인
-                </Link>
-                <Link href="/auth/sign-up" className="button">
+                </p>
+                <p
+                  onClick={() => {
+                    router.push('/auth/sign-up');
+                    logEvent('GNB 회원가입', {
+                      from: 'globalNavigationBar / 회원가입',
+                    });
+                  }}
+                  className="button"
+                >
                   회원가입
-                </Link>
+                </p>
               </LogOutGNBDiv>
             )}
           </div>

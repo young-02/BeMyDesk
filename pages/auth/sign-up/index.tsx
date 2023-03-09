@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CustomButton from '../../../components/ui/CustomButton';
+import { logEvent } from '@/amplitude/amplitude';
 type Props = {};
 
 export default function SignUp({}: Props) {
@@ -452,7 +453,12 @@ export default function SignUp({}: Props) {
             paddingColumns="0.875"
             paddingRow="0.875"
             fontSize="1.25"
-            onClick={onClickConfirmButton}
+            onClick={() => {
+              onClickConfirmButton();
+              logEvent('회원가입버튼', {
+                from: 'auth/sign-up / 직접회원가입',
+              });
+            }}
             disabled={notAllow}
           >
             회원가입

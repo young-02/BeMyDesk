@@ -16,6 +16,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import useGetReaction from '../../../Hooks/useGetReaction';
 import useCheckUser from '@/Hooks/useCheckUser';
+import { setAmplitudeUserId } from '@/amplitude/amplitude';
 type Props = {};
 
 export default function SignIn({}: Props) {
@@ -77,12 +78,14 @@ export default function SignIn({}: Props) {
   }
 
   //로그인 버튼동작
-  const onClickLoginButton = () => {
+  const onClickLoginButton = async () => {
     if (emailValid && pwValid) {
-      signInWithEmailAndPassword(auth, email, pw)
-        .then(() => {
+      await signInWithEmailAndPassword(auth, email, pw)
+        .then((UserCredential) => {
+          console.log('UserCredential', UserCredential.user.uid);
+          setAmplitudeUserId(UserCredential.user.uid);
           alert('로그인 성공');
-          console.log('login sucess', auth.currentUser);
+
           router.push('/post-list');
         })
         .catch((error) => {
@@ -170,6 +173,7 @@ export default function SignIn({}: Props) {
         // };
 
         // await setDoc(collectionRef, payload);
+
         router.push('/auth/sns-nickname');
       } else {
         router.push('/post-list');
@@ -203,6 +207,7 @@ export default function SignIn({}: Props) {
         // };
 
         // await setDoc(collectionRef, payload);
+
         router.push('/auth/sns-nickname');
       } else {
         router.push('/post-list');
