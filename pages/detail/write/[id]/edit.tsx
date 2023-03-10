@@ -39,7 +39,6 @@ const Edit = (props: Props) => {
           mode={'update'}
         />
       )}
-      <h1>게시글 수정</h1>
     </>
   );
 };
