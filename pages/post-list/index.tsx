@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import PostListFilterBar from '../../components/PostListFilterBar';
-import PostListCard from '../../components/PostListCard';
+import PostListCard from '../../components/post-list/PostListCard';
 import useFilter from '../../Hooks/useFilter';
 
 import SignUpModal from '@/components/post-list/SignUpModal';

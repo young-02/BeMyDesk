@@ -2,18 +2,18 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
-import scrap from '../public/images/scrapIcon.png';
-import main1 from '../public/images/mainSlide/main1.png';
-import main2 from '../public/images/mainSlide/main2.png';
-import main3 from '../public/images/mainSlide/main3.png';
-import main4 from '../public/images/mainSlide/main4.png';
-import main5 from '../public/images/mainSlide/main5.png';
-import designer from '../public/images/category/designer.jpg';
-import developer from '../public/images/category/developer.jpg';
-import student from '../public/images/category/student.jpg';
-import gamer from '../public/images/category/gamer.jpg';
+import scrap from '../../public/images/scrapIcon.png';
+import main1 from '../../public/images/mainSlide/main1.png';
+import main2 from '../../public/images/mainSlide/main2.png';
+import main3 from '../../public/images/mainSlide/main3.png';
+import main4 from '../../public/images/mainSlide/main4.png';
+import main5 from '../../public/images/mainSlide/main5.png';
+import designer from '../../public/images/category/designer.jpg';
+import developer from '../../public/images/category/developer.jpg';
+import student from '../../public/images/category/student.jpg';
+import gamer from '../../public/images/category/gamer.jpg';
 import { useRouter } from 'next/router';
-import useResponsive from '../Hooks/useResponsive';
+import useResponsive from '../../Hooks/useResponsive';
 
 const text = {
   inactive: { opacity: 0, translateY: 120 },
