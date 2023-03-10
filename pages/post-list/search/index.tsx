@@ -11,7 +11,7 @@ import { dbService } from '../../../shared/firebase';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 
-import PostListCard from '../../../components/PostListCard';
+import PostListCard from '../../../components/post-list/PostListCard';
 import PostListFilterBar from '../../../components/PostListFilterBar';
 import CustomError from '@/components/ui/error/CustomError';
 

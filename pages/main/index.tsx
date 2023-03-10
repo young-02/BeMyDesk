@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import gradient from '../../public/images/gradient.png';
 import Image from 'next/image';
-import MainSlide from '../../components/MainSlide';
+import MainSlide from '../../components/main/MainSlide';
 import HeadSeo from '@/components/ui/HeadSeo';
 
 const item = {

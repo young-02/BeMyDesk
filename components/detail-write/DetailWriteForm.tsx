@@ -14,8 +14,8 @@ import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import { useQueryClient } from 'react-query';
 import { logEvent } from '@/amplitude/amplitude';
-import HeadSeo from '../ui/HeadSeo';
 import { useMediaQuery } from 'react-responsive';
+import HeadSeo from '../ui/HeadSeo';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
