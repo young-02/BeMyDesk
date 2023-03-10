@@ -68,3 +68,7 @@ declare interface UserInfoType {
   follower: string[];
   introduction: string;
 }
+
+declare interface HeadInfoProps {
+  title?: string;
+}

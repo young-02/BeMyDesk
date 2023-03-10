@@ -14,6 +14,7 @@ import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import { useQueryClient } from 'react-query';
 import { logEvent } from '@/amplitude/amplitude';
+import HeadSeo from '../ui/HeadSeo';
 import { useMediaQuery } from 'react-responsive';
 axios.defaults.withCredentials = true;
 
@@ -320,6 +321,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       )}
       <DetailWriteLayout>
         <DetailWriteWrap>
+          <HeadSeo title="글쓰기 | 내가 꾸민 데스크테리어 자랑 커뮤니티" />
           <JobSelectBox>
             <select
               className="job_select"

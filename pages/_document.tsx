@@ -35,7 +35,7 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head />
+        <Head lang="ko" />
         <body>
           <Main />
           <div id="modal-root" />
