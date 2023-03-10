@@ -6,6 +6,7 @@ import useFilter from '../../Hooks/useFilter';
 import SignUpModal from '@/components/post-list/SignUpModal';
 import { useEffect, useState } from 'react';
 import HeadSeo from '@/components/ui/HeadSeo';
+import CustomError from '@/components/ui/error/CustomError';
 
 export default function PostList() {
   // 현재 페이지의 query 값을 가져옵니다.
@@ -40,6 +41,11 @@ export default function PostList() {
         {postList?.map((post) => (
           <PostListCard key={post.id} post={post} />
         ))}
+        {postList?.length === 0 && (
+          <CustomError title="필터 결과가 없어요!">
+            <p>필터를 삭제하거나</p> <p>다른 검색어를 입력해 주세요</p>
+          </CustomError>
+        )}
       </PostListBox>
     </PostListLayout>
   );
@@ -50,7 +56,7 @@ const PostListLayout = styled.div`
   flex-direction: column;
   align-items: center;
   /* width: 100vw; */
-  /* height: 100vh; */
+  min-height: 61vh;
   margin-top: 8rem;
 `;
 
