@@ -13,7 +13,7 @@ import { usePost } from '../../Hooks/usePost';
 import { QueryClient, useQueryClient } from 'react-query';
 import CustomModal from '../ui/CustomModal';
 import CustomButton from '../ui/CustomButton';
-import { useMediaQuery } from 'react-responsive';
+import useResponsive from '@/Hooks/useResponsive';
 
 type Props = {};
 
@@ -35,17 +35,11 @@ export default function DetailView({}) {
   const updatePost = async () => {
     router.push(`/detail/write/${postId}/edit`);
   };
-  //반응형
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 820 });
-  const isDesktopSize = useMediaQuery({ minWidth: 821 });
 
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 820,
+    minWidth: 821,
+  });
 
   return (
     <>
