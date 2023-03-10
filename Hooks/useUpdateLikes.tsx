@@ -122,6 +122,7 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
 
         // 좋아요 체크 상태값을 변경합니다.
         setIsLikesClicked(!isLikesClicked);
+        queryClient.removeQueries('post', postId);
       },
 
       onError: (err, newTodo, context) => {
@@ -132,7 +133,7 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
         );
       },
 
-      // 실패, 성공 여하와 상관없이 데이터를 refetching 하지 않습니다.
+      // 좋아요 값이 변경된
       onSettled: () => {},
     },
   );
@@ -176,7 +177,7 @@ export const useUpdateLikes = (currentUserId: any, post: PostType) => {
     },
   );
 
-  // 💚포스트 리스트 페이지 좋아요 업데이트
+  // 💚마이 페이지 좋아요 업데이트
   const { mutate: myPostMutate } = useMutation(
     () => updateLikes({ post, newLikes }),
     {
