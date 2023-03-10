@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
-import activeLikes from '../public/images/userReaction/activeLikes.png';
-import inactiveLikes from '../public/images/userReaction/inactiveLikes.png';
+import activeLikes from '../../public/images/userReaction/activeLikes.png';
+import inactiveLikes from '../../public/images/userReaction/inactiveLikes.png';
 import { doc, updateDoc } from 'firebase/firestore';
-import { dbService } from '../shared/firebase';
+import { dbService } from '../../shared/firebase';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { transDate } from '../utils/transDate';
+import { transDate } from '../../utils/transDate';
 import { auth } from '@/shared/firebase';
-import { useUpdateLikes } from '../Hooks/useUpdateLikes';
+import { useUpdateLikes } from '../../Hooks/useUpdateLikes';
 
 const PostListCard = ({ post }: { post: PostType }) => {
   const router = useRouter();
