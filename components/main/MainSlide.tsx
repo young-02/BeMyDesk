@@ -791,9 +791,9 @@ const CategoryCardBox = styled.div`
     z-index: 1;
     font-size: 1rem;
     font-weight: 400;
-    display: none;
+    opacity: 0;
     white-space: nowrap;
-    left: 2rem;
+    left: 0rem;
     bottom: 2rem;
   }
 
@@ -802,6 +802,7 @@ const CategoryCardBox = styled.div`
     transition: all 0.8s ease-in-out;
 
     > h3 {
+      animation: rotate 0.3s linear;
       transform: rotate(0deg);
       left: 2rem;
       bottom: 4rem;
@@ -813,12 +814,46 @@ const CategoryCardBox = styled.div`
     }
 
     > p {
-      display: block;
+      animation: fadeInPosition 0.4s ease-in-out;
+      opacity: 100;
+      left: 2rem;
 
       @media (max-width: 1000px) {
         left: 1rem;
         bottom: 0.75rem;
       }
+    }
+  }
+
+  @keyframes rotate {
+    from {
+      -webkit-transform: rotate(-90deg);
+      -o-transform: rotate(-90deg);
+      transform: rotate(-90deg);
+    }
+    to {
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+  }
+
+  @keyframes fadeInPosition {
+    from {
+      -webkit-transform: translateX(-4rem);
+      -o-transform: translateX(-4rem);
+      transform: translateX(-4rem);
+      -webkit-opacity: 0;
+      -o-opacity: 0;
+      opacity: 0;
+    }
+    to {
+      -webkit-transform: translateX(0rem);
+      -o-transform: translateX(0rem);
+      transform: translateX(0rem);
+      -webkit-opacity: 100;
+      -o-opacity: 100;
+      opacity: 100;
     }
   }
 `;
