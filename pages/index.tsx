@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import gradient from '../public/images/gradient.png';
 import Image from 'next/image';
-import MainSlide from '@/components/MainSlide';
 import HeadSeo from '@/components/ui/HeadSeo';
+import MainSlide from '@/components/main/MainSlide';
 
 const item = {
   inactive: { opacity: 0, translateY: 120 },
