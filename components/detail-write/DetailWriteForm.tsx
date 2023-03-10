@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import DetailWriteSearch from './DetailWriteSearch';
 import DetailWriteProductCard from './DetailWriteProductCard';
@@ -14,6 +14,7 @@ import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import { useQueryClient } from 'react-query';
 import { logEvent } from '@/amplitude/amplitude';
+import { useMediaQuery } from 'react-responsive';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
@@ -34,7 +35,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
   // 검색해서 선택한 제품 state
   const [list, setList] = useState<any[]>(initialValues?.list);
-  // console.log(list, 'list');
+
   // 검색해서 선택한 제품들을 넣는 state
   const [selectList, setSelectList] = useState<any[]>(
     initialValues?.selectList,
@@ -49,6 +50,9 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   // 이미지 프리뷰 state
   const [attachment, setAttachment] = useState(initialValues?.attachment);
 
+  const [isMobile, setIsMobile] = useState<number>(0);
+  const isMobileSize = useMediaQuery({ minWidth: 690 });
+
   // 직접입력 토글버튼 state
   const [isNotData, setIsNotData] = useState(false);
 
@@ -61,6 +65,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     setContent(value);
   };
 
+  // 유효성 검사 후 포커스
   const jobRef = useRef<any>();
   const titleRef = useRef<any>();
 
@@ -283,6 +288,10 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     router.push('/post-list');
   };
 
+  useEffect(() => {
+    setIsMobile(isMobileSize);
+  }, [isMobileSize]);
+
   return (
     <>
       {isModalShow && (
@@ -310,195 +319,233 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         />
       )}
       <DetailWriteLayout>
-        <JobSelectBox>
-          <select
-            className="job_select"
-            onChange={getJob}
-            value={selectJob}
-            ref={jobRef}
-          >
-            <option className="optionOne">선택해주세요</option>
-            <option value="개발자">개발자</option>
-            <option value="디자이너">디자이너</option>
-            <option value="학생">학생</option>
-            <option value="게이머">게이머</option>
-          </select>
-          <p className="job_span"> 의 책상</p>
-        </JobSelectBox>
-        <TitleInput
-          type="text"
-          placeholder="제목을 입력해주세요"
-          maxLength={30}
-          value={title}
-          onChange={inputTitle}
-          ref={titleRef}
-        />
-        <QuillEditor onChange={changeEditorText} value={content} />
-        <DetailWriteBox>
-          <div className="title_span_a">데스크테리어 이미지를 추가해주세요</div>
-          <div className="preview_image_wrap">
-            {attachment.length === 0 && (
-              <div className="image-container">
-                <div className="no-preview-box">
-                  <Image
-                    src={'/images/preViewImg.png'}
-                    alt="preview"
-                    width={64}
-                    height={64}
-                  />
-                </div>
+        <DetailWriteWrap>
+          <JobSelectBox>
+            <select
+              className="job_select"
+              onChange={getJob}
+              value={selectJob}
+              ref={jobRef}
+            >
+              <option className="optionOne">선택해주세요</option>
+              <option value="개발자">개발자</option>
+              <option value="디자이너">디자이너</option>
+              <option value="학생">학생</option>
+              <option value="게이머">게이머</option>
+            </select>
+            <p className="job_span"> 의 책상</p>
+          </JobSelectBox>
+          <TitleInput
+            type="text"
+            placeholder="제목을 입력해주세요"
+            maxLength={30}
+            value={title}
+            onChange={inputTitle}
+            ref={titleRef}
+          />
+          <QuillEditor onChange={changeEditorText} value={content} />
+          <DetailWriteBox>
+            <div className="title_span_a">
+              데스크테리어 이미지를 추가해주세요
+            </div>
+            <div className="preview_image_scroll">
+              <div className="preview_image_wrap">
+                {attachment.length === 0 && (
+                  <div className="image-container">
+                    <div className="no-preview-box">
+                      <Image
+                        src={'/images/preViewImg.png'}
+                        alt="preview"
+                        width={64}
+                        height={64}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {attachment.length > 0 &&
+                  attachment?.map((image: any) => (
+                    <div className="image-container" key={image}>
+                      <Image
+                        className="preview_image"
+                        src={image}
+                        alt="preview"
+                        width={200}
+                        height={200}
+                      />
+
+                      <Image
+                        className="closeBtnImage"
+                        src={'/images/close.png'}
+                        width={15}
+                        height={15}
+                        alt="closeBtnImage"
+                        onClick={() => {
+                          logEvent('image delete', { from: 'detailWrite' });
+                          deleteImage(image);
+                        }}
+                      />
+                    </div>
+                  ))}
               </div>
+            </div>
+
+            <DeskPhotoBox>
+              <div className="photo_wrap">
+                <label className="desk_label" htmlFor="deskImage">
+                  이미지를 업로드해주세요 {attachment.length}/2
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    id="deskImage"
+                    name="deskImage"
+                    onChange={selectPreview}
+                  />
+                </label>
+              </div>
+            </DeskPhotoBox>
+          </DetailWriteBox>
+          <DetailWriteBox>
+            <div className="title_span_box">
+              <div className="title_span_b">사용한 제품을 선택해주세요</div>
+              <CustomButton
+                onClick={() => {
+                  showSearchModal();
+                  logEvent('search product', {
+                    from: 'detailWrite / 기기검색버튼',
+                  });
+                }}
+                color="#206efb"
+                border="1"
+                paddingColumns="1"
+                paddingRow="1"
+                fontColor="#fff"
+                fontSize="1"
+                borderRadius="1.25"
+                fontWeight="700"
+                // fontSize="1"
+              >
+                기기검색
+              </CustomButton>
+            </div>
+            {selectList.length === 0 && (
+              <NoPreviewImageBox
+                onClick={() => {
+                  showSearchModal();
+                  logEvent('click no Product', {
+                    from: 'detailWrite / 제품없음이미지',
+                  });
+                }}
+              >
+                <div className="laptop_box">
+                  <Image
+                    src={'/images/laptop.png'}
+                    alt="isYourProduct"
+                    width={600}
+                    height={600}
+                    className="laptop"
+                  />
+                  <div className="check_text">등록하신 제품이 없어요</div>
+                </div>
+              </NoPreviewImageBox>
             )}
 
-            {attachment.length > 0 &&
-              attachment?.map((image: any) => (
-                <div className="image-container" key={image}>
-                  <Image
-                    className="preview_image"
-                    src={image}
-                    alt="preview"
-                    width={200}
-                    height={200}
-                  />
+            <DetailWriteProductCardBox>
+              <DetailWriteProductCard
+                key={selectList}
+                selectList={selectList}
+                setSelectList={setSelectList}
+                list={list}
+                setList={setList}
+              />
+            </DetailWriteProductCardBox>
+          </DetailWriteBox>
+          <DetailWriteButtonBox>
+            {isMobile ? (
+              <CustomButton
+                fontColor="#000"
+                borderRadius="1.25"
+                width="10"
+                margin="0 1.5"
+                fontWeight="700"
+                fontSize="1.25"
+                onClick={
+                  mode === 'update'
+                    ? () => {
+                        logEvent('글 수정 취소', {
+                          from: 'detailWrite / 글 수정 취소버튼',
+                        });
+                        router.push(`/detail/${router.query.id}`);
+                      }
+                    : () => {
+                        logEvent('글 작성 취소', {
+                          from: 'detailWrite /글 작성 취소버튼',
+                        });
+                        router.push('/post-list');
+                      }
+                }
+              >
+                취소
+              </CustomButton>
+            ) : null}
 
-                  <Image
-                    className="closeBtnImage"
-                    src={'/images/close.png'}
-                    width={15}
-                    height={15}
-                    alt="closeBtnImage"
-                    onClick={() => {
-                      logEvent('image delete', { from: 'detailWrite' });
-                      deleteImage(image);
-                    }}
-                  />
-                </div>
-              ))}
-          </div>
-
-          <DeskPhotoBox>
-            <div className="photo_wrap">
-              <label className="desk_label" htmlFor="deskImage">
-                이미지를 업로드해주세요 {attachment.length}/2
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  id="deskImage"
-                  name="deskImage"
-                  onChange={selectPreview}
-                />
-              </label>
-            </div>
-          </DeskPhotoBox>
-        </DetailWriteBox>
-        <DetailWriteBox>
-          <div className="title_span_box">
-            <div className="title_span_b">사용하신 제품을 선택해주세요</div>
-            <CustomButton
-              onClick={() => {
-                showSearchModal();
-                logEvent('search product', {
-                  from: 'detailWrite / 기기검색버튼',
-                });
-              }}
-              color="#206efb"
-              border="1"
-              paddingColumns="1"
-              paddingRow="1"
-              fontColor="#fff"
-              fontSize="1"
-              borderRadius="1.25"
-              fontWeight="700"
-              // fontSize="1"
-            >
-              기기검색
-            </CustomButton>
-          </div>
-          {selectList.length === 0 && (
-            <NoPreviewImageBox
-              onClick={() => {
-                showSearchModal();
-                logEvent('click no Product', {
-                  from: 'detailWrite / 제품없음이미지',
-                });
-              }}
-            >
-              <div className="laptop_box">
-                <Image
-                  src={'/images/laptop.png'}
-                  alt="isYourProduct"
-                  width={600}
-                  height={600}
-                  className="laptop"
-                />
-                <div className="check_text">등록하신 제품이 없어요</div>
-              </div>
-            </NoPreviewImageBox>
-          )}
-
-          <DetailWriteProductCardBox>
-            <DetailWriteProductCard
-              key={selectList}
-              selectList={selectList}
-              setSelectList={setSelectList}
-              list={list}
-              setList={setList}
-            />
-          </DetailWriteProductCardBox>
-        </DetailWriteBox>
-        <DetailWriteButtonBox>
-          <CustomButton
-            fontColor="#000"
-            borderRadius="1.25"
-            width="10"
-            margin="0 1.5"
-            fontWeight="700"
-            fontSize="1.25"
-            onClick={
-              mode === 'update'
-                ? () => {
-                    logEvent('글 수정 취소', {
-                      from: 'detailWrite / 글 수정 취소버튼',
-                    });
-                    router.push(`/detail/${router.query.id}`);
-                  }
-                : () => {
-                    logEvent('글 작성 취소', {
-                      from: 'detailWrite /글 작성 취소버튼',
-                    });
-                    router.push('/post-list');
-                  }
-            }
-          >
-            취소
-          </CustomButton>
-          <CustomButton
-            backgroundColor="#206efb"
-            fontColor="#fff"
-            borderRadius="1.25"
-            width="10"
-            fontWeight="700"
-            fontSize="1.25"
-            onClick={
-              mode === 'update'
-                ? () => {
-                    updatePost(selectList);
-                    logEvent('글 수정완료', {
-                      from: 'detailWrite / 글 수정완료 버튼',
-                    });
-                  }
-                : () => {
-                    submitPostForm();
-                    logEvent('글 작성 완료', {
-                      from: 'detailWrite / 글 작성완료 버튼',
-                    });
-                  }
-            }
-          >
-            완료
-          </CustomButton>
-        </DetailWriteButtonBox>
+            {isMobile ? (
+              <CustomButton
+                backgroundColor="#206efb"
+                fontColor="#fff"
+                borderRadius="1.25"
+                width="10"
+                fontWeight="700"
+                fontSize="1.25"
+                onClick={
+                  mode === 'update'
+                    ? () => {
+                        updatePost(selectList);
+                        logEvent('글 수정완료', {
+                          from: 'detailWrite / 글 수정완료 버튼',
+                        });
+                      }
+                    : () => {
+                        submitPostForm();
+                        logEvent('글 작성 완료', {
+                          from: 'detailWrite / 글 작성완료 버튼',
+                        });
+                      }
+                }
+              >
+                완료
+              </CustomButton>
+            ) : (
+              <CustomButton
+                backgroundColor="#206efb"
+                fontColor="#fff"
+                borderRadius="1.25"
+                width="35"
+                height="4"
+                fontWeight="700"
+                fontSize="1.25"
+                onClick={
+                  mode === 'update'
+                    ? () => {
+                        updatePost(selectList);
+                        logEvent('글 수정완료', {
+                          from: 'detailWrite / 글 수정완료 버튼',
+                        });
+                      }
+                    : () => {
+                        submitPostForm();
+                        logEvent('글 작성 완료', {
+                          from: 'detailWrite / 글 작성완료 버튼',
+                        });
+                      }
+                }
+              >
+                완료
+              </CustomButton>
+            )}
+          </DetailWriteButtonBox>
+        </DetailWriteWrap>
       </DetailWriteLayout>
     </>
   );
@@ -508,15 +555,35 @@ export default DetailWriteForm;
 
 const DetailWriteLayout = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
-  margin-top: 9rem;
+  /* margin: 0 3rem; */
+  /* width: 100%; */
+`;
+
+const DetailWriteWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center;
+  align-items: center; */
+  /* margin: 0 auto; */
+  margin-top: 5.5rem;
   margin-bottom: 4rem;
   width: 75%;
-  padding: 2.5rem;
+  /* padding: 2.5rem; */
   box-sizing: border-box;
+
+  @media (min-width: 1px) and (max-width: 375px) {
+    width: 90%;
+  }
+
+  @media (min-width: 376px) and (max-width: 690px) {
+    width: 80%;
+  }
+
+  @media (min-width: 691px) and (max-width: 1200px) {
+    width: 85%;
+  }
 `;
 
 const JobSelectBox = styled.div`
@@ -552,6 +619,23 @@ const TitleInput = styled.input`
   border: 1px solid #0000;
   border-bottom: 1px solid #868e96;
   font-size: 1.25rem;
+
+  @media (min-width: 1px) and (max-width: 375px) {
+    font-size: 1rem;
+  }
+
+  @media (min-width: 376px) and (max-width: 690px) {
+    font-size: 1.1rem;
+    ::placeholder {
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (min-width: 691px) and (max-width: 1200px) {
+    ::placeholder {
+      font-size: 1.25rem;
+    }
+  }
 `;
 
 const DetailWriteButtonBox = styled.div`
@@ -560,6 +644,16 @@ const DetailWriteButtonBox = styled.div`
   width: 100%;
   height: 3.25rem;
   margin-top: 3rem;
+
+  @media (min-width: 1px) and (max-width: 375px) {
+    margin-top: 1.25rem;
+    justify-content: center;
+  }
+
+  @media (min-width: 376px) and (max-width: 690px) {
+    margin-top: 1.5rem;
+    justify-content: center;
+  }
 
   .btn {
     background-color: #206efb;
@@ -585,9 +679,16 @@ const DetailWriteBox = styled.div`
   flex-direction: column;
   width: 100%;
 
+  .preview_image_scroll {
+    display: flex;
+    width: 100%;
+    /* overflow: hidden; */
+    overflow-x: scroll;
+  }
+
   .image-container {
     position: relative;
-    width: 35%;
+    width: 45%;
     height: 15rem;
     border: 1px solid #868e96;
     border-radius: 1.25rem;
@@ -595,6 +696,19 @@ const DetailWriteBox = styled.div`
     align-items: center;
     overflow: hidden;
     margin-right: 1rem;
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      width: 100%;
+      margin-right: 0.3rem;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      width: 100%;
+    }
+
+    @media (min-width: 691px) and (max-width: 1200px) {
+      width: 50%;
+    }
   }
 
   .no-preview-box {
@@ -624,6 +738,19 @@ const DetailWriteBox = styled.div`
   .preview_image_wrap {
     display: flex;
     flex-direction: row;
+    @media (min-width: 1px) and (max-width: 375px) {
+      width: 100%;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      width: 100%;
+    }
+    @media (min-width: 691px) and (max-width: 1200px) {
+      width: 100%;
+    }
+    @media (min-width: 1201px) {
+      width: 100%;
+    }
   }
 
   .test_image {
@@ -639,6 +766,25 @@ const DetailWriteBox = styled.div`
     text-align: center;
     margin-top: 3rem;
     margin-bottom: 0.5rem;
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.25rem;
+      margin-top: 0.5rem;
+      word-break: keep-all;
+      justify-content: center;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 1200px) {
+    }
   }
 
   .title_span_a {
@@ -650,6 +796,25 @@ const DetailWriteBox = styled.div`
     margin-right: 1rem;
     margin-top: 3rem;
     align-content: center;
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.25rem;
+      margin-top: 0.5rem;
+      /* word-break: keep-all; */
+      text-align: center;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 1200px) {
+    }
   }
 
   .title_span_b {
@@ -658,6 +823,25 @@ const DetailWriteBox = styled.div`
     color: #17171c;
     line-height: 2rem;
     align-content: center;
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.25rem;
+      /* word-break: keep-all; */
+      /* margin-top: 0.5rem; */
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.25rem;
+      /* word-break: keep-all; */
+      /* margin-top: 1rem; */
+    }
+
+    @media (max-width: 1200px) {
+    }
   }
 `;
 
@@ -695,6 +879,19 @@ const DeskPhotoBox = styled.div`
       > input {
         display: none;
       }
+
+      @media (min-width: 1px) and (max-width: 375px) {
+        font-size: 1rem;
+        word-break: break-all;
+      }
+
+      @media (min-width: 376px) and (max-width: 690px) {
+        font-size: 1.1rem;
+        word-break: keep-all;
+      }
+
+      @media (min-width: 691px) and (max-width: 1200px) {
+      }
     }
   }
 `;
@@ -718,6 +915,21 @@ const NoPreviewImageBox = styled.div`
     &:hover {
       border: 1px solid #206efb;
     }
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      width: 100%;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      width: 100%;
+    }
+
+    @media (min-width: 691px) and (max-width: 1200px) {
+      width: 49%;
+    }
+    @media (min-width: 1201px) {
+      width: 45%;
+    }
   }
 
   .laptop {
@@ -731,6 +943,14 @@ const NoPreviewImageBox = styled.div`
     opacity: 0.2;
     transform: rotate(14.85deg);
     padding-left: 3rem;
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      padding-left: 1.25rem;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      padding-left: 2rem;
+    }
   }
 
   .check_text {
@@ -747,6 +967,19 @@ const NoPreviewImageBox = styled.div`
 
     &:hover {
       color: #206efb;
+    }
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      font-size: 1rem;
+      word-break: keep-all;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      font-size: 1.1rem;
+    }
+
+    @media (min-width: 691px) and (max-width: 1200px) {
+      font-size: 1.25rem;
     }
   }
 `;
