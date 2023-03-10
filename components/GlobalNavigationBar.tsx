@@ -27,12 +27,6 @@ function GlobalNavigationBar() {
   //모바일 서브메뉴
   const [isOpen, setIsOpen] = useState(false);
 
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
-
   const mainPath = router.route === '/';
   console.log(router, mainPath);
 

@@ -406,7 +406,7 @@ const SlideContentsWrapper = styled.div`
     padding: 0rem calc(22vw - 3rem);
   }
 
-  @media (max-width: 500px) {
+  @media (max-width: 414px) {
     padding: 0rem 1.25rem;
   }
 `;
