@@ -1,11 +1,7 @@
-import { dbService } from '@/shared/firebase';
-import { doc, getDoc } from 'firebase/firestore';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { HiOutlineTrash } from 'react-icons/hi';
-import { FcLike } from 'react-icons/fc';
-import { useUpdateLikes } from '@/Hooks/useUpdateLikes';
+
 import PostCard from './PostCard';
 
 function MyPost({ myPost, postCount, currentUserId }: any) {
