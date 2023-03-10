@@ -2,35 +2,36 @@ import React from 'react';
 import styled from 'styled-components';
 
 declare interface CustomInputProps {
-  children?: React.ReactNode;
-  type?: string;
-  subHeadingText?: string;
-  descriptionText?: string;
-  placeholder?: string;
-  disabled?: boolean;
+  subHeadingText: string;
+  descriptionText: string;
+  errorMessageText?: string;
+  width: string;
 }
 
 function CustomInput({
-  type,
   subHeadingText,
   descriptionText,
-  placeholder,
-  disabled,
+  errorMessageText,
+  width,
+  ...rest
 }: CustomInputProps) {
   return (
-    <CustomInputDiv>
+    <CustomInputDiv width={width}>
       <div className="firstLineDiv">
         <p className="subHeading">{subHeadingText}</p>
         <p className="description">{descriptionText}</p>
       </div>
       <div className="SecondLineDiv">
-        <input type={type} placeholder={placeholder} disabled={disabled} />
+        <input {...rest} />
+      </div>
+      <div className="errorMessageDiv">
+        {errorMessageText && <p className="errorMessage">{errorMessageText}</p>}
       </div>
     </CustomInputDiv>
   );
 }
 
-const CustomInputDiv = styled.div`
+const CustomInputDiv = styled.div<CustomInputProps>`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
@@ -43,6 +44,7 @@ const CustomInputDiv = styled.div`
       margin: 0 0 10px 5px;
     }
     .description {
+      padding-top: 0.15rem;
       font-size: 0.75rem;
       font-weight: 500;
       color: #adb5bd;
@@ -54,7 +56,7 @@ const CustomInputDiv = styled.div`
       border-radius: 0.625rem;
       padding: 0.8125rem 1.25rem;
       border: 0.0625rem solid #adb5bd;
-      width: 90%;
+      width: ${(props) => (props.width ? props.width + '%' : '90%')};
       font-weight: 500;
       font-size: 14px;
 
@@ -64,6 +66,18 @@ const CustomInputDiv = styled.div`
       &:focus-within {
         border: 1px solid #17171c;
       }
+    }
+  }
+  .errorMessageDiv {
+    margin: 5px 0 0 5px;
+    height: 15px;
+    .errorMessage {
+      font-family: 'Pretendard';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 16px;
+      color: #f83e4b;
     }
   }
 `;

@@ -14,7 +14,9 @@ function Footer({}: Props) {
     if (
       pathname === '/main' ||
       pathname === '/auth/sign-in' ||
-      pathname === '/auth/sign-up'
+      pathname === '/auth/sign-up' ||
+      pathname === '/auth/sns-nickname' ||
+      pathname === '/auth/find-password'
     ) {
       setIsActive(false);
     } else {
@@ -55,10 +57,11 @@ function Footer({}: Props) {
 export default Footer;
 
 const FooterLayout = styled.div`
-  position: static;
+  position: relative;
   bottom: 0;
   left: 0;
   width: 100%;
+  margin-top: 2rem;
   padding: 1.25rem;
   display: flex;
   justify-content: center;

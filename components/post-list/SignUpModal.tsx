@@ -6,6 +6,10 @@ import Image from 'next/image';
 import styled from 'styled-components';
 
 function SignUpModal({ isModalOn, setIsModalOn }: any) {
+  const modalButtonHandler = () => {
+    setIsModalOn(false);
+    localStorage.clear();
+  };
   return (
     <>
       {isModalOn && (
@@ -14,7 +18,7 @@ function SignUpModal({ isModalOn, setIsModalOn }: any) {
             <p className="headerText">회원가입을 축하드려요!</p>
             <Image
               className="profileImage"
-              src="/images/laptop.png"
+              src="/images/workingDesk.png"
               alt="ProfileImage"
               width={150}
               height={150}
@@ -27,7 +31,7 @@ function SignUpModal({ isModalOn, setIsModalOn }: any) {
               paddingColumns="0.575"
               paddingRow="0.575"
               fontSize="1"
-              onClick={() => setIsModalOn(false)}
+              onClick={modalButtonHandler}
             >
               확인
             </CustomButton>

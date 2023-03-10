@@ -10,6 +10,7 @@
     "vercel-deploy": "next build && next export"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^1.9.1",
     "@next/font": "13.1.6",
     "@tanstack/react-query": "^4.24.4",
     "@types/node": "18.13.0",

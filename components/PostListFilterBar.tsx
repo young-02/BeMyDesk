@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import dropDown from '../public/images/lightThemeDropdown.png';
+import { logEvent } from '@/amplitude/amplitude';
 
 const PostListFilterBar = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const PostListFilterBar = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleDropdown = (e: any) => {
+  const handleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
@@ -45,7 +46,15 @@ const PostListFilterBar = () => {
             currentQuery.order == 'category' ? 'selected' : 'unselected'
           }
         >
-          <div className="selector" onClick={handleDropdown}>
+          <div
+            className="selector"
+            onClick={() => {
+              handleDropdown();
+              logEvent('직업별 필터 드롭다운', {
+                from: 'post-list /직업별 필터 드롭다운',
+              });
+            }}
+          >
             <div>{currentSelect}</div>
             <div
               className={isOpen ? 'dropdown-toggle-rotate' : 'dropdown-toggle'}
