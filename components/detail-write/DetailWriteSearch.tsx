@@ -5,22 +5,16 @@ import axios from 'axios';
 import close from 'public/images/close.png';
 import CustomButton from '../ui/CustomButton';
 import Image from 'next/image';
+import { useMediaQuery } from 'react-responsive';
 
 const parse = require('html-react-parser');
 axios.defaults.withCredentials = true;
 
 const DetailWriteSearch = ({
   searchWord,
-  setSearchWord,
   data,
-  setData,
   list,
-  setList,
-  select,
-  isNotData,
-  setIsNotData,
   leftToggle,
-  rightToggle,
   inputSearchWord,
   getNaverData,
   selectProduct,
@@ -28,6 +22,13 @@ const DetailWriteSearch = ({
   onClose,
   onClick,
 }: any) => {
+  const [isMobile, setIsMobile] = useState<number>(0);
+  const isMobileSize = useMediaQuery({ maxWidth: 690 });
+
+  useEffect(() => {
+    setIsMobile(isMobileSize);
+  }, [isMobileSize]);
+
   return (
     <DetailWriteSearchModal onClose={onClose}>
       <DetailWriteSearchLayout>
@@ -37,9 +38,6 @@ const DetailWriteSearch = ({
               <span className="search" onClick={leftToggle}>
                 검색하기
               </span>
-              {/* <span className="search" onClick={rightToggle}> */}
-              {/* 직접 등록하기 */}
-              {/* </span> */}
             </div>
             <button className="closeBtn" onClick={onClose}>
               <Image
@@ -51,127 +49,73 @@ const DetailWriteSearch = ({
               />
             </button>
           </DetailWriteSearchBox>
-          {/* {isNotData ? ( */}
-          {/* <p className="search_products">제품을 입력해주세요</p> */}
-          {/* ) : ( */}
           <p className="search_products">제품을 검색해주세요</p>
-          {/* )} */}
           <SearchInputBox>
             <input
               className="searchInput"
               id="products"
               type="text"
-              placeholder={
-                isNotData ? '제품명을 입력해주세요' : '검색어를 입력해주세요'
-              }
+              placeholder="검색어를 입력해주세요"
               value={searchWord}
               onChange={inputSearchWord}
             />
-            {isNotData ? (
-              <CustomButton onClick={getNaverData}>입력</CustomButton>
-            ) : (
-              <CustomButton onClick={getNaverData}>검색</CustomButton>
-            )}
+
+            <CustomButton onClick={getNaverData}>검색</CustomButton>
           </SearchInputBox>
-          {isNotData ? (
-            <>
-              <div className="search_description">
-                검색하기에서 안 나오는 제품들을 입력해주세요
-              </div>
-              <div className="laptop_box">
-                <Image
-                  src={'/images/laptop.png'}
-                  alt="isYourProduct"
-                  width={300}
-                  height={300}
-                  className="laptop"
-                />
-                <div className="check_text">입력하신 제품이 맞으신가요?</div>
-                <div className="check_title_text">
-                  입력한 값 여기 들어올거임
-                </div>
-              </div>
-              <div className="enter_again_text">다시 입력할게요</div>
-              <DetailWriteSearchBoxBottom>
-                <PickProductListBox>
-                  <PickProductList>
-                    {list?.map((item: any) => (
-                      <PickProductsBox key={item.productId}>
-                        <div className="pickProducts">{parse(item.title)}</div>
-
-                        <Image
-                          className="closeBtnImage"
-                          src={close.src}
-                          alt="closeBtn"
-                          width={24}
-                          height={24}
-                          onClick={() => deleteProduct(item)}
-                          style={{
-                            alignContent: 'center',
-                            justifyContent: 'center',
-                          }}
-                        />
-                      </PickProductsBox>
-                    ))}
-                  </PickProductList>
-                </PickProductListBox>
-                <ButtonBox>
-                  <CustomButton onClick={onClose}>닫기</CustomButton>
-                  <CustomButton onClick={onClick}>등록하기</CustomButton>
-                </ButtonBox>
-              </DetailWriteSearchBoxBottom>
-            </>
-          ) : null}
         </DetailWriteSearchBoxTop>
+        <SelectProductBox>
+          {data?.map((item: any) => (
+            <DetailWriteSearchProductBox
+              key={item.productId}
+              onClick={() => selectProduct(item)}
+            >
+              <div className="searchProduct">
+                <div className="searchProductWrap">
+                  {item.title.split('<b>').join('').split('</b>').join('')}
+                </div>
+                <div className="search_category">{item.category2}</div>
+              </div>
+            </DetailWriteSearchProductBox>
+          ))}
+        </SelectProductBox>
 
-        {isNotData ? null : (
-          <>
-            <SelectProductBox>
-              {data?.map((item: any) => (
-                <DetailWriteSearchProductBox
-                  key={item.productId}
-                  onClick={() => selectProduct(item)}
-                >
-                  <div className="searchProduct">
-                    <div style={{ width: '600px' }}>
-                      {item.title.split('<b>').join('').split('</b>').join('')}
-                    </div>
-                    <div className="search_category">{item.category2}</div>
-                  </div>
-                </DetailWriteSearchProductBox>
+        <DetailWriteSearchBoxBottom>
+          <PickProductListBox>
+            <PickProductList>
+              {list?.map((item: any) => (
+                <PickProductsBox key={item.productId}>
+                  <div className="pickProducts">{parse(item.title)}</div>
+
+                  <Image
+                    className="closeBtnImage"
+                    src={close.src}
+                    alt="closeBtn"
+                    width={24}
+                    height={24}
+                    onClick={() => deleteProduct(item)}
+                    style={{
+                      alignContent: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                </PickProductsBox>
               ))}
-            </SelectProductBox>
+            </PickProductList>
+          </PickProductListBox>
 
-            <DetailWriteSearchBoxBottom>
-              <PickProductListBox>
-                <PickProductList>
-                  {list?.map((item: any) => (
-                    <PickProductsBox key={item.productId}>
-                      <div className="pickProducts">{parse(item.title)}</div>
-
-                      <Image
-                        className="closeBtnImage"
-                        src={close.src}
-                        alt="closeBtn"
-                        width={24}
-                        height={24}
-                        onClick={() => deleteProduct(item)}
-                        style={{
-                          alignContent: 'center',
-                          justifyContent: 'center',
-                        }}
-                      />
-                    </PickProductsBox>
-                  ))}
-                </PickProductList>
-              </PickProductListBox>
-              <ButtonBox>
-                <CustomButton onClick={onClose}>닫기</CustomButton>
+          <ButtonBox>
+            <div className="button_wrap">
+              {isMobile ? (
                 <CustomButton onClick={onClick}>등록하기</CustomButton>
-              </ButtonBox>
-            </DetailWriteSearchBoxBottom>
-          </>
-        )}
+              ) : (
+                <>
+                  <CustomButton onClick={onClose}>닫기</CustomButton>
+                  <CustomButton onClick={onClick}>등록</CustomButton>
+                </>
+              )}
+            </div>
+          </ButtonBox>
+        </DetailWriteSearchBoxBottom>
       </DetailWriteSearchLayout>
     </DetailWriteSearchModal>
   );
@@ -206,6 +150,19 @@ const DetailWriteSearchBox = styled.div`
     &:active {
       border-bottom: 2px solid #206efb;
       color: #000000;
+    }
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      font-size: 1.1rem;
+    }
+
+    @media (min-width: 691px) and (max-width: 1200px) {
+      font-size: 1.25rem;
     }
   }
 
@@ -242,9 +199,50 @@ const DetailWriteSearchProductBox = styled.div`
     border-radius: 0.625rem;
     overflow: hidden;
     cursor: pointer;
+    &:hover {
+      color: #206efb;
+    }
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      font-size: 0.875rem;
+      padding: 0.5rem;
+      height: 80%;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      font-size: 1rem;
+      padding: 0.5rem;
+      height: 80%;
+    }
+
+    @media (min-width: 691px) and (max-width: 1200px) {
+      font-size: 1rem;
+      padding: 0.5rem;
+      height: 80%;
+    }
+
+    @media (min-width: 1201px) {
+      font-size: 1rem;
+      /* padding: 0.5rem; */
+      height: 80%;
+    }
   }
-  &:hover {
-    color: #206efb;
+
+  .searchProductWrap {
+    width: 37.5rem;
+    @media (min-width: 1px) and (max-width: 375px) {
+      width: 18.75rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      font-size: 1rem;
+    }
+
+    @media (min-width: 691px) and (max-width: 1200px) {
+    }
   }
 
   .search_category {
@@ -269,6 +267,18 @@ const DetailWriteSearchBoxTop = styled.div`
     line-height: 3rem;
     margin-bottom: 0.625rem;
     padding: 0 1.6rem;
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      font-size: 1rem;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      font-size: 1.1rem;
+    }
+
+    @media (min-width: 691px) and (max-width: 1200px) {
+      font-size: 1.25rem;
+    }
   }
 
   .search_description {
@@ -352,6 +362,14 @@ const DetailWriteSearchBoxBottom = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      font-size: 0.875rem;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      font-size: 1rem;
+    }
   }
 `;
 
@@ -360,6 +378,20 @@ const SearchInputBox = styled.div`
   justify-content: space-around;
   margin-bottom: 0.625rem;
   padding: 0 0.5rem;
+  @media (min-width: 1px) and (max-width: 375px) {
+    padding: 0 1rem;
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 376px) and (max-width: 690px) {
+    padding: 0 1rem;
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 691px) and (max-width: 1200px) {
+    padding: 0 1rem;
+    margin-bottom: 0;
+  }
 
   > input {
     width: 34.375rem;
@@ -375,6 +407,29 @@ const SearchInputBox = styled.div`
 
     &:focus {
       border-color: #206efb;
+    }
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      width: 41%;
+      font-size: 0.875rem;
+    }
+
+    @media (min-width: 376px) and (max-width: 519px) {
+      width: 55%;
+      font-size: 1rem;
+    }
+
+    @media (min-width: 520px) and (max-width: 690px) {
+      width: 61%;
+      font-size: 1rem;
+    }
+
+    @media (min-width: 691px) and (max-width: 1200px) {
+      width: 65%;
+      font-size: 1rem;
+    }
+    @media (min-width: 1201px) {
+      font-size: 1.25rem;
     }
   }
 
@@ -416,15 +471,48 @@ const ButtonBox = styled.div`
   justify-content: end;
   background-color: #f1f3f5;
   padding: 0.5rem 0.5rem;
+  width: 100%;
 
-  > button {
-    border: none;
-    border-radius: 0.625rem;
-    background-color: #206efb;
-    color: #fff;
-    font-size: 1rem;
-    margin: 0.625rem;
-    padding: 0.5rem 1rem;
+  .button_wrap {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+    @media (min-width: 691px) {
+      justify-content: end;
+    }
+
+    > button {
+      border: none;
+      border-radius: 0.625rem;
+      background-color: #206efb;
+      color: #fff;
+      font-size: 1rem;
+      margin: 0.625rem;
+      padding: 0.5rem 1rem;
+
+      @media (min-width: 1px) and (max-width: 375px) {
+        justify-content: center;
+        width: 90%;
+        height: 4rem;
+        font-size: 1.125rem;
+        font-weight: 700;
+      }
+
+      @media (min-width: 376px) and (max-width: 690px) {
+        width: 90%;
+        height: 4rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+
+      @media (min-width: 691px) {
+        font-weight: 700;
+        width: 11%;
+        height: 80%;
+        word-break: keep-all;
+      }
+    }
   }
 `;
 
