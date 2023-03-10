@@ -15,8 +15,6 @@ import CustomModal from '../ui/CustomModal';
 import CustomButton from '../ui/CustomButton';
 import useResponsive from '@/Hooks/useResponsive';
 
-type Props = {};
-
 export default function DetailView({}) {
   const router = useRouter();
   const postId = router.query.id;
