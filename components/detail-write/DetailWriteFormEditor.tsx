@@ -10,9 +10,11 @@ const Editor = dynamic(() => import('react-quill'), {
 
 const modules = {
   toolbar: [
-    [{ header: '1' }, { header: '2' }, { font: [] }],
+    [{ header: [1, 2] }, { font: [] }],
     [{ size: [] }],
-    ['italic', 'underline', 'strike', 'blockquote'],
+    ['italic', 'underline', 'strike', 'bold'],
+    ['blockquote'],
+    [{ color: [] }, { background: [] }],
     [
       { list: 'ordered' },
       { list: 'bullet' },
@@ -35,6 +37,8 @@ const formats = [
   'bullet',
   'indent',
   'link',
+  'color',
+  'background',
 ];
 
 export default function DetailWriteFormEditor({ value, onChange }: any) {

@@ -1,18 +1,16 @@
-import SignUpModal from '@/components/post-list/SignUpModal';
+import CustomAuthUI from '@/components/ui/authUi/CustomAuthUI';
+import CustomInput from '@/components/ui/authUi/CustomInput';
 import CustomButton from '@/components/ui/CustomButton';
-import CustomModal from '@/components/ui/CustomModal';
-import useCheckUser from '@/Hooks/useCheckUser';
+import HeadSeo from '@/components/ui/HeadSeo';
+
 import { auth, dbService } from '@/shared/firebase';
 import { updateProfile } from 'firebase/auth';
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
-  onSnapshot,
   query,
   setDoc,
-  updateDoc,
   where,
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
@@ -21,9 +19,6 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import styled from 'styled-components';
 
 function SnsNickname() {
-  // 모달 관리
-  const [isModalOn, setIsModalOn] = useState(false);
-
   const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
 
@@ -105,11 +100,7 @@ function SnsNickname() {
   }, [ageCheck, useCheck, marketingCheck]);
 
   if (loading) {
-    return (
-      <StyledBackground>
-        <StyledDiv></StyledDiv>
-      </StyledBackground>
-    );
+    return <CustomAuthUI height="32rem" />;
   }
   if (error) {
     console.log(error);
@@ -172,9 +163,11 @@ function SnsNickname() {
             isSocial: true,
           };
           await setDoc(collectionRef, payload);
+          localStorage.setItem('isSignUpRoute', 'true');
           router.push({
             pathname: '/post-list',
-            query: { isSignUpRoute: true },
+            // asPath: '/post-list',
+            // query: { isSignUpRoute: true },
           });
         }
       } catch (error) {
@@ -184,57 +177,45 @@ function SnsNickname() {
     };
 
     return (
-      <StyledBackground>
-        <StyledDiv>
-          <div className="headingDiv">
-            <p>추가 정보 입력</p>
-          </div>
-          <div className="emailDiv">
-            <p className="subheadingText">이메일</p>
-            <input type="text" placeholder={user?.email} disabled />
-            <div className="errorMessageDiv"></div>
-          </div>
-          <div className="nicknameDiv">
-            <div className="nicknameDivFirstLine">
-              <p className="subheadingText">닉네임</p>
-              <p className="description">닉네임 8글자 이내</p>
-            </div>
-            <div className="nicknameDivSecondLine">
-              <input
-                type="text"
-                placeholder="닉네임을 입력해주세요."
-                onChange={(event) => {
-                  setNickname(event.target.value);
-                }}
-                className={
-                  errorNicknameEmpty ||
-                  errorNicknameRegex ||
-                  errorNicknameduDlication ||
-                  errorEmailDuplication
-                    ? 'error'
-                    : null
-                }
-                onFocus={nicknameInputFocus}
-              />
-            </div>
-            <div className="errorMessageDiv">
-              {errorNicknameEmpty ? (
-                <p className="errorMessageText">필수 입력 항목입니다.</p>
-              ) : null}
+      <>
+        <HeadSeo title="닉네임설정 | be-my-desk" />
+        <CustomAuthUI headingTitle="추가 정보 입력" height="32rem">
+          <CustomInput
+            subHeadingText="이메일"
+            placeholder={user?.email}
+            disabled={true}
+          />
 
-              {errorNicknameRegex ? (
-                <p className="errorMessageText">닉네임 양식을 확인해주세요.</p>
-              ) : null}
-              {errorNicknameduDlication ? (
-                <p className="errorMessageText">중복된 닉네임 입니다.</p>
-              ) : null}
-              {errorEmailDuplication ? (
-                <p className="errorMessageText">
-                  해당 이메일 계정이 이미 존재합니다.
-                </p>
-              ) : null}
-            </div>
-          </div>
+          <CustomInput
+            type="text"
+            placeholder="닉네임을 입력해주세요."
+            subHeadingText="닉네임"
+            descriptionText="닉네임 8글자 이내, 특수문자 불가"
+            onChange={(event: any) => {
+              setNickname(event.target.value);
+            }}
+            className={
+              errorNicknameEmpty ||
+              errorNicknameRegex ||
+              errorNicknameduDlication ||
+              errorEmailDuplication
+                ? 'error'
+                : undefined
+            }
+            onFocus={nicknameInputFocus}
+            errorMessageText={
+              errorNicknameEmpty
+                ? '필수 입력 항목입니다.'
+                : errorNicknameRegex
+                ? '닉네임 양식을 확인해주세요.'
+                : errorNicknameduDlication
+                ? '중복된 닉네임 입니다.'
+                : errorEmailDuplication
+                ? '해당 이메일 계정이 이미 존재합니다.'
+                : undefined
+            }
+          />
+
           <SignUpAgreeDiv>
             <div className="agree-input-wrap">
               <div className="allCheckLine">
@@ -296,144 +277,28 @@ function SnsNickname() {
               </label>
             </div>
           </SignUpAgreeDiv>
-          <div className="ButtonDiv">
+          <ButtonDiv>
             <CustomButton
               backgroundColor="#206EFB"
               fontColor="#fff"
               paddingColumns="0.875"
               paddingRow="0.875"
-              fontSize="1.25"
+              fontSize="1"
               onClick={nicknameSet}
+              hover="90"
+              active="70"
             >
               회원가입
             </CustomButton>
-          </div>
-        </StyledDiv>
-      </StyledBackground>
+          </ButtonDiv>
+        </CustomAuthUI>
+      </>
     );
   }
 }
 
-const StyledBackground = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  height: 100vh;
-  background: url(https://images.pexels.com/photos/251225/pexels-photo-251225.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)
-    no-repeat center;
-  background-size: cover;
-
-  /* div {
-    border: 0.0625rem solid black;
-  } */
-`;
-
-const StyledDiv = styled.div`
-  display: flex;
-  /* justify-content: center; */
-  flex-direction: column;
-  width: 466px;
-  height: 518px;
-  background: #ffffff;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
-  border-radius: 20px;
-  padding: 20px 40px;
-
-  .headingDiv {
-    font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 32px;
-    text-align: center;
-    justify-content: center;
-  }
-
-  .emailDiv {
-    display: flex;
-    flex-direction: column;
-    margin-top: 45px;
-  }
-
-  .nicknameDiv {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-    .nicknameDivFirstLine {
-      display: flex;
-      justify-content: space-between;
-
-      .description {
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: #adb5bd;
-      }
-    }
-    .nicknameDivFirstLine {
-    }
-  }
-
-  //이용동의 Div는 아래에 SignUpAgreeDiv
-
-  .ButtonDiv {
-    display: flex;
-    margin-top: 2rem;
-
-    > button {
-      width: 100%;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 20px;
-      :hover {
-        opacity: 90%;
-      }
-    }
-  }
-
-  //서브헤딩 텍스트
-  .subheadingText {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin: 0 0 10px 5px;
-  }
-
-  //에러메세지
-  .errorMessageDiv {
-    margin-left: 5px;
-    margin-top: 5px;
-    min-height: 20px;
-    .errorMessageText {
-      font-style: normal;
-      font-weight: 500;
-      font-size: 12px;
-      line-height: 16px;
-      /* identical to box height, or 133% */
-      /* Point Red */
-
-      color: #f83e4b;
-    }
-  }
-
-  //인풋창
-  input {
-    border-radius: 0.625rem;
-    padding: 0.8125rem 1.25rem;
-    border: 0.0625rem solid #adb5bd;
-    width: 90%;
-    font-weight: 500;
-    font-size: 14px;
-
-    &.error {
-      border: 1px solid red;
-    }
-    &:focus-within {
-      border: 1px solid #17171c;
-    }
-  }
-`;
-
 const SignUpAgreeDiv = styled.div`
-  margin-top: 5px;
+  margin-top: 1rem;
   .agree-input-wrap {
     margin-bottom: 0.625rem;
 
@@ -500,6 +365,18 @@ const SignUpAgreeDiv = styled.div`
 
   .check-custorm-right {
     margin-left: 2.5px;
+  }
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  margin-top: 2rem;
+
+  > button {
+    width: 100%;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
   }
 `;
 

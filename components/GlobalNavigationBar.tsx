@@ -9,6 +9,7 @@ import useCheckLogin from '../Hooks/useCheckLogin';
 import useSearch from '@/Hooks/useSearch';
 import MobileMenu from './main/MobileMenu';
 import useResponsive from '@/Hooks/useResponsive';
+import { logEvent, resetAmplitude } from '@/amplitude/amplitude';
 
 function GlobalNavigationBar() {
   const router = useRouter();
@@ -26,19 +27,30 @@ function GlobalNavigationBar() {
   //모바일 서브메뉴
   const [isOpen, setIsOpen] = useState(false);
 
+  //서버사이드렌더링
+  useEffect(() => {
+    setIsMobile(isMobileSize);
+    setIsDesktop(isDesktopSize);
+  }, [isMobileSize, isDesktopSize]);
+
+  const mainPath = router.route === '/';
+  console.log(router, mainPath);
+
   return (
-    <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>
+    <GNBLayout theme={pathname === '/main' || mainPath ? 'dark' : 'light'}>
       {isMobile && (
         <div>
           <span
             onClick={() => setIsOpen(!isOpen)}
             className={
-              pathname === '/main' ? 'mobile-icon dark' : 'mobile-icon light'
+              pathname === '/main' || mainPath
+                ? 'mobile-icon dark'
+                : 'mobile-icon light'
             }
           />
 
           <Link href="/main" className="logo mobile">
-            {pathname === '/main' ? (
+            {pathname === '/main' || mainPath ? (
               <Image
                 src="/images/logo_white.png"
                 layout="fill"
@@ -63,7 +75,7 @@ function GlobalNavigationBar() {
         <>
           <div className="button-wrapper">
             <Link href="/main" className="logo">
-              {pathname === '/main' ? (
+              {pathname === '/main' || mainPath ? (
                 <Image
                   src="/images/logo_white.png"
                   layout="fill"
@@ -110,7 +122,7 @@ function GlobalNavigationBar() {
                   className="login-menu"
                   onClick={() => setIsOpenMenu((prev) => !prev)}
                 >
-                  {pathname === '/main' ? (
+                  {pathname === '/main' || mainPath ? (
                     <Image
                       src="/images/mainLoginGNB.png"
                       alt="loginGNB"
@@ -139,12 +151,28 @@ function GlobalNavigationBar() {
               </LoginGNBDiv>
             ) : (
               <LogOutGNBDiv>
-                <Link href="/auth/sign-in" className="button">
+                <p
+                  onClick={() => {
+                    router.push('/auth/sign-in');
+                    logEvent('GNB 로그인', {
+                      from: 'globalNavigationBar / 로그인',
+                    });
+                  }}
+                  className="button"
+                >
                   로그인
-                </Link>
-                <Link href="/auth/sign-up" className="button">
+                </p>
+                <p
+                  onClick={() => {
+                    router.push('/auth/sign-up');
+                    logEvent('GNB 회원가입', {
+                      from: 'globalNavigationBar / 회원가입',
+                    });
+                  }}
+                  className="button"
+                >
                   회원가입
-                </Link>
+                </p>
               </LogOutGNBDiv>
             )}
           </div>

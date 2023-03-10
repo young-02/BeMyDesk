@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 
 import PostListCard from '../../../components/post-list/PostListCard';
 import PostListFilterBar from '../../../components/PostListFilterBar';
+import CustomError from '@/components/ui/error/CustomError';
 
 export default function PostList() {
   const router = useRouter();
@@ -57,6 +58,13 @@ export default function PostList() {
         <PostListFilterBar />
       </Header>
       <PostListBox>
+        {searchList.length === 0 && (
+          <CustomError title="검색 결과가 없어요" errorMessage={`" ${term} "`}>
+            <div>
+              <p>필터를 삭제하거나</p> <p>다른 검색어를 입력해 주세요</p>
+            </div>
+          </CustomError>
+        )}
         {searchList?.map((post) => (
           <PostListCard
             key={post.id}
@@ -73,7 +81,7 @@ const PostListLayout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100vw;
+  width: 100%;
   margin-top: 8rem;
   overflow-x: hidden;
 `;
@@ -81,7 +89,13 @@ const PostListLayout = styled.div`
 const Header = styled.div`
   position: fixed;
   top: 0rem;
+  left: 50%;
   z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
 `;
 
 const PostListBox = styled.div`

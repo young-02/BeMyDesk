@@ -352,7 +352,7 @@ const StyledEditProfileModalContainer = styled.div`
           opacity: 45%;
         }
         .deleteAccountText {
-         font-style: normal;
+          font-style: normal;
           font-weight: 700;
           font-size: 16px;
           line-height: 20px;
@@ -377,7 +377,7 @@ const StyledEditProfileModalContainer = styled.div`
       justify-content: space-between;
       margin-bottom: 60px;
       .RightModalTitle {
-       font-style: normal;
+        font-style: normal;
         font-weight: 700;
         font-size: 24px;
         line-height: 32px;
@@ -401,7 +401,7 @@ const StyledEditProfileModalContainer = styled.div`
     }
   }
 
-  .modalThirdLineButton2Warning 
+  .modalThirdLineButton2Warning {
     font-style: normal;
     font-weight: 500;
     font-size: 13px;

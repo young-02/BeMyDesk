@@ -14,6 +14,7 @@ import { QueryClient, useQueryClient } from 'react-query';
 import CustomModal from '../ui/CustomModal';
 import CustomButton from '../ui/CustomButton';
 import useResponsive from '@/Hooks/useResponsive';
+import { logEvent } from '@/amplitude/amplitude';
 
 export default function DetailView({}) {
   const router = useRouter();

@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import useCheckUser from '@/Hooks/useCheckUser';
 import { sendPasswordResetEmail } from 'firebase/auth';
+import HeadSeo from '@/components/ui/HeadSeo';
 
 function FindPassword() {
   // 유저 상태 체크
@@ -69,80 +70,83 @@ function FindPassword() {
   };
 
   return (
-    <StyledBackground>
-      <StyledDiv>
-        <div className="headingDiv">
-          <p>비밀번호 찾기</p>
-        </div>
-        <div className="guideMessageDiv">
-          <p>가입 시 등록했던 이메일로</p>
-          <p>임시 비밀번호를 보내드릴게요.</p>
-        </div>
-        <div className="emailDiv">
-          <label
-            id="loginInput"
-            className={
-              errorEmailEmpty || errorEmailInvalid || errorEmailSnsUser
-                ? 'inputWrap error'
-                : 'inputWrap'
-            }
-          >
-            <span className="iconSpan">
-              <AiOutlineMail className="inputIcon" />
-            </span>
-            <input
-              type="text"
-              placeholder="이메일 주소를 입력해주세요"
-              onChange={(event) => {
-                setEmail(event?.target.value);
-              }}
-              onFocus={emailOnfocus}
-            />
-          </label>
-          <div className="errorMessageDiv">
-            {errorEmailEmpty ? (
-              <p className="errorMessageText">필수 입력 항목입니다.</p>
-            ) : null}
-
-            {errorEmailInvalid ? (
-              <p className="errorMessageText">등록되지 않은 이메일입니다.</p>
-            ) : null}
-
-            {errorEmailSnsUser ? (
-              <p className="errorMessageText">
-                비밀번호 찾기는 &#34;이메일 가입하기&#34;로 가입한 경우에만
-                가능합니다.
-              </p>
-            ) : null}
-
-            {sendDone ? (
-              <p className="sendDoneMessageText">이메일이 발송되었습니다</p>
-            ) : null}
+    <>
+      <HeadSeo title="비밀번호 찾기 | be-my-desk" />
+      <StyledBackground>
+        <StyledDiv>
+          <div className="headingDiv">
+            <p>비밀번호 찾기</p>
           </div>
-        </div>
-        <div className="ButtonDiv">
-          <CustomButton
-            backgroundColor="#206EFB"
-            fontColor="#fff"
-            paddingColumns="0.875"
-            paddingRow="0.875"
-            fontSize="1.25"
-            onClick={ButtonClickHandler}
-          >
-            전송하기
-          </CustomButton>
-        </div>
-        <div className="buttonBottomDiv">
-          <p
-            onClick={() => {
-              router.push('/auth/sign-in');
-            }}
-          >
-            로그인 페이지로 돌아가기
-          </p>
-        </div>
-      </StyledDiv>
-    </StyledBackground>
+          <div className="guideMessageDiv">
+            <p>가입 시 등록했던 이메일로</p>
+            <p>임시 비밀번호를 보내드릴게요.</p>
+          </div>
+          <div className="emailDiv">
+            <label
+              id="loginInput"
+              className={
+                errorEmailEmpty || errorEmailInvalid || errorEmailSnsUser
+                  ? 'inputWrap error'
+                  : 'inputWrap'
+              }
+            >
+              <span className="iconSpan">
+                <AiOutlineMail className="inputIcon" />
+              </span>
+              <input
+                type="text"
+                placeholder="이메일 주소를 입력해주세요"
+                onChange={(event) => {
+                  setEmail(event?.target.value);
+                }}
+                onFocus={emailOnfocus}
+              />
+            </label>
+            <div className="errorMessageDiv">
+              {errorEmailEmpty ? (
+                <p className="errorMessageText">필수 입력 항목입니다.</p>
+              ) : null}
+
+              {errorEmailInvalid ? (
+                <p className="errorMessageText">등록되지 않은 이메일입니다.</p>
+              ) : null}
+
+              {errorEmailSnsUser ? (
+                <p className="errorMessageText">
+                  비밀번호 찾기는 &#34;이메일 가입하기&#34;로 가입한 경우에만
+                  가능합니다.
+                </p>
+              ) : null}
+
+              {sendDone ? (
+                <p className="sendDoneMessageText">이메일이 발송되었습니다</p>
+              ) : null}
+            </div>
+          </div>
+          <div className="ButtonDiv">
+            <CustomButton
+              backgroundColor="#206EFB"
+              fontColor="#fff"
+              paddingColumns="0.875"
+              paddingRow="0.875"
+              fontSize="1.25"
+              onClick={ButtonClickHandler}
+            >
+              전송하기
+            </CustomButton>
+          </div>
+          <div className="buttonBottomDiv">
+            <p
+              onClick={() => {
+                router.push('/auth/sign-in');
+              }}
+            >
+              로그인 페이지로 돌아가기
+            </p>
+          </div>
+        </StyledDiv>
+      </StyledBackground>
+    </>
   );
 }
 
@@ -170,7 +174,13 @@ const StyledDiv = styled.div`
   background: #ffffff;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
   border-radius: 20px;
-
+  @media (max-width: 466px) {
+    margin-top: 130px;
+    height: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    width: 466px;
+  }
   .headingDiv {
     margin-top: 25px;
     font-style: normal;
@@ -208,6 +218,9 @@ const StyledDiv = styled.div`
   .ButtonDiv {
     margin-top: 5px;
     padding: 0px 60px 0 60px;
+    @media (max-width: 466px) {
+      padding: 0 1.5rem 0 1.5rem;
+    }
     > button {
       width: 100%;
       font-size: 16px;
