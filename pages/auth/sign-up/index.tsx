@@ -1,6 +1,5 @@
 import CustomAuthUI from '@/components/ui/authUi/CustomAuthUI';
 import CustomInput from '@/components/ui/authUi/CustomInput';
-import CustomButton from '@/components/ui/CustomButton';
 import useCheckUser from '@/Hooks/useCheckUser';
 import { auth, dbService } from '@/shared/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -17,6 +16,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { logEvent } from '@/amplitude/amplitude';
+import HeadSeo from '@/components/ui/HeadSeo';
 type Props = {};
 
 export default function SignUp({}: Props) {
@@ -237,183 +237,186 @@ export default function SignUp({}: Props) {
   }, [emailValid, pwValid, nicknameValid, pwVerfyValid, allCheck]);
 
   return (
-    <CustomAuthUI headingTitle="회원가입" height="43rem">
-      <CustomInput
-        type="text"
-        placeholder="닉네임을 입력해주세요."
-        subHeadingText="닉네임"
-        descriptionText="닉네임 8글자 이내, 특수문자 불가"
-        className={
-          (!nicknameValid && nickname.length > 0) || errorNicknameDuplication
-            ? 'error'
-            : null
-        }
-        value={nickname}
-        onChange={handleNickname}
-        onFocus={() => setErrorNicknameDuplication(false)}
-        errorMessageText={
-          !nicknameValid && nickname.length > 1
-            ? '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자 이하이어야합니다.'
-            : errorNicknameDuplication
-            ? '중복된 닉네임 입니다.'
-            : undefined
-        }
-      />
-
-      <EmailDiv>
+    <>
+      <HeadSeo title="회원가입 | be-my-desk" />
+      <CustomAuthUI headingTitle="회원가입" height="43rem">
         <CustomInput
-          width="70"
-          subHeadingText="이메일"
+          type="text"
+          placeholder="닉네임을 입력해주세요."
+          subHeadingText="닉네임"
+          descriptionText="닉네임 8글자 이내, 특수문자 불가"
           className={
-            (!emailValid && email.length > 0) || errorEmailDuplication
-              ? 'input error'
-              : 'input'
+            (!nicknameValid && nickname.length > 0) || errorNicknameDuplication
+              ? 'error'
+              : null
           }
-          placeholder="이메일을 입력해주세요"
-          value={email}
-          autoComplete="off"
-          onChange={handleEmail}
-          onFocus={() => setErrorEmailDuplication(false)}
+          value={nickname}
+          onChange={handleNickname}
+          onFocus={() => setErrorNicknameDuplication(false)}
           errorMessageText={
-            !emailValid && email.length
-              ? '이메일 양식을 확인해주세요.'
-              : errorEmailDuplication
-              ? '해당 이메일 계정이 이미 존재합니다.'
+            !nicknameValid && nickname.length > 1
+              ? '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자 이하이어야합니다.'
+              : errorNicknameDuplication
+              ? '중복된 닉네임 입니다.'
               : undefined
           }
         />
-        <div className="emailAt">@</div>
-        {/* @ 뒷쪽 */}
-        <SelectBox
-          onClick={() =>
-            setSelected((selected) => ({
-              ...selected,
-              selectBox: !selected.selectBox,
-            }))
-          }
-        >
-          <p
+
+        <EmailDiv>
+          <CustomInput
+            width="70"
+            subHeadingText="이메일"
             className={
-              currentValue === '선택해주세요' && email.length > 0
-                ? 'selectedText'
-                : selectBox
-                ? 'selectedText active'
-                : 'selectedText'
+              (!emailValid && email.length > 0) || errorEmailDuplication
+                ? 'input error'
+                : 'input'
+            }
+            placeholder="이메일을 입력해주세요"
+            value={email}
+            autoComplete="off"
+            onChange={handleEmail}
+            onFocus={() => setErrorEmailDuplication(false)}
+            errorMessageText={
+              !emailValid && email.length
+                ? '이메일 양식을 확인해주세요.'
+                : errorEmailDuplication
+                ? '해당 이메일 계정이 이미 존재합니다.'
+                : undefined
+            }
+          />
+          <div className="emailAt">@</div>
+          {/* @ 뒷쪽 */}
+          <SelectBox
+            onClick={() =>
+              setSelected((selected) => ({
+                ...selected,
+                selectBox: !selected.selectBox,
+              }))
             }
           >
-            {currentValue}
-            <span className="arrow" />
-          </p>
-          {selectBox && (
-            <ul className="select-list">
-              <li onClick={selectTarget}>naver.com</li>
-              <li onClick={selectTarget}>gmail.com</li>
-              <li onClick={selectTarget}>hanmail.net</li>
-              <li onClick={selectTarget}>daum.net</li>
-              <li onClick={selectTarget}>kakao.com</li>
-              <li onClick={selectTarget}>nate.com</li>
-              {/* <li onClick={selectTarget}>직접입력하기</li> */}
-            </ul>
-          )}
-        </SelectBox>
-      </EmailDiv>
+            <p
+              className={
+                currentValue === '선택해주세요' && email.length > 0
+                  ? 'selectedText'
+                  : selectBox
+                  ? 'selectedText active'
+                  : 'selectedText'
+              }
+            >
+              {currentValue}
+              <span className="arrow" />
+            </p>
+            {selectBox && (
+              <ul className="select-list">
+                <li onClick={selectTarget}>naver.com</li>
+                <li onClick={selectTarget}>gmail.com</li>
+                <li onClick={selectTarget}>hanmail.net</li>
+                <li onClick={selectTarget}>daum.net</li>
+                <li onClick={selectTarget}>kakao.com</li>
+                <li onClick={selectTarget}>nate.com</li>
+                {/* <li onClick={selectTarget}>직접입력하기</li> */}
+              </ul>
+            )}
+          </SelectBox>
+        </EmailDiv>
 
-      <CustomInput
-        type="password"
-        placeholder="비밀번호를 입력해주세요."
-        subHeadingText="비밀번호"
-        descriptionText="8~16 자리 / 영문 대소문자, 숫자, 특수문자 포함"
-        className={!pwValid && pw.length > 0 ? 'error' : null}
-        value={pw}
-        onChange={handlePw}
-        errorMessageText={
-          !pwValid && pw.length > 0
-            ? '영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.'
-            : undefined
-        }
-      />
+        <CustomInput
+          type="password"
+          placeholder="비밀번호를 입력해주세요."
+          subHeadingText="비밀번호"
+          descriptionText="8~16 자리 / 영문 대소문자, 숫자, 특수문자 포함"
+          className={!pwValid && pw.length > 0 ? 'error' : null}
+          value={pw}
+          onChange={handlePw}
+          errorMessageText={
+            !pwValid && pw.length > 0
+              ? '영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.'
+              : undefined
+          }
+        />
 
-      <CustomInput
-        type="password"
-        placeholder="다시한번 입력해주세요."
-        subHeadingText="비밀번호 확인"
-        className={!pwVerfyValid && pwVerfy.length > 0 ? 'error' : null}
-        onChange={handleVerfyPw}
-        errorMessageText={
-          !pwVerfyValid && pwVerfy.length > 0
-            ? '비밀번호가 다릅니다'
-            : undefined
-        }
-      />
+        <CustomInput
+          type="password"
+          placeholder="다시한번 입력해주세요."
+          subHeadingText="비밀번호 확인"
+          className={!pwVerfyValid && pwVerfy.length > 0 ? 'error' : null}
+          onChange={handleVerfyPw}
+          errorMessageText={
+            !pwVerfyValid && pwVerfy.length > 0
+              ? '비밀번호가 다릅니다'
+              : undefined
+          }
+        />
 
-      <SignUpAgreeDiv>
-        <div className="agree-input-wrap">
-          <label htmlFor="all-check" className="agree-title">
-            <input
-              type="checkbox"
-              id="all-check"
-              checked={allCheck}
-              onChange={allBtnEvent}
-            />
-            <span className="check-custorm" />
-            전체동의
-          </label>
-        </div>
-        <div className="agree-input-wrap">
-          <label htmlFor="check1">
-            <input
-              type="checkbox"
-              id="check1"
-              checked={ageCheck}
-              onChange={ageBtnEvent}
-            />
-            <span className="check-custorm" />만 14세 이상입니다
-            <span className="check-custorm-right">(필수)</span>
-          </label>
-        </div>
-        <div className="agree-input-wrap">
-          <label htmlFor="check2">
-            <input
-              type="checkbox"
-              id="check2"
-              checked={useCheck}
-              onChange={useBtnEvent}
-            />
-            <span className="check-custorm" />
-            개인정보 수집/이용에 동의합니다.{' '}
-            <span className="check-custorm-right">(필수)</span>
-          </label>
-        </div>
+        <SignUpAgreeDiv>
+          <div className="agree-input-wrap">
+            <label htmlFor="all-check" className="agree-title">
+              <input
+                type="checkbox"
+                id="all-check"
+                checked={allCheck}
+                onChange={allBtnEvent}
+              />
+              <span className="check-custorm" />
+              전체동의
+            </label>
+          </div>
+          <div className="agree-input-wrap">
+            <label htmlFor="check1">
+              <input
+                type="checkbox"
+                id="check1"
+                checked={ageCheck}
+                onChange={ageBtnEvent}
+              />
+              <span className="check-custorm" />만 14세 이상입니다
+              <span className="check-custorm-right">(필수)</span>
+            </label>
+          </div>
+          <div className="agree-input-wrap">
+            <label htmlFor="check2">
+              <input
+                type="checkbox"
+                id="check2"
+                checked={useCheck}
+                onChange={useBtnEvent}
+              />
+              <span className="check-custorm" />
+              개인정보 수집/이용에 동의합니다.{' '}
+              <span className="check-custorm-right">(필수)</span>
+            </label>
+          </div>
 
-        <div className="agree-input-wrap">
-          <label htmlFor="check3">
-            <input
-              type="checkbox"
-              id="check3"
-              checked={marketingCheck}
-              onChange={marketingBtnEvent}
-            />
-            <span className="check-custorm" />
-            서비스 이용약관에 동의합니다.
-            <span className="check-custorm-right">(필수)</span>
-          </label>
-        </div>
-      </SignUpAgreeDiv>
+          <div className="agree-input-wrap">
+            <label htmlFor="check3">
+              <input
+                type="checkbox"
+                id="check3"
+                checked={marketingCheck}
+                onChange={marketingBtnEvent}
+              />
+              <span className="check-custorm" />
+              서비스 이용약관에 동의합니다.
+              <span className="check-custorm-right">(필수)</span>
+            </label>
+          </div>
+        </SignUpAgreeDiv>
 
-      <ButtonDiv>
-        <CustomButton
-          backgroundColor="#206EFB"
-          fontColor="#fff"
-          paddingColumns="0.875"
-          paddingRow="0.875"
-          fontSize="1.25"
-          onClick={onClickConfirmButton}
-          disabled={notAllow}
-        >
-          회원가입
-        </CustomButton>
-      </ButtonDiv>
-    </CustomAuthUI>
+        <ButtonDiv>
+          <CustomButton
+            backgroundColor="#206EFB"
+            fontColor="#fff"
+            paddingColumns="0.875"
+            paddingRow="0.875"
+            fontSize="1.25"
+            onClick={onClickConfirmButton}
+            disabled={notAllow}
+          >
+            회원가입
+          </CustomButton>
+        </ButtonDiv>
+      </CustomAuthUI>
+    </>
   );
 }
 

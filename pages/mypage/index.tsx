@@ -16,6 +16,7 @@ import { useQuery } from 'react-query';
 import { useUserInfo } from '../../Hooks/useUserInfo';
 import useUserPostList from '../../Hooks/useUserPostList';
 import useCheckUser from '@/Hooks/useCheckUser';
+import HeadSeo from '@/components/ui/HeadSeo';
 import CustomModal from '@/components/ui/CustomModal';
 import CustomButton from '@/components/ui/CustomButton';
 import DeleteModal from '@/components/mypage/contents/DeleteModal';
@@ -58,6 +59,7 @@ export default function MyPage({}: Props) {
   if (user) {
     return (
       <StyledContainer>
+        <HeadSeo title={'마이페이지 | be-my-desk'} />
         {isLoading && <div>Loading...</div>}
         {isError && <div>Error: {userInfoError.message}</div>}
 
