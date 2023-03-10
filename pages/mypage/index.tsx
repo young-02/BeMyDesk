@@ -17,6 +17,9 @@ import { useUserInfo } from '../../Hooks/useUserInfo';
 import useUserPostList from '../../Hooks/useUserPostList';
 import useCheckUser from '@/Hooks/useCheckUser';
 import HeadSeo from '@/components/ui/HeadSeo';
+import CustomModal from '@/components/ui/CustomModal';
+import CustomButton from '@/components/ui/CustomButton';
+import DeleteModal from '@/components/mypage/contents/DeleteModal';
 
 type Props = {};
 
