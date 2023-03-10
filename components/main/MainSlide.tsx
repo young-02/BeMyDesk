@@ -395,8 +395,8 @@ const SlideContentsWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: yellow; */
   padding: 0rem 1.25rem;
+  /* background-color: yellow; */
 
   @media (max-width: 1200px) {
     padding: 0rem 10vw;
@@ -406,7 +406,7 @@ const SlideContentsWrapper = styled.div`
     padding: 0rem calc(22vw - 3rem);
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: 500px) {
     padding: 0rem 1.25rem;
   }
 `;
@@ -697,22 +697,43 @@ const MotionText = styled(motion.div)`
 `;
 
 const SlideContentMiddle = styled.div`
-  width: 75rem;
-  height: 50rem;
+  width: 85vw;
+  height: 76vh;
   display: flex;
   flex-direction: row;
-  gap: 1.5rem;
+  gap: 1.25rem;
+  margin-top: 5vh;
   transition: all 0.6s ease-in-out;
+  /* background-color: cyan; */
 
   :hover {
-    width: 1360px;
+    width: 95vw;
     transition: all 0.8s ease-in-out;
+  }
+
+  @media (min-width: 1300px) {
+    width: 75rem;
+    height: 48rem;
+
+    :hover {
+      width: 1360px;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    width: 100%;
+    height: 80vh;
+    flex-direction: column;
+
+    :hover {
+      width: 95vw;
+    }
   }
 `;
 
 const CategoryCardBox = styled.div`
   flex: 1;
-  width: 282px;
+  width: 17.625rem;
   height: 100%;
   position: relative;
   gap: 0.625rem;
@@ -737,6 +758,17 @@ const CategoryCardBox = styled.div`
     );
   }
 
+  @media (max-width: 1000px) {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+
+    :hover {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
   > h3 {
     position: absolute;
     z-index: 1;
@@ -746,6 +778,12 @@ const CategoryCardBox = styled.div`
     transform-origin: 0% 100%;
     left: 4rem;
     bottom: 2rem;
+
+    @media (max-width: 1000px) {
+      font-size: 1.5rem;
+      left: 2.5rem;
+      bottom: 1rem;
+    }
   }
 
   > p {
@@ -763,14 +801,24 @@ const CategoryCardBox = styled.div`
     flex: 5;
     transition: all 0.8s ease-in-out;
 
-    > p {
-      display: block;
-    }
-
     > h3 {
       transform: rotate(0deg);
       left: 2rem;
       bottom: 4rem;
+
+      @media (max-width: 1000px) {
+        left: 1rem;
+        bottom: 2.25rem;
+      }
+    }
+
+    > p {
+      display: block;
+
+      @media (max-width: 1000px) {
+        left: 1rem;
+        bottom: 0.75rem;
+      }
     }
   }
 `;
