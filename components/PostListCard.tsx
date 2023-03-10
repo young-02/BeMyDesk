@@ -137,7 +137,7 @@ const PostListCardLayout = styled.div`
 
     :hover {
       .post-image {
-        transform: scale(1.2);
+        transform: scale(1.1);
       }
     }
   }
