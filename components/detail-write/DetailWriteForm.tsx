@@ -15,6 +15,7 @@ import imageCompression from 'browser-image-compression';
 import { useQueryClient } from 'react-query';
 import { logEvent } from '@/amplitude/amplitude';
 import { useMediaQuery } from 'react-responsive';
+import HeadSeo from '../ui/HeadSeo';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
@@ -320,6 +321,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       )}
       <DetailWriteLayout>
         <DetailWriteWrap>
+         <HeadSeo title="글쓰기 | 내가 꾸민 데스크테리어 자랑 커뮤니티" />
           <JobSelectBox>
             <select
               className="job_select"
@@ -387,6 +389,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
                       />
                     </div>
                   ))}
+
               </div>
             </div>
 

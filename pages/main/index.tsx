@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import gradient from '../../public/images/gradient.png';
 import Image from 'next/image';
-import MainSlide from '../../components/MainSlide';
+import MainSlide from '../../components/main/MainSlide';
+import HeadSeo from '@/components/ui/HeadSeo';
 
 const item = {
   inactive: { opacity: 0, translateY: 120 },
@@ -17,6 +18,7 @@ const item = {
 export default function MainPage() {
   return (
     <MainPageLayout>
+      <HeadSeo title={`be-my-desk`} />
       <MainSlide />
       <Background>
         <BackgroundGradient

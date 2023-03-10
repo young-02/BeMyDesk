@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUpdateLikes } from '@/Hooks/useUpdateLikes';
 import activeLikes from '../../../public/images/userReaction/activeLikes.png';
 import inactiveLikes from '../../../public/images/userReaction/inactiveLikes.png';
@@ -9,6 +9,7 @@ import { deleteDoc, doc } from 'firebase/firestore';
 import { dbService } from '@/shared/firebase';
 import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
+import DeleteModal from './DeleteModal';
 
 type Props = {};
 
@@ -20,14 +21,30 @@ const PostCard = ({ post, currentUserId }: any) => {
     post,
   );
 
-  const deletePost = async () => {
-    alert('삭제?');
-    await deleteDoc(doc(dbService, `postData/${post.id}`));
-    queryClient.invalidateQueries(['my-page', 'myPost']);
+  // 글삭제 모달
+  const [isDeleteModalOn, setIsDeleteModalOn] = useState(false);
+  // const deletePost = async () => {
+  //   await deleteDoc(doc(dbService, `postData/${post.id}`));
+  //   queryClient.invalidateQueries(['my-page', 'myPost']);
+  // };
+  const deleteButtonHandler = async () => {
+    setIsDeleteModalOn(true);
   };
+
+  useEffect(() => {
+    return setIsDeleteModalOn(false);
+  }, []);
 
   return (
     <StyledContainer key={post.id}>
+      {/* 글삭제모달 */}
+      {isDeleteModalOn && (
+        <DeleteModal
+          isDeleteModalOn={isDeleteModalOn}
+          setIsDeleteModalOn={setIsDeleteModalOn}
+          post={post}
+        />
+      )}
       <StyledLeftDiv>
         {post.postImage1 ? (
           <Image
@@ -69,7 +86,10 @@ const PostCard = ({ post, currentUserId }: any) => {
               {post.likesCount}
             </p>
           </div>
-          <HiOutlineTrash className="deleteButton" onClick={deletePost} />
+          <HiOutlineTrash
+            className="deleteButton"
+            onClick={deleteButtonHandler}
+          />
         </div>
       </StyledRightDiv>
     </StyledContainer>

@@ -19,6 +19,8 @@ interface CustomButtonProps {
   fontWeight?: string;
   disabled?: boolean;
   color?: string;
+  hover?: string;
+  active?: string;
 }
 
 export default function CustomButton({
@@ -38,6 +40,8 @@ export default function CustomButton({
   fontWeight,
   disabled,
   color,
+  hover,
+  active,
 }: CustomButtonProps) {
   return (
     <Button
@@ -56,6 +60,8 @@ export default function CustomButton({
       fontWeight={fontWeight}
       disabled={disabled}
       color={color}
+      hover={hover}
+      active={active}
     >
       {children}
     </Button>
@@ -77,4 +83,10 @@ const Button = styled.button<CustomButtonProps>`
   font-size: ${(props) => props.fontSize}rem;
   color: ${(props) => props.color};
   font-family: ${(props) => props.fontFamily ?? 'Pretendard Variable'};
+  :hover {
+    opacity: ${(props) => props.hover}%;
+  }
+  :active {
+    opacity: ${(props) => props.active}%;
+  }
 `;

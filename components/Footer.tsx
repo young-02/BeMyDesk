@@ -14,7 +14,9 @@ function Footer({}: Props) {
     if (
       pathname === '/main' ||
       pathname === '/auth/sign-in' ||
-      pathname === '/auth/sign-up'
+      pathname === '/auth/sign-up' ||
+      pathname === '/auth/sns-nickname' ||
+      pathname === '/auth/find-password'
     ) {
       setIsActive(false);
     } else {
@@ -55,10 +57,11 @@ function Footer({}: Props) {
 export default Footer;
 
 const FooterLayout = styled.div`
-  position: static;
+  position: relative;
   bottom: 0;
   left: 0;
   width: 100%;
+  margin-top: 2rem;
   padding: 1.25rem;
   display: flex;
   justify-content: center;
@@ -66,8 +69,8 @@ const FooterLayout = styled.div`
   border-top: 0.0625rem solid #868e96;
   background: #17171c;
 
-  @media (max-width: 520px) {
-    position: unset;
+  @media (max-width: 900px) {
+    height: fit-content;
   }
 `;
 
@@ -76,15 +79,14 @@ const FooterInfo = styled.div`
   width: 100%;
   display: flex;
   gap: 120px;
-  /* paadin */
+  margin: 1.25rem;
 
   @media (max-width: 900px) {
     gap: 1.25rem;
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 900px) {
     flex-direction: column;
-    padding: 1rem;
   }
 
   > div {
@@ -93,7 +95,7 @@ const FooterInfo = styled.div`
     flex-direction: column;
     gap: 20px;
 
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
       gap: 0.75rem;
     }
 
@@ -102,7 +104,7 @@ const FooterInfo = styled.div`
       font-weight: 600;
       color: #ced4da;
 
-      @media (max-width: 800px) {
+      @media (max-width: 900px) {
         font-size: 0.875rem;
       }
     }
@@ -112,7 +114,7 @@ const FooterInfo = styled.div`
       font-weight: 400;
       color: #868e96;
 
-      @media (max-width: 800px) {
+      @media (max-width: 900px) {
         font-size: 0.75rem;
       }
     }
@@ -128,7 +130,7 @@ const FooterInfo = styled.div`
         font-weight: 400;
         color: #868e96;
 
-        @media (max-width: 800px) {
+        @media (max-width: 900px) {
           font-size: 0.75rem;
         }
       }

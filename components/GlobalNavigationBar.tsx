@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 import Search from './Search';
 import { auth } from '@/shared/firebase';
 import useCheckLogin from '../Hooks/useCheckLogin';
-import { useMediaQuery } from 'react-responsive';
 import useSearch from '@/Hooks/useSearch';
 import MobileMenu from './main/MobileMenu';
+import useResponsive from '@/Hooks/useResponsive';
 import { logEvent, resetAmplitude } from '@/amplitude/amplitude';
 
 function GlobalNavigationBar() {
@@ -19,34 +19,32 @@ function GlobalNavigationBar() {
   const userProfilImg =
     auth.currentUser?.photoURL ?? '/images/defaultProfile.png';
 
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 690 });
-  const isDesktopSize = useMediaQuery({ minWidth: 691 });
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 690,
+    minWidth: 691,
+  });
 
   //모바일 서브메뉴
   const [isOpen, setIsOpen] = useState(false);
 
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
+  const mainPath = router.route === '/';
+  console.log(router, mainPath);
 
   return (
-    <GNBLayout theme={pathname === '/main' ? 'dark' : 'light'}>
+    <GNBLayout theme={pathname === '/main' || mainPath ? 'dark' : 'light'}>
       {isMobile && (
         <div>
           <span
             onClick={() => setIsOpen(!isOpen)}
             className={
-              pathname === '/main' ? 'mobile-icon dark' : 'mobile-icon light'
+              pathname === '/main' || mainPath
+                ? 'mobile-icon dark'
+                : 'mobile-icon light'
             }
           />
 
           <Link href="/main" className="logo mobile">
-            {pathname === '/main' ? (
+            {pathname === '/main' || mainPath ? (
               <Image
                 src="/images/logo_white.png"
                 layout="fill"
@@ -71,7 +69,7 @@ function GlobalNavigationBar() {
         <>
           <div className="button-wrapper">
             <Link href="/main" className="logo">
-              {pathname === '/main' ? (
+              {pathname === '/main' || mainPath ? (
                 <Image
                   src="/images/logo_white.png"
                   layout="fill"
@@ -118,7 +116,7 @@ function GlobalNavigationBar() {
                   className="login-menu"
                   onClick={() => setIsOpenMenu((prev) => !prev)}
                 >
-                  {pathname === '/main' ? (
+                  {pathname === '/main' || mainPath ? (
                     <Image
                       src="/images/mainLoginGNB.png"
                       alt="loginGNB"

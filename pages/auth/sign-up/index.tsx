@@ -1,3 +1,5 @@
+import CustomAuthUI from '@/components/ui/authUi/CustomAuthUI';
+import CustomInput from '@/components/ui/authUi/CustomInput';
 import useCheckUser from '@/Hooks/useCheckUser';
 import { auth, dbService } from '@/shared/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -13,8 +15,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import CustomButton from '../../../components/ui/CustomButton';
 import { logEvent } from '@/amplitude/amplitude';
+import HeadSeo from '@/components/ui/HeadSeo';
+import CustomButton from '@/components/ui/CustomButton';
 type Props = {};
 
 export default function SignUp({}: Props) {
@@ -235,162 +238,116 @@ export default function SignUp({}: Props) {
   }, [emailValid, pwValid, nicknameValid, pwVerfyValid, allCheck]);
 
   return (
-    <StyledBackground>
-      <SignUpLayout>
-        <div className="title">회원가입</div>
-        <div className="contentWrap">
-          <div>
-            <div className="inputTitleWrap">
-              <p className="title">닉네임</p>
-              <p className="description">닉네임 8글자 이내</p>
-            </div>
-            <div className="inputWrap">
-              <input
-                type="text"
-                className={
-                  (!nicknameValid && nickname.length > 0) ||
-                  errorNicknameDuplication
-                    ? 'input error'
-                    : 'input'
-                }
-                placeholder="닉네임을 작성해주세요."
-                value={nickname}
-                onChange={handleNickname}
-                onFocus={() => setErrorNicknameDuplication(false)}
-              />
-            </div>
-            <div className="error-text">
-              {!nicknameValid && nickname.length > 1 && (
-                <div className="errorMessageWrap">
-                  닉네임은 특수문자를 포함할수 없고 2글자 이상 8자
-                  이하이어야합니다.
-                </div>
-              )}
-              {errorNicknameDuplication ? (
-                <div className="errorMessageWrap">중복된 닉네임 입니다.</div>
-              ) : null}
-            </div>
-          </div>
+    <>
+      <HeadSeo title="회원가입 | be-my-desk" />
+      <CustomAuthUI headingTitle="회원가입" height="43rem">
+        <CustomInput
+          type="text"
+          placeholder="닉네임을 입력해주세요."
+          subHeadingText="닉네임"
+          descriptionText="닉네임 8글자 이내, 특수문자 불가"
+          className={
+            (!nicknameValid && nickname.length > 0) || errorNicknameDuplication
+              ? 'error'
+              : null
+          }
+          value={nickname}
+          onChange={handleNickname}
+          onFocus={() => setErrorNicknameDuplication(false)}
+          errorMessageText={
+            !nicknameValid && nickname.length > 1
+              ? '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자 이하이어야합니다.'
+              : errorNicknameDuplication
+              ? '중복된 닉네임 입니다.'
+              : undefined
+          }
+        />
 
-          <div>
-            <div className="inputTitleWrap">
-              <p className="title">이메일</p>
-            </div>
-            <div className="inputWrap error">
-              <input
-                type="text"
-                className={
-                  (!emailValid && email.length > 0) || errorEmailDuplication
-                    ? 'input error'
-                    : 'input'
-                }
-                placeholder="이메일을 입력해주세요"
-                value={email}
-                // autoComplete 어트리뷰트는 브라우저 자동완성 작동여부
-                autoComplete="off"
-                onChange={handleEmail}
-                onFocus={() => setErrorEmailDuplication(false)}
-              />
-              @{/* @ 뒷쪽 */}
-              <SelectBox
-                onClick={() =>
-                  setSelected((selected) => ({
-                    ...selected,
-                    selectBox: !selected.selectBox,
-                  }))
-                }
-                // className={
-                //   (!emailValid && email.length > 0) || errorEmailDuplication
-                //     ? 'input error'
-                //     : 'input'
-                // }
-              >
-                <p
-                  className={
-                    currentValue === '선택해주세요' && email.length > 0
-                      ? 'selectedText'
-                      : selectBox
-                      ? 'selectedText active'
-                      : 'selectedText'
-                  }
-                >
-                  {currentValue}
-                  <span className="arrow" />
-                </p>
-                {selectBox && (
-                  <ul className="select-list">
-                    <li onClick={selectTarget}>naver.com</li>
-                    <li onClick={selectTarget}>gmail.com</li>
-                    <li onClick={selectTarget}>hanmail.net</li>
-                    <li onClick={selectTarget}>daum.net</li>
-                    <li onClick={selectTarget}>kakao.com</li>
-                    <li onClick={selectTarget}>nate.com</li>
-                    {/* <li onClick={selectTarget}>직접입력하기</li> */}
-                  </ul>
-                )}
-              </SelectBox>
-            </div>
+        <EmailDiv>
+          <CustomInput
+            width="70"
+            subHeadingText="이메일"
+            className={
+              (!emailValid && email.length > 0) || errorEmailDuplication
+                ? 'input error'
+                : 'input'
+            }
+            placeholder="이메일을 입력해주세요"
+            value={email}
+            autoComplete="off"
+            onChange={handleEmail}
+            onFocus={() => setErrorEmailDuplication(false)}
+            errorMessageText={
+              !emailValid && email.length
+                ? '이메일 양식을 확인해주세요.'
+                : errorEmailDuplication
+                ? '해당 이메일 계정이 이미 존재합니다.'
+                : undefined
+            }
+          />
+          <div className="emailAt">@</div>
+          {/* @ 뒷쪽 */}
+          <SelectBox
+            onClick={() =>
+              setSelected((selected) => ({
+                ...selected,
+                selectBox: !selected.selectBox,
+              }))
+            }
+          >
+            <p
+              className={
+                currentValue === '선택해주세요' && email.length > 0
+                  ? 'selectedText'
+                  : selectBox
+                  ? 'selectedText active'
+                  : 'selectedText'
+              }
+            >
+              {currentValue}
+              <span className="arrow" />
+            </p>
+            {selectBox && (
+              <ul className="select-list">
+                <li onClick={selectTarget}>naver.com</li>
+                <li onClick={selectTarget}>gmail.com</li>
+                <li onClick={selectTarget}>hanmail.net</li>
+                <li onClick={selectTarget}>daum.net</li>
+                <li onClick={selectTarget}>kakao.com</li>
+                <li onClick={selectTarget}>nate.com</li>
+                {/* <li onClick={selectTarget}>직접입력하기</li> */}
+              </ul>
+            )}
+          </SelectBox>
+        </EmailDiv>
 
-            <div className="error-text">
-              {!emailValid && email.length > 0 && (
-                <div className="errorMessageWrap">
-                  이메일 양식을 확인해주세요.
-                </div>
-              )}
-              {errorEmailDuplication ? (
-                <div className="errorMessageWrap">
-                  해당 이메일 계정이 이미 존재합니다.
-                </div>
-              ) : null}
-            </div>
-          </div>
+        <CustomInput
+          type="password"
+          placeholder="비밀번호를 입력해주세요."
+          subHeadingText="비밀번호"
+          descriptionText="8~16 자리 / 영문 대소문자, 숫자, 특수문자 포함"
+          className={!pwValid && pw.length > 0 ? 'error' : null}
+          value={pw}
+          onChange={handlePw}
+          errorMessageText={
+            !pwValid && pw.length > 0
+              ? '영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.'
+              : undefined
+          }
+        />
 
-          <div>
-            <div className="inputTitleWrap">
-              <p className="title">비밀번호</p>
-              <p className="description">
-                8~16 자리 / 영문 대소문자, 숫자, 특수문자 포함
-              </p>
-            </div>
-            <div className="inputWrap">
-              <input
-                type="password"
-                className={!pwValid && pw.length > 0 ? 'input error' : 'input'}
-                placeholder="비밀번호를 입력해주세요"
-                value={pw}
-                onChange={handlePw}
-              />
-            </div>
-            <div className="error-text">
-              {!pwValid && pw.length > 0 && (
-                <div className="errorMessageWrap">
-                  영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <div className="inputTitleWrap">
-              <p className="title">비밀번호 확인</p>
-            </div>
-            <div className="inputWrap">
-              <input
-                type="password"
-                className={
-                  !pwVerfyValid && pwVerfy.length > 0 ? 'input error' : 'input'
-                }
-                placeholder="비밀번호를 입력해주세요"
-                onChange={handleVerfyPw}
-              />
-            </div>
-            <div className="error-text">
-              {!pwVerfyValid && pwVerfy.length > 0 && (
-                <div className="errorMessageWrap">비밀번호가 다릅니다.</div>
-              )}
-            </div>
-          </div>
-        </div>
+        <CustomInput
+          type="password"
+          placeholder="다시한번 입력해주세요."
+          subHeadingText="비밀번호 확인"
+          className={!pwVerfyValid && pwVerfy.length > 0 ? 'error' : null}
+          onChange={handleVerfyPw}
+          errorMessageText={
+            !pwVerfyValid && pwVerfy.length > 0
+              ? '비밀번호가 다릅니다'
+              : undefined
+          }
+        />
 
         <SignUpAgreeDiv>
           <div className="agree-input-wrap">
@@ -446,146 +403,35 @@ export default function SignUp({}: Props) {
           </div>
         </SignUpAgreeDiv>
 
-        <div className="buttonWrap">
+        <ButtonDiv>
           <CustomButton
             backgroundColor="#206EFB"
             fontColor="#fff"
             paddingColumns="0.875"
             paddingRow="0.875"
             fontSize="1.25"
-            onClick={() => {
-              onClickConfirmButton();
-              logEvent('회원가입버튼', {
-                from: 'auth/sign-up / 직접회원가입',
-              });
-            }}
+            onClick={onClickConfirmButton}
             disabled={notAllow}
           >
             회원가입
           </CustomButton>
-        </div>
-      </SignUpLayout>
-    </StyledBackground>
+        </ButtonDiv>
+      </CustomAuthUI>
+    </>
   );
 }
 
-const StyledBackground = styled.div`
+const EmailDiv = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: url(https://images.pexels.com/photos/251225/pexels-photo-251225.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)
-    no-repeat center;
-  background-size: cover;
-`;
-
-const SignUpLayout = styled.div`
-  display: flex;
-  /* justify-content: center; */
-  flex-direction: column;
-  width: 466px;
-  height: 740px;
-  background: #ffffff;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29);
-  border-radius: 20px;
-  margin-top: 50px;
-  padding: 1.5rem 2.5rem;
-
-  /* max-width: 36.75rem;
-  width: 100%;
-
-  padding: 2.375rem 2.5rem;
-  border-radius: 1.25rem;
-  background: #fff;
-  margin-top: 40px;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.29); */
-
-  // 개별항목 헤딩 + 맨위 '회원가입'
-  .title {
-    text-align: center;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 32px;
-    margin-left: 10px;
-  }
-  // 인풋창 전체 묶기
-  .contentWrap {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 40px;
-
-    // 개별항목 헤딩 Div
-    .inputTitleWrap {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      > .title {
-        font-size: 1.25rem;
-        font-weight: 700;
-      }
-
-      > .description {
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: #adb5bd;
-      }
-    }
-    // 인풋창
-    .inputWrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      color: #adb5bd;
-      font-weight: 500;
-      font-size: 14px;
-
-      > input {
-        flex: 1;
-        border-radius: 0.625rem;
-        padding: 0.8125rem 1.25rem;
-        border: 0.0625rem solid #adb5bd;
-
-        &.error {
-          border: 1px solid red;
-        }
-        &:focus-within {
-          border: 1px solid #17171c;
-        }
-      }
-    }
-  }
-
-  .buttonWrap {
-    display: flex;
-    margin-top: 2.5rem;
-
-    > button {
-      width: 100%;
-      font-size: 16px;
-      :hover {
-        opacity: 90%;
-      }
-      &:disabled {
-        background-color: #adb5bd;
-      }
-    }
-  }
-
-  .error-text {
-    min-height: 12px;
-    color: #f83e4b;
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
-    margin-left: 5px;
-    font-weight: 500;
+  .emailAt {
+    align-self: center;
+    padding-right: 10px;
   }
 `;
 const SelectBox = styled.div`
   flex: 1;
   position: relative;
+  align-self: center;
 
   .selectedText {
     display: flex;
@@ -594,7 +440,12 @@ const SelectBox = styled.div`
     border-radius: 10px;
     padding: 13px 20px;
     border: 1px solid #adb5bd;
-
+    font-weight: 500;
+    font-size: 14px;
+    color: #5b5b5b;
+    @media (max-width: 420px) {
+      font-size: 10px;
+    }
     &.active {
       border: 0.0625rem solid #206efb;
       color: #206efb;
@@ -606,6 +457,9 @@ const SelectBox = styled.div`
         border-right: 6px solid transparent;
         border-top: 0;
         border-bottom: 6px solid #206efb;
+        @media (max-width: 420px) {
+          margin-left: 0;
+        }
       }
     }
     &.error {
@@ -629,7 +483,10 @@ const SelectBox = styled.div`
     background: #fff;
     box-shadow: 0px 4px 6px 0px #00000040;
     overflow: hidden;
-
+    @media (max-width: 420px) {
+      font-size: 13px;
+      width: 120%;
+    }
     > li {
       padding: 20px;
 
@@ -641,8 +498,6 @@ const SelectBox = styled.div`
   }
 `;
 const SignUpAgreeDiv = styled.div`
-  margin-top: 2rem;
-
   .agree-input-wrap {
     margin-bottom: 0.5rem;
 
@@ -690,5 +545,21 @@ const SignUpAgreeDiv = styled.div`
 
   .check-custorm-right {
     margin-left: 2.5px;
+  }
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  margin-top: 1.5rem;
+
+  > button {
+    width: 100%;
+    font-size: 16px;
+    :hover {
+      opacity: 90%;
+    }
+    &:disabled {
+      background-color: #adb5bd;
+    }
   }
 `;
