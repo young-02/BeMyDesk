@@ -1,4 +1,5 @@
 import CustomButton from '@/components/ui/CustomButton';
+import CustomError from '@/components/ui/error/CustomError';
 import HeadSeo from '@/components/ui/HeadSeo';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -11,20 +12,11 @@ export default function Error404() {
   const route = useRouter();
 
   return (
-    <Error404Layout>
-      <HeadSeo title={'404 | 페이지를 찾을 수 없습니다.'} />
-      <p>404 ERROR</p>
-      <div className="image-wrap">
-        <Image
-          src="/images/error_icon.jpg"
-          layout="fill"
-          object-fit="cover"
-          alt="error_icon"
-        />
+    <CustomError subtitle="404 ERROR" title="앗! 페이지를 찾을 수가 없어요">
+       <div>
+        <p>존재하지 않는 주소를 입력하셨거나,</p>
+        <p>요청하신 페이지의 주소가 변경, 삭제가 되었나 봐요</p>
       </div>
-      <h2>앗! 페이지를 찾을 수가 없어요</h2>
-      <p>존재하지 않는 주소를 입력하셨거나,</p>
-      <p>요청하신 페이지의 주소가 변경, 삭제가 되었나 봐요</p>
       <div className="button-wrap">
         <CustomButton
           backgroundColor="#fff"
@@ -56,7 +48,7 @@ export default function Error404() {
           이전으로
         </CustomButton>
       </div>
-    </Error404Layout>
+    </CustomError>
   );
 }
 
