@@ -50,12 +50,14 @@ const PostListCard = ({ post }: { post: PostType }) => {
     <PostListCardLayout key={id}>
       <div className="post">
         <Link href={`/detail/${id}`}>
-          <div
-            className="post-image"
-            style={{
-              backgroundImage: `url(${postImage1})`,
-            }}
-          />
+          <div className="profile-image-wrap">
+            <div
+              className="post-image"
+              style={{
+                backgroundImage: `url(${postImage1})`,
+              }}
+            />
+          </div>
         </Link>
         <CardContentBox>
           <div
@@ -64,6 +66,7 @@ const PostListCard = ({ post }: { post: PostType }) => {
               backgroundImage: `url(${userProfileImg} )`,
             }}
           />
+
           <div className="top">
             <h4>{userNickname ?? '닉네임'}</h4>
             <p>{nowDate}</p>
@@ -103,6 +106,7 @@ const PostListCardLayout = styled.div`
   background-color: white;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   cursor: pointer;
+  overflow: hidden;
 
   @media (max-width: 1300px) {
     width: calc(100% / 3 - 11px);
@@ -116,16 +120,25 @@ const PostListCardLayout = styled.div`
     width: 100%;
   }
 
-  .post-image {
+  .profile-image-wrap {
     width: 100%;
     height: 16rem;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
     border-radius: 0.625rem 0.625rem 0rem 0rem;
-    :hover {
-      background-size: 19rem;
+    overflow: hidden;
+
+    .post-image {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
       transition: all 0.2s;
+    }
+
+    :hover {
+      .post-image {
+        transform: scale(1.1);
+      }
     }
   }
 `;
