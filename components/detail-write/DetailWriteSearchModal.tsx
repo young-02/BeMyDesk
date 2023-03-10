@@ -61,5 +61,25 @@ const ModalOverlays = styled.div`
   border-radius: 10px;
   z-index: 20;
   overflow-y: scroll;
+
+  @media (min-width: 1px) and (max-width: 375px) {
+    top: 9vh;
+    left: 0%;
+    width: 100%;
+    height: 92%;
+  }
+
+  @media (min-width: 376px) and (max-width: 690px) {
+    top: 8vh;
+    left: 0%;
+    width: 100%;
+    height: 93%;
+  }
+
+  @media (min-width: 691px) and (max-width: 1200px) {
+    top: 11vh;
+    left: 15%;
+    width: 70%;
+  }
 `;
 export default DetailWriteSearchModal;

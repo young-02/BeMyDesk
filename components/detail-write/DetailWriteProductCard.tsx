@@ -1,12 +1,11 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import PostListItem from '../post-list/PostListItem';
 
 const parse = require('html-react-parser');
 
@@ -48,6 +47,7 @@ const DetailWriteProductCard = ({
                   width={150}
                   height={150}
                   alt="selectListImg"
+                  className="selectListImg"
                 />
                 <div className="card">
                   <p className="product_title">{parse(i.title)}</p>
@@ -59,14 +59,29 @@ const DetailWriteProductCard = ({
         ))
       ) : (
         <Swiper
-          slidesPerView={2}
+          slidesPerView={1}
           centeredSlides={true}
-          spaceBetween={-65}
+          spaceBetween={20}
           pagination={{
             type: 'fraction',
+            clickable: true,
           }}
           navigation={true}
           modules={[Pagination, Navigation]}
+          breakpoints={{
+            640: {
+              width: 640,
+              slidesPerView: 1,
+            },
+            768: {
+              width: 768,
+              slidesPerView: 2,
+            },
+            1200: {
+              width: 1200,
+              slidesPerView: 3,
+            },
+          }}
           className="mySwiper"
         >
           {selectList?.map((i: any) => (
@@ -131,19 +146,45 @@ const DetailWriteCardLayout = styled.div`
 const DetailWriteCardBox = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0.6rem;
 
   .close {
     display: flex;
     justify-content: end;
+    @media (min-width: 1px) and (max-width: 375px) {
+      width: 10%;
+      height: 10%;
+    }
   }
 `;
 
 const CardBox = styled.div`
-  width: 31.25rem;
+  width: 100%;
   border: 0.0625rem solid #868e96;
   border-radius: 0.625rem;
   margin: 1.5rem;
   padding: 1rem;
+  overflow: hidden;
+  /* margin: 0 auto; */
+  @media (min-width: 1px) and (max-width: 375px) {
+    width: 50%;
+    border: none;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 376px) and (max-width: 690px) {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 691px) and (max-width: 1200px) {
+    width: 69.5%;
+    margin: 0 auto;
+  }
+  @media (min-width: 1201px) {
+    width: 75%;
+    margin: 0 auto;
+  }
 
   .close_box {
     display: flex;
@@ -158,6 +199,11 @@ const CardBox = styled.div`
     text-align: center;
   }
 
+  .selectListImg {
+    width: 35%;
+    height: 35%;
+  }
+
   .product_title {
     font-size: 0.875rem;
     font-weight: 700;
@@ -166,6 +212,19 @@ const CardBox = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    box-sizing: border-box;
+
+    @media (min-width: 1px) and (max-width: 375px) {
+      width: 50%;
+    }
+
+    @media (min-width: 376px) and (max-width: 690px) {
+      width: 50%;
+    }
+
+    @media (min-width: 691px) and (max-width: 1200px) {
+      width: 55%;
+    }
   }
 
   .product_hashTag {

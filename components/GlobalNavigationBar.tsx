@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 import Search from './Search';
 import { auth } from '@/shared/firebase';
 import useCheckLogin from '../Hooks/useCheckLogin';
-import { useMediaQuery } from 'react-responsive';
 import useSearch from '@/Hooks/useSearch';
 import MobileMenu from './main/MobileMenu';
+import useResponsive from '@/Hooks/useResponsive';
 import { logEvent, resetAmplitude } from '@/amplitude/amplitude';
 
 function GlobalNavigationBar() {
@@ -19,20 +19,13 @@ function GlobalNavigationBar() {
   const userProfilImg =
     auth.currentUser?.photoURL ?? '/images/defaultProfile.png';
 
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 690 });
-  const isDesktopSize = useMediaQuery({ minWidth: 691 });
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 690,
+    minWidth: 691,
+  });
 
   //모바일 서브메뉴
   const [isOpen, setIsOpen] = useState(false);
-
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
 
   const mainPath = router.route === '/';
   console.log(router, mainPath);

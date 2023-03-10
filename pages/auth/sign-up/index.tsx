@@ -17,6 +17,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { logEvent } from '@/amplitude/amplitude';
 import HeadSeo from '@/components/ui/HeadSeo';
+import CustomButton from '@/components/ui/CustomButton';
 type Props = {};
 
 export default function SignUp({}: Props) {
