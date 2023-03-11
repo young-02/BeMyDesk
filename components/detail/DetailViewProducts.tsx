@@ -50,7 +50,7 @@ const DetailViewProductsLayout = styled.div`
     max-height: 66.875rem;
     min-height: 66.875rem;
     overflow-y: auto;
-    padding: 0 0.625rem 0 0;
+    padding: 0;
 
     @media (max-width: 820px) {
       flex-direction: row;
@@ -58,6 +58,18 @@ const DetailViewProductsLayout = styled.div`
       display: flex;
       gap: 1rem;
       overflow-x: scroll;
+
+      ::-webkit-scrollbar {
+        background-color: #fff;
+        height: .5rem;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #ced4da;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: #fff;
+      }
     }
   }
 
