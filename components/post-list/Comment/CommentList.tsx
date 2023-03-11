@@ -124,6 +124,11 @@ const CommentListLayout = styled.div`
   margin-bottom: 1.25rem;
   padding: 0.125rem;
 
+  @media (max-width: 820px) {
+    position:relative;
+  }
+
+
   &:hover {
     background: #f1f3f5;
   }
@@ -148,6 +153,10 @@ const CommentTextDiv = styled.div`
   justify-content: space-between;
   flex-direction: column;
   width: calc(100% - 10rem);
+
+  @media (max-width: 820px) {
+    width: 100%;
+  }
 
   .userInformation {
     display: flex;
@@ -190,4 +199,10 @@ const CommentTextDiv = styled.div`
 const CommentModify = styled.div`
   display: flex;
   gap: 10px;
+
+  @media (max-width: 820px) {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 `;
