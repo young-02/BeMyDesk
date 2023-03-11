@@ -109,7 +109,7 @@ export default function DetailViewUserInfor({ post }) {
         </div>
         {isFollowingClicked ? (
           <CustomButton
-            border="1px solid #206EFB"
+            border=".0625rem solid #206EFB"
             fontColor="#206EFB"
             paddingColumns="0.5"
             paddingRow="1"
@@ -138,12 +138,12 @@ const DetailViewUserInforLayout = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.25rem;
-  padding: 1px;
+  padding: 0.0625rem;
 
   .user-expression {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: 20px;
 
     > div {
       cursor: pointer;
@@ -154,8 +154,8 @@ const DetailViewUserInforLayout = styled.div`
       flex-direction: row;
       align-items: center;
       color: #868e96;
-      gap: 0.625rem;
-      margin: 0rem 0.25rem;
+      gap: .625rem;
+      margin: 0px 4px;
     }
   }
 `;
@@ -167,40 +167,39 @@ const UserProfile = styled.div`
   .user-profile {
     position: relative;
     width: 4rem;
-    height: 4rem;
+    height: 64px;
     border-radius: 100%;
     overflow: hidden;
 
-    @media (max-width: 820px) {
+    @media (max-width: 51.25rem) {
       width: 2.5rem;
       height: 2.5rem;
     }
   }
   .user-information {
-    margin-left: 2.5rem;
+    margin-left: 20px;
 
-    @media (max-width: 820px) {
-      margin-left: 14px;
+    @media (max-width: 51.25rem) {
+      margin-left: 0.875rem;
     }
 
     .user-id {
-      margin-bottom: 0.5rem;
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.125rem;
       line-height: 2rem;
 
-      @media (max-width: 820px) {
-        margin-bottom: 0.125rem;
-        font-size: 0.875rem;
+      @media (max-width: 51.25rem) {
+        margin-bottom: .125rem;
+        font-size: .875rem;
       }
     }
     .user-job {
       font-weight: 500;
-      font-size: 1.25rem;
+      font-size: 1rem;
       color: #868e96;
 
-      @media (max-width: 820px) {
-        font-size: 12px;
+      @media (max-width: 51.25rem) {
+        font-size: 0.75rem;
       }
     }
   }

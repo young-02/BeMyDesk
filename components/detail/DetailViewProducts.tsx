@@ -58,9 +58,6 @@ const DetailViewProductsLayout = styled.div`
       display: flex;
       gap: 1rem;
       overflow-x: scroll;
-      ::-webkit-scrollbar {
-        display: none;
-      }
     }
   }
 

@@ -185,8 +185,16 @@ const DetailViewLayout = styled.div`
   margin: 9.25rem auto;
 
   .detail-header {
-    width: 100%;
+    width: 70%;
     max-width: 55.875rem;
+
+    @media (max-width: 820px) {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    padding: 0 1.25rem;
   }
 `;
 
@@ -220,7 +228,7 @@ const DetailViewDiv = styled.div`
       width: 100%;
       min-width: 100%;
       background-color: #fff;
-      padding: 0 1rem;
+      padding: 0;
     }
   }
 `;
