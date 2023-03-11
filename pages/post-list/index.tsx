@@ -55,9 +55,9 @@ const PostListLayout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* width: 100vw; */
-  min-height: 61vh;
+  min-height: 70vh;
   margin-top: 8rem;
+  margin-bottom: 4em;
 `;
 
 const Header = styled.div`
@@ -82,5 +82,8 @@ const PostListBox = styled.div`
   gap: 1rem;
   ::-webkit-scrollbar {
     display: none;
+  }
+  @media (max-width:1200px){
+    padding:0 1.25rem;
   }
 `;
