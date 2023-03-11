@@ -1,5 +1,5 @@
 import { auth, dbService } from '@/shared/firebase';
-import { doc, setDoc, updateDoc, addDoc } from 'firebase/firestore';
+import { doc, setDoc, updateDoc, addDoc, deleteDoc } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useCheckLogin from '../../Hooks/useCheckLogin';
@@ -15,6 +15,8 @@ import inactiveScrap from '../../public/images/userReaction/inactiveScrap.png';
 import useUserInfo from '@/Hooks/useUserInfo';
 import { useUpdateScrap } from '@/Hooks/useUpdateScrap';
 import { useUpdateFollowing } from '../../Hooks/useUpdateFollowing';
+import CustomModal from '../ui/CustomModal';
+import { useQueryClient } from 'react-query';
 
 export default function DetailViewUserInfor({ post }) {
   const router = useRouter();
@@ -31,6 +33,12 @@ export default function DetailViewUserInfor({ post }) {
   const scraper = scraps?.includes(id) ? true : false;
   const follower = following?.includes(userId) ? true : false;
   const userProfileImg = userProfile ?? '/images/defaultProfile.png';
+  const [isModify, setIsModify] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+
+  const postId = router.query.id;
+  const queryClient = useQueryClient();
 
   const currentUserId = auth.currentUser?.uid;
   const { data: userInfo } = useUserInfo(currentUserId);
@@ -73,6 +81,16 @@ export default function DetailViewUserInfor({ post }) {
     } else {
       updateFollowing(id);
     }
+  };
+
+  const deletePost = async () => {
+    await deleteDoc(doc(dbService, `postData/${postId}`));
+    queryClient.removeQueries('post-list');
+    router.push('/post-list');
+  };
+
+  const updatePost = async () => {
+    router.push(`/detail/write/${postId}/edit`);
   };
 
   return (
@@ -128,6 +146,82 @@ export default function DetailViewUserInfor({ post }) {
             팔로우
           </CustomButton>
         )}
+
+        {auth.currentUser?.uid === post?.userId && (
+          <ModifyWrap>
+            <div
+              className="modify-icon"
+              onClick={() => setIsModify((prev) => !prev)}
+            >
+              <Image src="/images/modify_icon.svg" layout="fill" alt="modify" />
+            </div>
+
+            {isModify && (
+              <div className="modify-wraper">
+                <>
+                  <span onClick={() => setIsEdit((prev) => !prev)}>
+                    수정하기
+                  </span>
+                  <span
+                    className="delete"
+                    onClick={() => setIsDelete((prev) => !prev)}
+                  >
+                    삭제하기
+                  </span>
+                </>
+
+                {isEdit && (
+                  <CustomModal title="글을 수정하시겠습니까?">
+                    <div className="buttonWrap">
+                      <CustomButton
+                        paddingRow="0"
+                        paddingColumns="0.5"
+                        backgroundColor="#F83E4B"
+                        fontColor="#fff"
+                        onClick={updatePost}
+                      >
+                        수정
+                      </CustomButton>
+                      <CustomButton
+                        paddingRow="0"
+                        paddingColumns="0.5"
+                        backgroundColor="#fff"
+                        fontColor="#868E96"
+                        onClick={() => setIsEdit((prev) => !prev)}
+                      >
+                        취소
+                      </CustomButton>
+                    </div>
+                  </CustomModal>
+                )}
+                {isDelete && (
+                  <CustomModal title="정말 삭제하시겠습니까?">
+                    <div className="buttonWrap">
+                      <CustomButton
+                        paddingRow="0"
+                        paddingColumns="0.5"
+                        backgroundColor="#F83E4B"
+                        fontColor="#fff"
+                        onClick={deletePost}
+                      >
+                        삭제
+                      </CustomButton>
+                      <CustomButton
+                        paddingRow="0"
+                        paddingColumns="0.5"
+                        backgroundColor="#fff"
+                        fontColor="#868E96"
+                        onClick={() => setIsDelete((prev) => !prev)}
+                      >
+                        취소
+                      </CustomButton>
+                    </div>
+                  </CustomModal>
+                )}
+              </div>
+            )}
+          </ModifyWrap>
+        )}
       </div>
     </DetailViewUserInforLayout>
   );
@@ -143,7 +237,11 @@ const DetailViewUserInforLayout = styled.div`
   .user-expression {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 1.25rem;
+
+    @media (max-width: 520px) {
+      gap: 0.5rem;
+    }
 
     > div {
       cursor: pointer;
@@ -154,8 +252,12 @@ const DetailViewUserInforLayout = styled.div`
       flex-direction: row;
       align-items: center;
       color: #868e96;
-      gap: .625rem;
+      gap: 0.125rem;
       margin: 0px 4px;
+
+      > p{
+        font-size:.875rem;
+      }
     }
   }
 `;
@@ -166,8 +268,8 @@ const UserProfile = styled.div`
 
   .user-profile {
     position: relative;
-    width: 4rem;
-    height: 64px;
+    width: 3rem;
+    height: 3rem;
     border-radius: 100%;
     overflow: hidden;
 
@@ -189,8 +291,8 @@ const UserProfile = styled.div`
       line-height: 2rem;
 
       @media (max-width: 51.25rem) {
-        margin-bottom: .125rem;
-        font-size: .875rem;
+        margin-bottom: 0.125rem;
+        font-size: 0.875rem;
       }
     }
     .user-job {
@@ -200,6 +302,45 @@ const UserProfile = styled.div`
 
       @media (max-width: 51.25rem) {
         font-size: 0.75rem;
+      }
+    }
+  }
+`;
+
+const ModifyWrap = styled.div`
+  position: relative;
+
+  .modify-icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+  .modify-wraper {
+    position: absolute;
+    right: -0.625rem;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    text-align: center;
+    z-index: 99;
+    top: 2rem;
+    border-radius: 10px;
+    box-shadow: 3px 0.25rem 0.375rem rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+
+    .delete {
+      color: #f83e4b;
+    }
+
+    > span {
+      display: block;
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+
+      :hover {
+        background: #f1f3f5;
       }
     }
   }
