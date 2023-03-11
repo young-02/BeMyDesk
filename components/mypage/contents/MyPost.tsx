@@ -38,9 +38,17 @@ const StyledErrorDiv = styled.div`
   justify-content: center;
   margin-top: 190px;
   align-items: center;
+  @media (max-width: 1000px) {
+    margin-top: 90px;
+  }
   .errorIcon {
     width: 164px;
     height: 164px;
+
+    @media (max-width: 1000px) {
+      width: 124px;
+      height: 124px;
+    }
   }
   .errorFirstLine {
     font-style: normal;
@@ -56,6 +64,11 @@ const StyledErrorDiv = styled.div`
     /* Gray 06 */
 
     color: #495057;
+    @media (max-width: 1000px) {
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 20px;
+    }
   }
   .errorSecondLine {
     font-style: normal;
@@ -71,5 +84,11 @@ const StyledErrorDiv = styled.div`
     /* Gray 05 */
 
     color: #868e96;
+    @media (max-width: 1000px) {
+      margin-top: 7px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 16px;
+    }
   }
 `;

@@ -188,10 +188,12 @@ const MobileStyledContainer = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-
+    padding: 10px;
+    overflow: hidden;
     .firstLine {
       height: 25px;
-      background-color: blue;
+
+      width: 90%;
 
       .Title {
         font-family: 'Pretendard';
@@ -206,9 +208,8 @@ const MobileStyledContainer = styled.div`
       }
     }
     .secondLine {
-      background-color: red;
-      height: 70px;
-
+      min-height: 55%;
+      margin-top: 5px;
       .Text {
         font-family: 'Pretendard';
         font-style: normal;
@@ -216,13 +217,13 @@ const MobileStyledContainer = styled.div`
         font-size: 12px;
         line-height: 18px;
         color: #17171c;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
       }
     }
     .thirdLine {
-      background-color: lightgray;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -273,7 +274,7 @@ const StyledRightDiv = styled.div`
   padding: 20px;
 
   .firstLine {
-    width: 500px;
+    width: 450px;
     height: 30px;
     margin-bottom: 20px;
 
@@ -284,11 +285,15 @@ const StyledRightDiv = styled.div`
       font-size: 24px;
       line-height: 32px;
       color: #17171c;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .secondLine {
     width: 572px;
     height: 58.12px;
+
     .Text {
       font-family: 'Pretendard';
       font-style: normal;
@@ -296,6 +301,10 @@ const StyledRightDiv = styled.div`
       font-size: 16px;
       line-height: 20px;
       color: #17171c;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
     }
   }
   .thirdLine {

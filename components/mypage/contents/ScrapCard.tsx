@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import usePost from '@/Hooks/usePost';
@@ -6,6 +6,7 @@ import { useUpdateScrap } from '@/Hooks/useUpdateScrap';
 import activeScrap from '../../../public/images/userReaction/activeScrap.png';
 import inactiveScrap from '../../../public/images/userReaction/inactiveScrap.png';
 import { useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
 
 const ScrapCard = ({ postId, userInfo, currentUserId }: any) => {
   const queryClient = useQueryClient();
@@ -17,51 +18,203 @@ const ScrapCard = ({ postId, userInfo, currentUserId }: any) => {
     queryClient.removeQueries(['post', postId]);
   };
 
+  // 반응응형 사이즈
+  const [isMobile, setIsMobile] = useState<number>(0);
+  const [isDesktop, setIsDesktop] = useState<number>(0);
+  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
+  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
+
+  //서버사이드렌더링
+  useEffect(() => {
+    setIsMobile(isMobileSize);
+    setIsDesktop(isDesktopSize);
+  }, [isMobileSize, isDesktopSize]);
+
   return (
     <>
-      {isLoading && <div>Loading...</div>}
-      {isError && <div>Error: {error.message}</div>}
-      <StyledContainer>
-        <StyledLeftDiv>
-          <Image
-            src={post?.postImage1}
-            alt="postImage1"
-            width={282}
-            height={197}
-            style={{ cursor: 'pointer' }}
-            className="img"
-          />
-        </StyledLeftDiv>
-        <StyledRightDiv>
-          <div className="firstLine">
-            <p className="Title">{post?.postTitle}</p>
+      {isLoading && <div></div>}
+      {isError && <div></div>}
+      {isDesktopSize && (
+        <StyledContainer>
+          <StyledLeftDiv>
+            <Image
+              src={post?.postImage1}
+              alt="postImage1"
+              width={282}
+              height={197}
+              style={{ cursor: 'pointer' }}
+              className="img"
+            />
+          </StyledLeftDiv>
+          <StyledRightDiv>
+            <div className="firstLine">
+              <p className="Title">{post?.postTitle}</p>
+            </div>
+            <div className="secondLine">
+              <p className="Text">{post?.postText.replace(/<[^>]*>?/g, '')}</p>
+            </div>
+            <div className="thirdLine">
+              <div className="ProfileDiv">
+                <div className="profileImage">
+                  <Image
+                    src="/images/defaultProfile.png"
+                    alt="profileImage"
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                </div>
+                <p className="ProfileNickname">{post?.userNickname}</p>
+              </div>
+              <div onClick={handleScrap} style={{ cursor: 'pointer' }}>
+                <Image src={activeScrap} alt="scrap-icon" width={24} />
+              </div>
+            </div>
+          </StyledRightDiv>
+        </StyledContainer>
+      )}
+      {isMobileSize && (
+        <MobileStyledContainer>
+          <div className="leftDiv">
+            <Image
+              src={post?.postImage1}
+              alt="postImage1"
+              width={140}
+              height={124}
+              style={{ cursor: 'pointer' }}
+              className="img"
+            />
           </div>
-          <div className="secondLine">
-            <p className="Text">{post?.postText.replace(/<[^>]*>?/g, '')}</p>
-          </div>
-          <div className="thirdLine">
-            <div className="ProfileDiv">
-              <div className="profileImage">
+          <div className="rightDiv">
+            <div className="firstLine">
+              <p className="Title">{post?.postTitle}</p>
+            </div>
+            <div className="secondLine">
+              <p className="Text">{post?.postText.replace(/<[^>]*>?/g, '')}</p>
+            </div>
+            <div className="thirdLine">
+              <div className="ProfileDiv">
+                <div className="profileImage">
+                  <Image
+                    src="/images/defaultProfile.png"
+                    alt="profileImage"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <p className="ProfileNickname">{post?.userNickname}</p>
+              </div>
+              <div onClick={handleScrap} style={{ cursor: 'pointer' }}>
                 <Image
-                  src="/images/defaultProfile.png"
-                  alt="profileImage"
-                  layout="fill"
-                  objectFit="cover"
+                  src={activeScrap}
+                  alt="scrap-icon"
+                  width={24}
+                  height={24}
                 />
               </div>
-              <p className="ProfileNickname">{post?.userNickname}</p>
-            </div>
-            <div onClick={handleScrap} style={{ cursor: 'pointer' }}>
-              <Image src={activeScrap} alt="scrap-icon" width={24} />
             </div>
           </div>
-        </StyledRightDiv>
-      </StyledContainer>
+        </MobileStyledContainer>
+      )}
     </>
   );
 };
 
 export default ScrapCard;
+
+const MobileStyledContainer = styled.div`
+  margin-bottom: 15px;
+
+  display: flex;
+  width: 100%;
+  height: 124px;
+  background: #ffffff;
+  border: 1px solid #868e96;
+  border-radius: 10px;
+  overflow: hidden;
+
+  .leftDiv {
+    .img {
+    }
+  }
+  .rightDiv {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    overflow: hidden;
+    .firstLine {
+      height: 25px;
+
+      width: 90%;
+
+      .Title {
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 20px;
+        color: #17171c;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .secondLine {
+      min-height: 55%;
+      margin-top: 5px;
+      .Text {
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 18px;
+        color: #17171c;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+      }
+    }
+
+    .thirdLine {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+
+      .ProfileDiv {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .profileImage {
+          position: relative;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          overflow: hidden;
+          margin-bottom: 3px;
+        }
+
+        .ProfileNickname {
+          margin-left: 13px;
+          /* Pretendard Bold 12 */
+
+          font-family: 'Pretendard';
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 12px;
+          /* identical to box height, or 133% */
+
+          /* Gray 09 */
+
+          color: #17171c;
+        }
+      }
+    }
+  }
+`;
 
 const StyledContainer = styled.div`
   display: flex;
@@ -105,6 +258,9 @@ const StyledRightDiv = styled.div`
       /* Gray 09 */
 
       color: #17171c;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .secondLine {
@@ -120,7 +276,10 @@ const StyledRightDiv = styled.div`
       /* or 125% */
 
       /* Gray 09 */
-
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
       color: #17171c;
     }
   }
