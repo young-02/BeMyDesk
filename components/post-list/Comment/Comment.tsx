@@ -40,6 +40,11 @@ const CommentLayout = styled.div`
   .title {
     font-size: 1.25rem;
     font-weight: 700;
+
+    @media (max-width: 820px) {
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
   }
   .description {
     margin: 0.75rem 0 1.125rem;

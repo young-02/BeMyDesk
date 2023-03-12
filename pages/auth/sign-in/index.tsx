@@ -125,7 +125,7 @@ export default function SignIn({}: Props) {
       scope: 'profile_nickname, account_email, profile_image',
       success: function (authObj: any) {
         //authObj 토큰
-        console.log('authObj', authObj);
+        // console.log('authObj', authObj);
         window.Kakao.API.request({
           url: '/v2/user/me',
           success: (res: any) => {

@@ -28,8 +28,7 @@ function GlobalNavigationBar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const mainPath = router.route === '/';
-  console.log(router, mainPath);
-
+ 
   return (
     <GNBLayout theme={pathname === '/main' || mainPath ? 'dark' : 'light'}>
       {isMobile && (
