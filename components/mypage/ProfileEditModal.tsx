@@ -11,6 +11,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import Image from 'next/image';
 import DeleteAccount from './editProfile/DeleteAccount';
 import { useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
 
 export function ProfileEditModal({
   setProfileEditModalOpen,
@@ -76,136 +77,461 @@ export function ProfileEditModal({
     updateDoc(collectionRef, payload);
     queryClient.removeQueries('userInfo');
   };
+  // 반응응형 사이즈
+  const [isMobile, setIsMobile] = useState<number>(0);
+  const [isDesktop, setIsDesktop] = useState<number>(0);
+  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
+  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
+
+  //서버사이드렌더링
+  useEffect(() => {
+    setIsMobile(isMobileSize);
+    setIsDesktop(isDesktopSize);
+  }, [isMobileSize, isDesktopSize]);
 
   return (
-    <StyledEditProfileModalContainer>
-      <div
-        className="modal-overlay"
-        onClick={() => setProfileEditModalOpen(false)}
-      />
-      <div className="modal-content">
-        <div className="modalLeftContiner">
-          <div className="modalFirstLine">
-            <div
-              onClick={handleImageClick}
-              className="modalProfileImageContainer"
-            >
-              <Image
-                src={profileImageUrl}
-                alt="ProfileImage"
-                // onClick={handleImageClick}
-                className="modalProfileImage"
-                width={202}
-                height={202}
-              />
+    <>
+      {isDesktopSize && (
+        <StyledEditProfileModalContainer>
+          <div
+            className="modal-overlay"
+            onClick={() => setProfileEditModalOpen(false)}
+          />
+          <div className="modal-content">
+            <div className="modalLeftContiner">
+              <div className="modalFirstLine">
+                <div
+                  onClick={handleImageClick}
+                  className="modalProfileImageContainer"
+                >
+                  <Image
+                    src={profileImageUrl}
+                    alt="ProfileImage"
+                    // onClick={handleImageClick}
+                    className="modalProfileImage"
+                    width={202}
+                    height={202}
+                  />
 
-              <div className="modalProfileImageOverlay">
-                <BiCamera className="modalProfileImageOverlayIcon" />
-                <p className="modalProfileImageOverlayText">프로필 사진 변경</p>
+                  <div className="modalProfileImageOverlay">
+                    <BiCamera className="modalProfileImageOverlayIcon" />
+                    <p className="modalProfileImageOverlayText">
+                      프로필 사진 변경
+                    </p>
+                  </div>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  style={{ display: 'none' }}
+                />
+              </div>
+              <div className="modalSecondLine">
+                <button
+                  className="modalSecondLineButton"
+                  onClick={removeProfileImage}
+                >
+                  기본 이미지 변경하기
+                </button>
+              </div>
+              <div className="modalThirdLine">
+                <button
+                  className={
+                    profileEditToggle
+                      ? 'editModalbuttonActive'
+                      : 'editModalbuttoninActive'
+                  }
+                  onClick={() =>
+                    setToggleEditMenu({
+                      profileEditToggle: true,
+                      changePasswordToggle: false,
+                      deleteAccountToggle: false,
+                    })
+                  }
+                >
+                  프로필 정보 설정
+                </button>
+                <button
+                  className={
+                    changePasswordToggle
+                      ? 'editModalbuttonActive'
+                      : 'editModalbuttoninActive'
+                  }
+                  onClick={() =>
+                    setToggleEditMenu({
+                      profileEditToggle: false,
+                      changePasswordToggle: true,
+                      deleteAccountToggle: false,
+                    })
+                  }
+                  disabled={user.providerData[0].providerId !== 'password'}
+                >
+                  비밀번호 변경
+                </button>
+                <p className="modalThirdLineButton2Warning">
+                  {user.providerData[0].providerId !== 'password'
+                    ? 'SNS 로그인 유저는 비밀번호를 변경할수 없습니다.'
+                    : null}{' '}
+                </p>
+              </div>
+              <div className="modalFourthLine">
+                <button
+                  className="deleteAccountText"
+                  onClick={() =>
+                    setToggleEditMenu({
+                      profileEditToggle: false,
+                      changePasswordToggle: false,
+                      deleteAccountToggle: true,
+                    })
+                  }
+                >
+                  회원탈퇴
+                </button>
               </div>
             </div>
-            <input
-              type="file"
-              accept="image/*"
-              ref={fileInputRef}
-              onChange={handleImageUpload}
-              style={{ display: 'none' }}
-            />
+            <div className="modalRightContiner">
+              <div className="RightModalFirstLine">
+                <p className="RightModalTitle">
+                  {profileEditToggle && '프로필 정보 설정'}
+                  {changePasswordToggle && '비밀번호 변경'}
+                  {deleteAccountToggle && '회원 탈퇴'}
+                </p>
+                <button
+                  className="modal-close"
+                  onClick={() => setProfileEditModalOpen(false)}
+                >
+                  <AiOutlineClose />
+                </button>
+              </div>
+              <div>
+                {profileEditToggle && (
+                  <ChangeProfile
+                    user={user}
+                    profileData={profileData}
+                    setProfileEditModalOpen={setProfileEditModalOpen}
+                  />
+                )}
+                {changePasswordToggle && <ChangePassword user={user} />}
+                {deleteAccountToggle && <DeleteAccount />}
+              </div>
+            </div>
           </div>
-          <div className="modalSecondLine">
-            <button
-              className="modalSecondLineButton"
-              onClick={removeProfileImage}
-            >
-              기본 이미지 변경하기
-            </button>
+        </StyledEditProfileModalContainer>
+      )}
+      {/* 여기부터 모바일 */}
+      {/* ㅇ
+      ㅇ
+      ㅇ
+      ㅇ */}
+      {isMobileSize && (
+        <MobileStyledEditProfileModalContainer>
+          <div
+            className="modal-overlay"
+            onClick={() => setProfileEditModalOpen(false)}
+          />
+          <div className="modal-content">
+            {/* 버튼 DIV */}
+            <div className="buttonDiv">
+              <div>
+                <button
+                  className={
+                    profileEditToggle
+                      ? 'editModalbuttonActive'
+                      : 'editModalbuttoninActive'
+                  }
+                  onClick={() =>
+                    setToggleEditMenu({
+                      profileEditToggle: true,
+                      changePasswordToggle: false,
+                      deleteAccountToggle: false,
+                    })
+                  }
+                >
+                  프로필 정보 설정
+                </button>
+                <button
+                  className={
+                    changePasswordToggle
+                      ? 'editModalbuttonActive'
+                      : 'editModalbuttoninActive'
+                  }
+                  onClick={() =>
+                    setToggleEditMenu({
+                      profileEditToggle: false,
+                      changePasswordToggle: true,
+                      deleteAccountToggle: false,
+                    })
+                  }
+                  disabled={user.providerData[0].providerId !== 'password'}
+                >
+                  비밀번호 변경
+                </button>
+              </div>
+              <div className="deleteAccountDiv">
+                <button
+                  className="deleteAccountText"
+                  onClick={() =>
+                    setToggleEditMenu({
+                      profileEditToggle: false,
+                      changePasswordToggle: false,
+                      deleteAccountToggle: true,
+                    })
+                  }
+                >
+                  회원탈퇴
+                </button>
+                <button
+                  className="modal-close"
+                  onClick={() => setProfileEditModalOpen(false)}
+                >
+                  <AiOutlineClose />
+                </button>
+              </div>
+            </div>
+            <div className="buttonBottomDiv">
+              <p className="buttonBottomDivText">
+                {user.providerData[0].providerId !== 'password'
+                  ? 'SNS 로그인 유저는 비밀번호를 변경할수 없습니다.'
+                  : null}{' '}
+              </p>
+            </div>
+            {/* // 프사DIV */}
+            {profileEditToggle ? (
+              <div className="profileDiv">
+                <div
+                  onClick={handleImageClick}
+                  className="modalProfileImageContainer"
+                >
+                  <Image
+                    src={profileImageUrl}
+                    alt="ProfileImage"
+                    // onClick={handleImageClick}
+                    className="modalProfileImage"
+                    width={164}
+                    height={164}
+                  />
+
+                  <div className="modalProfileImageOverlay">
+                    <BiCamera className="modalProfileImageOverlayIcon" />
+                    <p className="modalProfileImageOverlayText">
+                      프로필 사진 변경
+                    </p>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                      style={{ display: 'none' }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <button
+                    className="defultImageButton"
+                    onClick={removeProfileImage}
+                  >
+                    프로필 사진 삭제
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
+            <div className="mainDiv">
+              {profileEditToggle && (
+                <ChangeProfile
+                  user={user}
+                  profileData={profileData}
+                  setProfileEditModalOpen={setProfileEditModalOpen}
+                />
+              )}
+              {changePasswordToggle && <ChangePassword user={user} />}
+              {deleteAccountToggle && <DeleteAccount />}
+            </div>
           </div>
-          <div className="modalThirdLine">
-            <button
-              className={
-                profileEditToggle
-                  ? 'editModalbuttonActive'
-                  : 'editModalbuttoninActive'
-              }
-              onClick={() =>
-                setToggleEditMenu({
-                  profileEditToggle: true,
-                  changePasswordToggle: false,
-                  deleteAccountToggle: false,
-                })
-              }
-            >
-              프로필 정보 설정
-            </button>
-            <button
-              className={
-                changePasswordToggle
-                  ? 'editModalbuttonActive'
-                  : 'editModalbuttoninActive'
-              }
-              onClick={() =>
-                setToggleEditMenu({
-                  profileEditToggle: false,
-                  changePasswordToggle: true,
-                  deleteAccountToggle: false,
-                })
-              }
-              disabled={user.providerData[0].providerId !== 'password'}
-            >
-              비밀번호 변경
-            </button>
-            <p className="modalThirdLineButton2Warning">
-              {user.providerData[0].providerId !== 'password'
-                ? 'SNS 로그인 유저는 비밀번호를 변경할수 없습니다.'
-                : null}{' '}
-            </p>
-          </div>
-          <div className="modalFourthLine">
-            <button
-              className="deleteAccountText"
-              onClick={() =>
-                setToggleEditMenu({
-                  profileEditToggle: false,
-                  changePasswordToggle: false,
-                  deleteAccountToggle: true,
-                })
-              }
-            >
-              회원탈퇴
-            </button>
-          </div>
-        </div>
-        <div className="modalRightContiner">
-          <div className="RightModalFirstLine">
-            <p className="RightModalTitle">
-              {profileEditToggle && '프로필 정보 설정'}
-              {changePasswordToggle && '비밀번호 변경'}
-              {deleteAccountToggle && '회원 탈퇴'}
-            </p>
-            <button
-              className="modal-close"
-              onClick={() => setProfileEditModalOpen(false)}
-            >
-              <AiOutlineClose />
-            </button>
-          </div>
-          <div>
-            {profileEditToggle && (
-              <ChangeProfile
-                user={user}
-                profileData={profileData}
-                setProfileEditModalOpen={setProfileEditModalOpen}
-              />
-            )}
-            {changePasswordToggle && <ChangePassword user={user} />}
-            {deleteAccountToggle && <DeleteAccount />}
-          </div>
-        </div>
-      </div>
-    </StyledEditProfileModalContainer>
+        </MobileStyledEditProfileModalContainer>
+      )}
+    </>
   );
 }
 
+const MobileStyledEditProfileModalContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+  }
+
+  .modal-content {
+    margin-top: 10rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 101;
+    background-color: #fff;
+
+    .buttonDiv {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      height: 10%;
+      margin-top: 20px;
+      padding: 0 13px;
+      .editModalbuttonActive {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 20px;
+        /* identical to box height, or 125% */
+
+        /* Primary 01 */
+
+        color: #206efb;
+        justify-self: start;
+      }
+      .editModalbuttoninActive {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        :hover {
+          opacity: 60%;
+        }
+
+        /* identical to box height, or 125% */
+
+        /* Gray 05 */
+
+        color: #868e96;
+      }
+      .deleteAccountDiv {
+        display: flex;
+
+        align-items: flex-start;
+        .deleteAccountText {
+          font-style: normal;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          /* identical to box height, or 125% */
+
+          /* Point Red */
+
+          color: #f83e4b;
+        }
+        .modal-close {
+          margin-left: 10px;
+        }
+      }
+    }
+    .buttonBottomDiv {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 16px;
+      /* identical to box height, or 133% */
+
+      display: flex;
+      justify-content: left;
+      margin-left: 50px;
+      align-items: center;
+      /* Gray 04 */
+
+      color: #adb5bd;
+      min-height: 20px;
+    }
+
+    .profileDiv {
+      margin-top: 15px;
+      display: flex;
+      align-items: flex-end;
+      .modalProfileImageContainer {
+        position: relative;
+        display: inline-block;
+        :hover {
+          opacity: 90%;
+        }
+      }
+
+      .modalProfileImage {
+        border-radius: 10px;
+      }
+      .modalProfileImageOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 98.2%;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        padding-top: 60px;
+        border-radius: 10px;
+        cursor: pointer;
+        text-align: center;
+        .modalProfileImageOverlayIcon {
+          width: 20px;
+          height: 20px;
+        }
+        .modalProfileImageOverlayText {
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 16px;
+          /* identical to box height, or 133% */
+
+          /* Gray 00 */
+
+          color: #f1f3f5;
+        }
+      }
+
+      .defultImageButton {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 20px;
+        /* identical to box height, or 125% */
+
+        /* Primary 01 */
+
+        color: black;
+        :hover {
+          opacity: 50%;
+        }
+      }
+    }
+
+    .mainDiv {
+      margin-top: 20px;
+    }
+    .modal-close {
+      font-size: 24px;
+      line-height: 1;
+      background: #17171c;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      :hover {
+        opacity: 50%;
+      }
+    }
+  }
+`;
 const StyledEditProfileModalContainer = styled.div`
   position: fixed;
   top: 0;

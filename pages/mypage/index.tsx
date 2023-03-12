@@ -73,7 +73,7 @@ export default function MyPage({}: Props) {
         {isDesktopSize && (
           <StyledContainer>
             <HeadSeo title={'마이페이지 | be-my-desk'} />
-            {isLoading && <div>Loading...</div>}
+            {isLoading && <div></div>}
             {isError && <div>Error: {userInfoError.message}</div>}
 
             <StyledDivButton>
