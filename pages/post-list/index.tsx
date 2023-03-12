@@ -40,7 +40,7 @@ export default function PostList() {
       {isLoading && (
         <Skeleton>
           {new Array(8).fill('').map((_, i) => (
-            <SkeletonPostCard />
+            <SkeletonPostCard key={i} />
           ))}
         </Skeleton>
       )}
