@@ -39,6 +39,7 @@ const DetailWriteProductCard = ({
                   width={24}
                   height={24}
                   onClick={() => deleteCard(i)}
+                  style={{ cursor: 'pointer' }}
                 />
               </div>
               <div className="card">
@@ -79,7 +80,7 @@ const DetailWriteProductCard = ({
             },
             1200: {
               width: 1200,
-              slidesPerView: 3,
+              slidesPerView: 2,
             },
           }}
           className="mySwiper"
@@ -97,6 +98,7 @@ const DetailWriteProductCard = ({
                         width={24}
                         height={24}
                         onClick={() => deleteCard(i)}
+                        style={{ cursor: 'pointer' }}
                       />
                     </div>
                     <div className="card">
