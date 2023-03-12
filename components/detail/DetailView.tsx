@@ -15,25 +15,17 @@ import CustomModal from '../ui/CustomModal';
 import CustomButton from '../ui/CustomButton';
 import useResponsive from '@/Hooks/useResponsive';
 import { logEvent } from '@/amplitude/amplitude';
+import Image from 'next/image';
+import Skeleton from '../ui/skeleton/Skeleton';
+import SkeletonPostCard from '../ui/skeleton/SkeletonPostCard';
+import SkeletonDetail from '../ui/skeleton/SkeletonDetail';
 
 export default function DetailView({}) {
   const router = useRouter();
   const postId = router.query.id;
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const { isLoading, isError, data: post, error } = usePost(postId);
-  const [isEdit, setIsEdit] = useState(false);
-  const [isDelete, setIsDelete] = useState(false);
-
-  const deletePost = async () => {
-    await deleteDoc(doc(dbService, `postData/${postId}`));
-    queryClient.removeQueries('post-list');
-    router.push('/post-list');
-  };
-
-  const updatePost = async () => {
-    router.push(`/detail/write/${postId}/edit`);
-  };
 
   const { isMobile, isDesktop } = useResponsive({
     maxWidth: 820,
@@ -42,118 +34,15 @@ export default function DetailView({}) {
 
   return (
     <>
-      {isLoading && <DetailViewLayout>Loading...</DetailViewLayout>}
+      {isLoading && (
+        <Skeleton>
+          <SkeletonDetail />
+        </Skeleton>
+      )}
       {isError && <DetailViewLayout>Error: {error.message}</DetailViewLayout>}
       {post && (
         <DetailViewLayout>
           <div className="detail-header">
-            {auth.currentUser?.uid === post?.userId && (
-              <>
-                <button onClick={() => setIsDelete((prev) => !prev)}>
-                  삭제
-                </button>
-                <button onClick={() => setIsEdit((prev) => !prev)}>수정</button>
-              </>
-            )}
-            {isEdit && (
-              <CustomModal title="Edit" description="글을 수정하시겠습니까?">
-                <div className="buttonWrap">
-                  <CustomButton
-                    paddingRow="0"
-                    paddingColumns="0.5"
-                    backgroundColor="#F83E4B"
-                    fontColor="#fff"
-                    onClick={updatePost}
-                  >
-                    수정
-                  </CustomButton>
-                  <CustomButton
-                    paddingRow="0"
-                    paddingColumns="0.5"
-                    backgroundColor="#fff"
-                    fontColor="#868E96"
-                    onClick={() => setIsEdit((prev) => !prev)}
-                  >
-                    취소
-                  </CustomButton>
-                </div>
-              </CustomModal>
-            )}
-
-            {isDelete && (
-              <CustomModal title="Delete" description="정말 삭제하시겠습니까?">
-                <div className="buttonWrap">
-                  <CustomButton
-                    paddingRow="0"
-                    paddingColumns="0.5"
-                    backgroundColor="#F83E4B"
-                    fontColor="#fff"
-                    onClick={deletePost}
-                  >
-                    삭제
-                  </CustomButton>
-                  <CustomButton
-                    paddingRow="0"
-                    paddingColumns="0.5"
-                    backgroundColor="#fff"
-                    fontColor="#868E96"
-                    onClick={() => setIsDelete((prev) => !prev)}
-                  >
-                    취소
-                  </CustomButton>
-                </div>
-              </CustomModal>
-            )}
-            {isEdit && (
-              <CustomModal title="Edit" description="글을 수정하시겠습니까?">
-                <div className="buttonWrap">
-                  <CustomButton
-                    paddingRow="0"
-                    paddingColumns="0.5"
-                    backgroundColor="#F83E4B"
-                    fontColor="#fff"
-                    onClick={updatePost}
-                  >
-                    수정
-                  </CustomButton>
-                  <CustomButton
-                    paddingRow="0"
-                    paddingColumns="0.5"
-                    backgroundColor="#fff"
-                    fontColor="#868E96"
-                    onClick={() => setIsEdit((prev) => !prev)}
-                  >
-                    취소
-                  </CustomButton>
-                </div>
-              </CustomModal>
-            )}
-
-            {isDelete && (
-              <CustomModal title="Delete" description="정말 삭제하시겠습니까?">
-                <div className="buttonWrap">
-                  <CustomButton
-                    paddingRow="0"
-                    paddingColumns="0.5"
-                    backgroundColor="#F83E4B"
-                    fontColor="#fff"
-                    onClick={deletePost}
-                  >
-                    삭제
-                  </CustomButton>
-                  <CustomButton
-                    paddingRow="0"
-                    paddingColumns="0.5"
-                    backgroundColor="#fff"
-                    fontColor="#868E96"
-                    onClick={() => setIsDelete((prev) => !prev)}
-                  >
-                    취소
-                  </CustomButton>
-                </div>
-              </CustomModal>
-            )}
-
             <DetailViewUserInfor post={post} />
           </div>
           <DetailViewDiv>
@@ -182,11 +71,25 @@ export default function DetailView({}) {
 const DetailViewLayout = styled.div`
   max-width: 75rem;
   width: 100%;
-  margin: 9.25rem auto;
+  margin: 7rem auto;
 
   .detail-header {
-    width: 100%;
+    width: 70%;
     max-width: 55.875rem;
+
+    @media (max-width: 820px) {
+      width: 100%;
+    }
+
+    .modify {
+      position: relative;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    padding: 0 1.25rem;
   }
 `;
 
@@ -220,7 +123,7 @@ const DetailViewDiv = styled.div`
       width: 100%;
       min-width: 100%;
       background-color: #fff;
-      padding: 0 1rem;
+      padding: 0;
     }
   }
 `;

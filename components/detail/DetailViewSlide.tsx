@@ -48,6 +48,14 @@ const DetailViewSlideLayout = styled.div`
     position: relative;
     width: 100%;
     height: 37.25rem;
+
+    @media (max-width: 820px) {
+      height: 26.25rem;
+    }
+
+    @media (max-width: 520px) {
+      height: 19.5rem;
+    }
   }
 
   .swiper-pagination {

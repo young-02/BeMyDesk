@@ -18,7 +18,6 @@ export default function DetailViewText({ post }) {
 
   const status = useGetKakao('https://developers.kakao.com/sdk/js/kakao.js');
 
-  console.log(post);
   // kakao sdk 초기화하기
   // status가 변경될 때마다 실행되며, status가 ready일 때 초기화를 시도합니다.
   useEffect(() => {
@@ -56,10 +55,11 @@ export default function DetailViewText({ post }) {
     });
   };
 
-  console.log(post);
   return (
     <>
-      <HeadSeo title={`${post.userNickname}님의 ${post.postTitle} | 데스크테리어`} />
+      <HeadSeo
+        title={`${post.userNickname}님의 ${post.postTitle} | 데스크테리어`}
+      />
       <DetailViewTextLayout>
         <div className="detail-view-title">{post.postTitle}</div>
         <div className="detail-view-text">{ReactHtmlParser(post.postText)}</div>
@@ -90,18 +90,18 @@ const DetailViewTextLayout = styled.div`
   margin-top: 1.25rem;
 
   .detail-view-title {
-    font-size: 1.5rem;
+    font-size: 1.125rem
     line-height: 2rem;
     font-weight: 700;
 
     @media (max-width: 820px) {
-      font-size: 1.125rem;
+      font-size: 1rem;
     }
   }
 
   .detail-view-text {
     margin: 1.25rem 0;
-    font-size: 1.125rem;
+    font-size: 1rem;
     line-height: 1.5rem;
     color: #343a40;
 
@@ -140,6 +140,10 @@ const ShareLayout = styled.div`
     height: 3.5rem;
     background: url('/images/snsWrapper.png') no-repeat center;
     border-radius: 0.625rem;
+
+    @media (max-width: 1200px) {
+      right: 0%;
+    }
 
     .sns-icon {
       display: flex;
