@@ -27,7 +27,6 @@ export default function CommentList({ comment, path }) {
   };
   //수정
 
-  // console.log(commentText);
   const editComment = async (id: string) => {
     setEdit({ ...edit, active: !active });
     const commentText = editText;
@@ -125,9 +124,8 @@ const CommentListLayout = styled.div`
   padding: 0.125rem;
 
   @media (max-width: 820px) {
-    position:relative;
+    position: relative;
   }
-
 
   &:hover {
     background: #f1f3f5;

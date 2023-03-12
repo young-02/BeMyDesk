@@ -83,7 +83,6 @@ export default function SignIn({}: Props) {
     if (emailValid && pwValid) {
       await signInWithEmailAndPassword(auth, email, pw)
         .then((UserCredential) => {
-          console.log('UserCredential', UserCredential.user.uid);
           setAmplitudeUserId(UserCredential.user.uid);
           alert('로그인 성공');
 
@@ -107,13 +106,11 @@ export default function SignIn({}: Props) {
             ? setEmailEmptyError(true)
             : setEmailRegexError(true);
           pw.length === 0 ? setPwEmptyError(true) : null;
-          // emailRef.current?.focus();
         }
       } else if (pwValid === false) {
         {
           pw.length === 0 ? setPwEmptyError(true) : setPwRegexError(true);
           email.length === 0 ? setEmailEmptyError(true) : null;
-          // pwRef.current?.focus();
         }
       }
     }
@@ -124,31 +121,16 @@ export default function SignIn({}: Props) {
     window.Kakao?.Auth.login({
       scope: 'profile_nickname, account_email, profile_image',
       success: function (authObj: any) {
-        //authObj 토큰
-        // console.log('authObj', authObj);
         window.Kakao.API.request({
           url: '/v2/user/me',
           success: (res: any) => {
             // kakao_account 유저정보
             const kakao_account = res.kakao_account;
-            console.log('kakao.account', kakao_account);
             router.push('/post-list');
           },
         });
       },
     });
-    // const auth = getAuth();
-    // signInWithCustomToken(auth, authObj)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     const user = userCredential.user;
-    //     // ...
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     // ...
-    //   });
   };
 
   //구글로그인
@@ -164,17 +146,6 @@ export default function SignIn({}: Props) {
         await updateProfile(result_google.user, {
           photoURL: '/images/defaultProfile.png',
         });
-        // const payload = {
-        //   profileImage: '/images/defaultProfile.png',
-        //   nickname: auth.currentUser?.displayName,
-        //   userId: auth.currentUser?.uid,
-        //   scraps: [],
-        //   following: [],
-        //   introduction: '안녕하세요!',
-        // };
-
-        // await setDoc(collectionRef, payload);
-
         router.push('/auth/sns-nickname');
       } else {
         router.push('/post-list');
@@ -197,18 +168,6 @@ export default function SignIn({}: Props) {
         await updateProfile(result_facebook.user, {
           photoURL: '/images/defaultProfile.png',
         });
-
-        // const payload = {
-        //   profileImage: '/images/defaultProfile.png',
-        //   nickname: auth.currentUser?.displayName,
-        //   userId: auth.currentUser?.uid,
-        //   scraps: [],
-        //   following: [],
-        //   introduction: '안녕하세요!',
-        // };
-
-        // await setDoc(collectionRef, payload);
-
         router.push('/auth/sns-nickname');
       } else {
         router.push('/post-list');
@@ -217,10 +176,6 @@ export default function SignIn({}: Props) {
       console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //   console.log('userInfo', auth?.currentUser);
-  // }, [auth?.currentUser]);
 
   return (
     <StyledBackground>
