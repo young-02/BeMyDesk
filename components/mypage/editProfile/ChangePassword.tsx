@@ -397,7 +397,6 @@ const MobilePasswordChange = styled.div`
       /* Gray 04 */
 
       color: #adb5bd;
-      margin-right: 20px;
     }
   }
   .error {

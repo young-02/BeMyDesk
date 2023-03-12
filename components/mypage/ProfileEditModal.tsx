@@ -233,7 +233,7 @@ export function ProfileEditModal({
           />
           <div className="modal-content">
             {/* 버튼 DIV */}
-            <div className="buttonDiv">
+            <div className="modal-buttonDiv">
               <div>
                 <button
                   className={
@@ -299,7 +299,7 @@ export function ProfileEditModal({
             </div>
             {/* // 프사DIV */}
             {profileEditToggle ? (
-              <div className="profileDiv">
+              <div className="modalProfileDiv">
                 <div
                   onClick={handleImageClick}
                   className="modalProfileImageContainer"
@@ -366,7 +366,7 @@ const MobileStyledEditProfileModalContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-y: auto;
+
   .modal-overlay {
     position: absolute;
     top: 0;
@@ -385,12 +385,11 @@ const MobileStyledEditProfileModalContainer = styled.div`
     z-index: 101;
     background-color: #fff;
 
-    .buttonDiv {
+    .modal-buttonDiv {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      height: 10%;
-      margin-top: 20px;
+
       padding: 0 13px;
       .editModalbuttonActive {
         font-style: normal;
@@ -449,17 +448,19 @@ const MobileStyledEditProfileModalContainer = styled.div`
       display: flex;
       justify-content: left;
       margin-left: 50px;
-      align-items: center;
+      align-items: flex-start;
       /* Gray 04 */
 
       color: #adb5bd;
       min-height: 20px;
     }
 
-    .profileDiv {
+    .modalProfileDiv {
+      margin: 0 20px;
       margin-top: 15px;
+
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
       .modalProfileImageContainer {
         position: relative;
         display: inline-block;
@@ -501,6 +502,7 @@ const MobileStyledEditProfileModalContainer = styled.div`
       }
 
       .defultImageButton {
+        margin-top: 140px;
         font-style: normal;
         font-weight: 500;
         font-size: 12px;
@@ -517,7 +519,6 @@ const MobileStyledEditProfileModalContainer = styled.div`
     }
 
     .mainDiv {
-      margin-top: 20px;
     }
     .modal-close {
       font-size: 24px;

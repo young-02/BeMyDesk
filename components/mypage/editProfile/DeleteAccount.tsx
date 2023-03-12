@@ -215,6 +215,7 @@ const MobileDeleteAccountContainer = styled.div`
   }
 
   .cautionDiv {
+    margin-top: 30px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -236,7 +237,7 @@ const MobileDeleteAccountContainer = styled.div`
     }
   }
   .buttonDiv {
-    margin-top: 100px;
+    margin-top: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;

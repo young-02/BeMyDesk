@@ -435,13 +435,13 @@ const MobileProfileEdit = styled.div`
 
   .ProfileEditSecondLine {
     .ProfileEditIntroductionInput {
-      width: 87%;
-      height: 60px;
+      width: 89%;
+      height: 50px;
 
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
-      line-height: 20px;
+      line-height: 16px;
       /* or 125% */
 
       /* Gray 09 */
@@ -460,7 +460,7 @@ const MobileProfileEdit = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      min-height: 35px;
+      min-height: 25px;
       width: 100%;
     }
     .ProfileEditIntroductionCount {
@@ -493,6 +493,7 @@ const MobileProfileEdit = styled.div`
         line-height: 16px;
         color: #206efb;
         margin-right: 5px;
+        height: 12px;
       }
     }
     .ProfileEditThirdLineApplyButtonDiv {
@@ -514,7 +515,6 @@ const MobileProfileEdit = styled.div`
         text-align: center;
         color: #ffffff;
         margin-top: 5px;
-        margin-right: 10px;
       }
     }
   }
