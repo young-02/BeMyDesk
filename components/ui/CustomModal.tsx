@@ -38,11 +38,19 @@ const ModalWrapDiv = styled.div`
   border-radius: 0.625rem;
   padding: 1.5rem 2.5rem;
 
+  @media (max-width: 520px) {
+    width: 95%;
+  }
+
   .buttonWrap {
     display: flex;
     gap: 0.625rem;
     flex-direction: column;
     min-width: 320px;
     margin-top: 2rem;
+
+    @media (max-width: 520px) {
+      min-width: 95%;
+    }
   }
 `;
