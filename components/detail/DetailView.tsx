@@ -16,6 +16,9 @@ import CustomButton from '../ui/CustomButton';
 import useResponsive from '@/Hooks/useResponsive';
 import { logEvent } from '@/amplitude/amplitude';
 import Image from 'next/image';
+import Skeleton from '../ui/skeleton/Skeleton';
+import SkeletonPostCard from '../ui/skeleton/SkeletonPostCard';
+import SkeletonDetail from '../ui/skeleton/SkeletonDetail';
 
 export default function DetailView({}) {
   const router = useRouter();
@@ -31,7 +34,11 @@ export default function DetailView({}) {
 
   return (
     <>
-      {isLoading && <DetailViewLayout>Loading...</DetailViewLayout>}
+      {isLoading && (
+        <Skeleton>
+          <SkeletonDetail />
+        </Skeleton>
+      )}
       {isError && <DetailViewLayout>Error: {error.message}</DetailViewLayout>}
       {post && (
         <DetailViewLayout>
@@ -64,7 +71,7 @@ export default function DetailView({}) {
 const DetailViewLayout = styled.div`
   max-width: 75rem;
   width: 100%;
-  margin: 9.25rem auto;
+  margin: 7rem auto;
 
   .detail-header {
     width: 70%;
