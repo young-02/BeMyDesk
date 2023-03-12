@@ -95,7 +95,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
    */
   const getNaverData = async () => {
     const response = await axios
-      .get('http://localhost:3000/api/naverData', {
+      .get('https://be-my-desk-git-dev-young-02.vercel.app/api/naverData', {
         params: {
           query: searchWord,
         },
@@ -110,7 +110,6 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     const newList = [...list, newItem];
     setList(newList);
   };
-    
 
   // 모달창에서 선택한 제품 삭제하기
   const deleteProduct = (item: any) => {
@@ -132,7 +131,6 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   const selectedProducts = (e: any) => {
     setSelectList(list);
     hideSearchModal();
-   
   };
 
   // 글쓰기 폼 제목 입력
@@ -187,7 +185,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       for (let i = 0; i < fileArr.length; i++) {
         const compressedImage = await imageCompression(fileArr[i], options);
         compressedImages.push(compressedImage);
-      
+
         if (fileArr.length > 2) {
           setShowModal(true);
           setModalTitle('Check');
@@ -205,7 +203,6 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           fileReader.readAsDataURL(file as any);
         }
       }
-      
     }
   };
 

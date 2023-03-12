@@ -31,7 +31,18 @@ const DetailWriteSearch = ({
 
   const filteredItem = data.filter(
     (item: any) =>
-      item.category1 === '디지털/가전' || item.category1 === '가구/인테리어',
+      item.category1 === '디지털/가전' ||
+      item.category1 === '가구/인테리어' ||
+      item.category1 === '주변기기' ||
+      item.category1 === '모니터' ||
+      item.category1 === '서재/사무용가구' ||
+      item.category1 === '멀티미디어장비' ||
+      item.category1 === '음향가전' ||
+      item.category1 === '모니터주변기기' ||
+      item.category1 === '노트북액세서리' ||
+      item.category1 === 'PC액세서리' ||
+      item.category1 === '마우스패드' ||
+      item.category1 === 'PC부품',
   );
 
   return (
