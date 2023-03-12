@@ -95,7 +95,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
    */
   const getNaverData = async () => {
     const response = await axios
-      .get('https://be-my-desk-git-dev-young-02.vercel.app/api/naverData', {
+      .get('https://https://be-my-desk.vercel.app/api/naverData', {
         params: {
           query: searchWord,
         },
@@ -448,7 +448,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
             <DeskPhotoBox>
               <div className="photo_wrap">
                 <label className="desk_label" htmlFor="deskImage">
-                  이미지 2장을 동시에 선택 후 업로드 해주세요{' '}
+                  2장을 동시에 선택 후 업로드 해주세요
                   {attachment.length}/2
                   <input
                     type="file"
