@@ -18,7 +18,6 @@ export default function DetailViewText({ post }) {
 
   const status = useGetKakao('https://developers.kakao.com/sdk/js/kakao.js');
 
-  console.log(post);
   // kakao sdk 초기화하기
   // status가 변경될 때마다 실행되며, status가 ready일 때 초기화를 시도합니다.
   useEffect(() => {
@@ -56,7 +55,6 @@ export default function DetailViewText({ post }) {
     });
   };
 
-  console.log(post);
   return (
     <>
       <HeadSeo
