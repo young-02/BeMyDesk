@@ -94,7 +94,6 @@ export default function SignUp({}: Props) {
     currentValue === '직접입력하기'
       ? `${email}@${WriteValue}`
       : `${email}@${currentValue}`;
-  console.log(emailValue);
 
   // 전체동의 버튼
   const allBtnEvent = () => {

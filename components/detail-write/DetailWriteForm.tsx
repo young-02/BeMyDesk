@@ -76,7 +76,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
   const inputSearchWord = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      // console.log('검색 인풋');
+    
       setSearchWord(e.target.value);
     },
     [],
@@ -100,8 +100,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   const selectProduct = (item: any) => {
     const newList = [...list, item];
     setList(newList);
-    // console.log('list', list);
-  };
+    
 
   // 모달창에서 선택한 제품 삭제하기
   const deleteProduct = (item: any) => {
@@ -123,7 +122,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   const selectedProducts = (e: any) => {
     setSelectList(list);
     hideSearchModal();
-    // console.log(list, 'list');
+   
   };
 
   // 글쓰기 폼 제목 입력
@@ -162,7 +161,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       for (let i = 0; i < fileArr.length; i++) {
         const compressedImage = await imageCompression(fileArr[i], options);
         compressedImages.push(compressedImage);
-        console.log(compressedImages, 'compressedImages');
+      
         if (fileArr.length > 2) {
           alert('이미지는 2개까지 업로드 할 수 있습니다');
           return;
@@ -178,7 +177,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           fileReader.readAsDataURL(file as any);
         }
       }
-      console.log('attachment', attachment);
+      
     }
   };
 

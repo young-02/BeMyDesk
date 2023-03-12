@@ -3,7 +3,6 @@ import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { useQuery } from 'react-query';
 
 export const getPostList = async (userId: any) => {
-  console.log('userId', userId);
   const myPostFilter = query(
     collection(dbService, 'postData'),
     where('userId', '==', userId),

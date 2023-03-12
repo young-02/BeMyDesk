@@ -59,7 +59,7 @@ function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
   ) {
     const inputText = event.target.value;
     setNickNameEdit(inputText);
-    console.log(nickNameEdit);
+    // console.log(nickNameEdit);
   };
 
   // disable 상태인 닉네임 첫클릭
