@@ -273,12 +273,6 @@ export function ProfileEditModal({
                 >
                   회원탈퇴
                 </button>
-                {/* <button
-                  className="modal-close"
-                  onClick={() => setProfileEditModalOpen(false)}
-                >
-                  <AiOutlineClose />
-                </button> */}
               </div>
             </div>
             <div className="buttonBottomDiv">
