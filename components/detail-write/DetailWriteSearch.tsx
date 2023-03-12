@@ -29,6 +29,11 @@ const DetailWriteSearch = ({
     setIsMobile(isMobileSize);
   }, [isMobileSize]);
 
+  const filteredItem = data.filter(
+    (item: any) =>
+      item.category1 === '디지털/가전' || item.category1 === '가구/인테리어',
+  );
+
   return (
     <DetailWriteSearchModal onClose={onClose}>
       <DetailWriteSearchLayout>
@@ -55,7 +60,7 @@ const DetailWriteSearch = ({
               className="searchInput"
               id="products"
               type="text"
-              placeholder="검색어를 입력해주세요"
+              placeholder="ex: 맥북, 시디즈 의자 등"
               value={searchWord}
               onChange={inputSearchWord}
             />
@@ -64,26 +69,30 @@ const DetailWriteSearch = ({
           </SearchInputBox>
         </DetailWriteSearchBoxTop>
         <SelectProductBox>
-          {data?.map((item: any) => (
-            <DetailWriteSearchProductBox
-              key={item.productId}
-              onClick={() => selectProduct(item)}
-            >
-              <div className="searchProduct">
-                <div className="searchProductWrap">
-                  {item.title.split('<b>').join('').split('</b>').join('')}
+          {filteredItem.length === 0 ? (
+            <div>검색결과가 없습니다</div>
+          ) : (
+            filteredItem.map((item: any) => (
+              <DetailWriteSearchProductBox
+                key={item.id}
+                onClick={() => selectProduct(item)}
+              >
+                <div className="searchProduct">
+                  <div className="searchProductWrap">
+                    {item.title.split('<b>').join('').split('</b>').join('')}
+                  </div>
+                  <div className="search_category">{item.category2}</div>
                 </div>
-                <div className="search_category">{item.category2}</div>
-              </div>
-            </DetailWriteSearchProductBox>
-          ))}
+              </DetailWriteSearchProductBox>
+            ))
+          )}
         </SelectProductBox>
 
         <DetailWriteSearchBoxBottom>
           <PickProductListBox>
             <PickProductList>
               {list?.map((item: any) => (
-                <PickProductsBox key={item.productId}>
+                <PickProductsBox key={item.id}>
                   <div className="pickProducts">{parse(item.title)}</div>
 
                   <Image
@@ -96,6 +105,7 @@ const DetailWriteSearch = ({
                     style={{
                       alignContent: 'center',
                       justifyContent: 'center',
+                      cursor: 'pointer',
                     }}
                   />
                 </PickProductsBox>
@@ -176,7 +186,6 @@ const DetailWriteSearchBox = styled.div`
     height: 1.5rem;
     border: none;
     background-color: #fff;
-    cursor: pointer;
   }
 `;
 
@@ -223,7 +232,6 @@ const DetailWriteSearchProductBox = styled.div`
 
     @media (min-width: 1201px) {
       font-size: 1rem;
-      /* padding: 0.5rem; */
       height: 80%;
     }
   }
@@ -257,7 +265,6 @@ const DetailWriteSearchBoxTop = styled.div`
   top: 0;
   background-color: #fff;
   overflow: hidden;
-  /* overflow-y: hidden; */
   z-index: 30;
 
   .search_products {
@@ -330,7 +337,6 @@ const DetailWriteSearchBoxTop = styled.div`
     font-size: 1.2rem;
     line-height: 1.25rem;
     text-decoration: underline 0.125rem #206efb;
-    /* border-bottom: 0.125rem solid #206efb; */
   }
 
   .enter_again_text {
@@ -351,12 +357,8 @@ const DetailWriteSearchBoxBottom = styled.div`
   bottom: 0;
   width: 100%;
   background-color: #fff;
-  /* overflow: hidden; */
   z-index: 30;
   justify-content: center;
-  /* flex-wrap: wrap; */
-  /* width: fit-content; */
-  /* align-items: flex-start; */
 
   .pickProducts {
     overflow: hidden;
@@ -453,8 +455,6 @@ const PickProductsBox = styled.div`
   color: #fff;
   background-color: #206efb;
   width: 16.75rem;
-  /* height: 2.25rem; */
-  /* margin: 0.625rem; */
   border-radius: 1.875rem;
   padding: 0.5rem 1.25rem;
   font-size: 1rem;
@@ -523,8 +523,6 @@ const SelectProductBox = styled.div`
   overflow-y: auto;
   height: 120vh;
   z-index: 25;
-  /* position: relative; */
-  /* bottom: 0; */
 `;
 
 const PickProductListBox = styled.div`
@@ -538,13 +536,11 @@ const PickProductListBox = styled.div`
 const PickProductList = styled.div`
   background-color: #fff;
   display: flex;
-  /* overflow-x: scroll; */
   height: 4.625rem;
   flex-direction: column;
   flex-wrap: wrap;
   width: fit-content;
   gap: 0.625rem;
-  /* width: 100%; */
   align-items: flex-start;
 `;
 
@@ -555,8 +551,6 @@ const TestBox = styled.div`
   background-color: #fff;
   overflow: hidden;
   z-index: 30;
-  /* flex-wrap: wrap; */
-  /* width: fit-content; */
-  /* align-items: flex-start; */
 `;
+
 export default memo(DetailWriteSearch);

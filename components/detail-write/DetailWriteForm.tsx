@@ -16,6 +16,7 @@ import { useQueryClient } from 'react-query';
 import { logEvent } from '@/amplitude/amplitude';
 import { useMediaQuery } from 'react-responsive';
 import HeadSeo from '../ui/HeadSeo';
+import CustomModal from '../ui/CustomModal';
 axios.defaults.withCredentials = true;
 
 // 글쓰기 페이지 폼 함수입니다
@@ -61,6 +62,14 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
   const [saveSearchWord, setSaveSearchWord] = useState('');
 
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalDescription, setModalDescription] = useState('');
+
+  const CloseModal = () => {
+    setShowModal(false);
+  };
+
   // 에디터 텍스트 onchange함수
   const changeEditorText = (value: string) => {
     setContent(value);
@@ -76,7 +85,6 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
   const inputSearchWord = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-    
       setSearchWord(e.target.value);
     },
     [],
@@ -87,7 +95,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
    */
   const getNaverData = async () => {
     const response = await axios
-      .get('https://be-my-desk.vercel.app/api/naverData', {
+      .get('http://localhost:3000/api/naverData', {
         params: {
           query: searchWord,
         },
@@ -98,14 +106,16 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
   // 모달창에서 검색한 제품 선택하기
   const selectProduct = (item: any) => {
-    const newList = [...list, item];
+    const newItem = { ...item, id: v4() };
+    const newList = [...list, newItem];
     setList(newList);
+  };
     
 
   // 모달창에서 선택한 제품 삭제하기
   const deleteProduct = (item: any) => {
     const deletedList = list;
-    setList(deletedList.filter((i) => i.productId !== item.productId));
+    setList(deletedList.filter((i) => i.id !== item.id));
   };
 
   // 모달 보이게 하기
@@ -145,12 +155,28 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
   };
 
   const selectPreview = async (event: any) => {
+    // const handleAddImages = (event) => {
+    //   const imageLists = event.target.files;
+    //   let imageUrlLists = [...showImages];
+
+    //   for (let i = 0; i < imageLists.length; i++) {
+    //     const currentImageUrl = URL.createObjectURL(imageLists[i]);
+    //     imageUrlLists.push(currentImageUrl);
+    //   }
+
+    //   if (imageUrlLists.length > 10) {
+    //     imageUrlLists = imageUrlLists.slice(0, 10);
+    //   }
+
+    //   setShowImages(imageUrlLists);
+    // };
+
     if (event.currentTarget.files) {
       let fileArr = event.currentTarget.files;
-      let compressedImages = [];
+      let compressedImages = [...attachment];
 
       const options = {
-        maxSizeMB: 1,
+        maxSizeMB: 0.5,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
       };
@@ -163,7 +189,9 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
         compressedImages.push(compressedImage);
       
         if (fileArr.length > 2) {
-          alert('이미지는 2개까지 업로드 할 수 있습니다');
+          setShowModal(true);
+          setModalTitle('Check');
+          setModalDescription('이미지는 2장까지만 업로드 가능합니다');
           return;
         }
 
@@ -194,22 +222,37 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
     // 유효성 검사
 
     if (!selectJob || selectJob === '선택해주세요') {
-      alert('누구의 책상인지 골라주세요');
+      setShowModal(true);
+      setModalTitle('Check');
+      setModalDescription('누구의 책상인지 골라주세요');
       return jobRef.current.focus();
     }
 
     if (!title) {
-      alert('제목을 입력해주세요');
+      setShowModal(true);
+      setModalTitle('Check');
+      setModalDescription('제목을 입력해주세요');
+      return titleRef.current.focus();
+    }
+
+    if (!content) {
+      setShowModal(true);
+      setModalTitle('Check');
+      setModalDescription('내용을 입력해주세요');
       return titleRef.current.focus();
     }
 
     if (!attachment) {
-      alert('데스크테리어 사진을 선택해주세요');
+      setShowModal(true);
+      setModalTitle('Check');
+      setModalDescription('데스크테리어 사진을 선택해주세요');
       return;
     }
 
     if (attachment.length < 2) {
-      alert('데스크테리어 사진을 선택해주세요');
+      setShowModal(true);
+      setModalTitle('Check');
+      setModalDescription('데스크테리어 사진을 2장 선택해주세요');
       return;
     }
 
@@ -256,7 +299,6 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       setAttachment([]);
     }
 
-    alert('글이 저장되었습니다');
     queryClient.removeQueries('post-list');
     queryClient.removeQueries(['my-page', 'myPost']);
     router.push('/post-list');
@@ -284,7 +326,6 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       products: updateProducts,
     });
 
-    alert('글이 수정되었습니다');
     router.push('/post-list');
   };
 
@@ -318,6 +359,22 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
           onClick={selectedProducts}
         />
       )}
+      {showModal && (
+        <CustomModal title={modalTitle} description={modalDescription}>
+          <div className="buttonWrap">
+            <CustomButton
+              paddingRow="0"
+              paddingColumns="0.5"
+              backgroundColor="#F83E4B"
+              fontColor="#fff"
+              onClick={CloseModal}
+            >
+              확인
+            </CustomButton>
+          </div>
+        </CustomModal>
+      )}
+
       <DetailWriteLayout>
         <DetailWriteWrap>
           <HeadSeo title="글쓰기 | 내가 꾸민 데스크테리어 자랑 커뮤니티" />
