@@ -29,37 +29,6 @@ export default function useSearch() {
     setSearch('');
   };
 
-  // const defaultFilter = query(
-  //   collection(dbService, 'postData'),
-  //   orderBy('createdAt', 'desc'),
-  // );
-
-  // useEffect(() => {
-  //   // 필터 적용한 포스트 리스트 READ
-  //   onSnapshot(defaultFilter, (snapshot) => {
-  //     const postData: any = snapshot.docs.map((doc) => ({
-  //       ...doc.data(),
-  //       id: doc.id,
-  //     }));
-  //     console.log('postData', postData);
-  //     console.log('searchWord', searchWord);
-
-  //     const filteredList: any[] = [];
-  //     postData.map((post: PostType) => {
-  //       if (post.postTitle.includes(searchWord)) {
-  //         filteredList.push(post);
-  //       } else if (post.postText.includes(searchWord)) {
-  //         filteredList.push(post);
-  //       } else {
-  //         return;
-  //       }
-  //     });
-  //     console.log('filteredList', filteredList);
-
-  //     setSearchList(filteredList);
-  //   });
-  // }, [searchWord]);
-
   return {
     search,
     setSearch,

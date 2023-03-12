@@ -51,7 +51,7 @@ function FindPassword() {
       where('isSocial', '==', true),
     );
     const SNSDocs = await getDocs(SNSQuery);
-    console.log(SNSDocs);
+
     if (email == '') {
       setErrorEmailEmpty(true);
       return;

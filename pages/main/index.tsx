@@ -1,32 +1,36 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import gradient from '../../public/images/gradient.png';
+import mobileGradient from '../../public/images/mobileGradient.jpg';
+import desktopGradient from '../../public/images/desktopGradient.jpg';
 import Image from 'next/image';
 import MainSlide from '../../components/main/MainSlide';
 import HeadSeo from '@/components/ui/HeadSeo';
-
-const item = {
-  inactive: { opacity: 0, translateY: 120 },
-  active: {
-    opacity: 1,
-    translateY: 0,
-    transition: { duration: 1, delay: 0.6, ease: 'easeInOut' },
-  },
-};
+import useResponsive from '@/Hooks/useResponsive';
 
 export default function MainPage() {
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 500,
+    minWidth: 501,
+  });
   return (
     <MainPageLayout>
       <HeadSeo title={`be-my-desk`} />
       <MainSlide />
       <Background>
-        <BackgroundGradient
-          className="gradient"
-          src={gradient}
-          alt="gradient-image"
-          width={2000}
-        />
+        {isMobile && (
+          <Image
+            className="gradient"
+            src={mobileGradient}
+            alt="gradient-image"
+          />
+        )}
+        {isDesktop && (
+          <Image
+            className="gradient"
+            src={desktopGradient}
+            alt="gradient-image"
+          />
+        )}
       </Background>
     </MainPageLayout>
   );
@@ -44,14 +48,14 @@ const Background = styled.div`
   position: fixed;
   top: 0rem;
   left: 0rem;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #17171c;
-`;
 
-const BackgroundGradient = styled(Image)`
-  z-index: -99;
-  position: fixed;
-  top: -10rem;
-  left: -14.5rem;
+  .gradient {
+    object-fit: cover;
+  }
 `;
