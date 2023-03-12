@@ -7,6 +7,8 @@ import SignUpModal from '@/components/post-list/SignUpModal';
 import { useEffect, useState } from 'react';
 import HeadSeo from '@/components/ui/HeadSeo';
 import CustomError from '@/components/ui/error/CustomError';
+import SkeletonPostCard from '@/components/ui/skeleton/SkeletonPostCard';
+import Skeleton from '@/components/ui/skeleton/Skeleton';
 
 export default function PostList() {
   // 현재 페이지의 query 값을 가져옵니다.
@@ -35,7 +37,13 @@ export default function PostList() {
       <Header>
         <PostListFilterBar />
       </Header>
-      {isLoading && <div>Loading...</div>}
+      {isLoading && (
+        <Skeleton>
+          {new Array(8).fill('').map((_, i) => (
+            <SkeletonPostCard />
+          ))}
+        </Skeleton>
+      )}
       {isError && <div>Error: {error.message}</div>}
       <PostListBox>
         {postList?.map((post) => (
@@ -83,7 +91,15 @@ const PostListBox = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-  @media (max-width:1200px){
-    padding:0 1.25rem;
+  @media (max-width: 1200px) {
+    padding: 0 1.25rem;
   }
+`;
+
+const SkeletonWrap = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 1200px;
+  width: 100%;
 `;
