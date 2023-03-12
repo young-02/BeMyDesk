@@ -13,6 +13,8 @@ import {
 } from 'firebase/firestore';
 import styled from 'styled-components';
 import { useQueryClient } from 'react-query';
+import { useMediaQuery } from 'react-responsive';
+import useResponsive from '@/Hooks/useResponsive';
 
 function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
   // 프사 변경시 캐쉬 다시 불러오기 위한 쿼리 클라이언트
@@ -163,6 +165,11 @@ function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
     queryClient.invalidateQueries('userInfo');
     // setProfileEditModalOpen(false);
   };
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 1000,
+    minWidth: 1001,
+  });
+
   // input창 enable시 자동 focus
   useEffect(() => {
     if (nicknameInputEnable && inputRef.current) {
@@ -171,92 +178,363 @@ function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
   }, [nicknameInputEnable, inputRef]);
 
   return (
-    <ProfileEdit>
-      <div className="ProfileEditFirstLine">
-        <p className="ProfileEditHeadTitle">닉네임</p>
-        <div onClick={handleDivClick}>
-          <input
-            className={`inputNickname ${
-              errorNickNameRegex ||
-              errorNickNameEmpty ||
-              errorNicknameduDlication
-                ? 'error'
-                : ''
-            }`}
-            type="text"
-            placeholder={
-              !nicknameInputEnable
-                ? profileData.nickname
-                : '닉네임을 입력하세요'
-            }
-            disabled={!nicknameInputEnable}
-            onChange={nickNameEditonChangeHandler}
-            ref={inputRef}
-            // onBlur={() => {
-            //   setErrorNickNameEmpty(false);
-            //   setErrorNickNameRegex(false);
-            // }}
-            onFocus={handleNicknameInputFocus}
-          />
-          <div className="errorDiv">
-            <p className="errorMessage">
-              {errorNickNameRegex
-                ? '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자이하이어야합니다.'
-                : null}
-            </p>
+    <>
+      {isDesktop && (
+        <ProfileEdit>
+          <div className="ProfileEditFirstLine">
+            <p className="ProfileEditHeadTitle">닉네임</p>
+            <div onClick={handleDivClick}>
+              <input
+                className={`inputNickname ${
+                  errorNickNameRegex ||
+                  errorNickNameEmpty ||
+                  errorNicknameduDlication
+                    ? 'error'
+                    : ''
+                }`}
+                type="text"
+                placeholder={
+                  !nicknameInputEnable
+                    ? profileData.nickname
+                    : '닉네임을 입력하세요'
+                }
+                disabled={!nicknameInputEnable}
+                onChange={nickNameEditonChangeHandler}
+                ref={inputRef}
+                // onBlur={() => {
+                //   setErrorNickNameEmpty(false);
+                //   setErrorNickNameRegex(false);
+                // }}
+                onFocus={handleNicknameInputFocus}
+              />
+              <div className="errorDiv">
+                <p className="errorMessage">
+                  {errorNickNameRegex
+                    ? '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자이하이어야합니다.'
+                    : null}
+                </p>
 
-            <p className="errorMessage">
-              {errorNickNameEmpty ? '필수 입력사항입니다' : null}
-            </p>
-            <p className="errorMessage">
-              {errorNicknameduDlication ? '중복된 닉네임 입니다.' : null}
-            </p>
+                <p className="errorMessage">
+                  {errorNickNameEmpty ? '필수 입력사항입니다' : null}
+                </p>
+                <p className="errorMessage">
+                  {errorNicknameduDlication ? '중복된 닉네임 입니다.' : null}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="ProfileEditSecondLine">
-        <p className="ProfileEditHeadTitle">프로필소개</p>
-        <textarea
-          className={`ProfileEditIntroductionInput ${
-            errorIntroductionEmpty ? 'error' : ''
-          }`}
-          onChange={countOnChangeHandler}
-          value={Characters}
-          // onBlur={() => {
-          //   setErrorIntroductionEmpty(false);
-          // }}
-          onFocus={handleIntroductionInputFocus}
-        />
-        <div className="bottomProfileDiv">
-          <p className="errorMessage">
-            {errorIntroductionEmpty ? '필수 입력사항입니다.' : null}
-          </p>
-          <p className="ProfileEditIntroductionCount">{countCharacters}/50</p>
-        </div>
-      </div>
+          <div className="ProfileEditSecondLine">
+            <p className="ProfileEditHeadTitle">프로필소개</p>
+            <textarea
+              className={`ProfileEditIntroductionInput ${
+                errorIntroductionEmpty ? 'error' : ''
+              }`}
+              onChange={countOnChangeHandler}
+              value={Characters}
+              // onBlur={() => {
+              //   setErrorIntroductionEmpty(false);
+              // }}
+              onFocus={handleIntroductionInputFocus}
+            />
+            <div className="bottomProfileDiv">
+              <p className="errorMessage">
+                {errorIntroductionEmpty ? '필수 입력사항입니다.' : null}
+              </p>
+              <p className="ProfileEditIntroductionCount">
+                {countCharacters}/50
+              </p>
+            </div>
+          </div>
 
-      <div className="ProfileEditThirdLine">
-        <div className="profileChangeDoneMessageDiv">
-          <p className="profileChangeDoneMessage">
-            {profileChangeDone
-              ? '프로필 정보를 성공적으로 변경하였습니다.'
-              : null}
-          </p>
-        </div>
-        <div className="ProfileEditThirdLineApplyButtonDiv">
-          <button
-            className="ProfileEditThirdLineApplyButton"
-            onClick={profileChangeConfirmButtonHandler}
-          >
-            변경하기
-          </button>
-        </div>
-      </div>
-    </ProfileEdit>
+          <div className="ProfileEditThirdLine">
+            <div className="profileChangeDoneMessageDiv">
+              <p className="profileChangeDoneMessage">
+                {profileChangeDone
+                  ? '프로필 정보를 성공적으로 변경하였습니다.'
+                  : null}
+              </p>
+            </div>
+            <div className="ProfileEditThirdLineApplyButtonDiv">
+              <button
+                className="ProfileEditThirdLineApplyButton"
+                onClick={profileChangeConfirmButtonHandler}
+              >
+                변경하기
+              </button>
+            </div>
+          </div>
+        </ProfileEdit>
+      )}{' '}
+      {isMobile && (
+        <MobileProfileEdit>
+          <div className="ProfileEditFirstLine">
+            <p className="ProfileEditHeadTitle">닉네임</p>
+            <div onClick={handleDivClick}>
+              <input
+                className={`inputNickname ${
+                  errorNickNameRegex ||
+                  errorNickNameEmpty ||
+                  errorNicknameduDlication
+                    ? 'error'
+                    : ''
+                }`}
+                type="text"
+                placeholder={
+                  !nicknameInputEnable
+                    ? profileData.nickname
+                    : '닉네임을 입력하세요'
+                }
+                disabled={!nicknameInputEnable}
+                onChange={nickNameEditonChangeHandler}
+                ref={inputRef}
+                // onBlur={() => {
+                //   setErrorNickNameEmpty(false);
+                //   setErrorNickNameRegex(false);
+                // }}
+                onFocus={handleNicknameInputFocus}
+              />
+              <div className="errorDiv">
+                <p className="errorMessage">
+                  {errorNickNameRegex
+                    ? '닉네임은 특수문자를 포함할수 없고 2글자 이상 8자이하이어야합니다.'
+                    : null}
+                </p>
+
+                <p className="errorMessage">
+                  {errorNickNameEmpty ? '필수 입력사항입니다' : null}
+                </p>
+                <p className="errorMessage">
+                  {errorNicknameduDlication ? '중복된 닉네임 입니다.' : null}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="ProfileEditSecondLine">
+            <p className="ProfileEditHeadTitle">프로필소개</p>
+            <textarea
+              className={`ProfileEditIntroductionInput ${
+                errorIntroductionEmpty ? 'error' : ''
+              }`}
+              onChange={countOnChangeHandler}
+              value={Characters}
+              // onBlur={() => {
+              //   setErrorIntroductionEmpty(false);
+              // }}
+              onFocus={handleIntroductionInputFocus}
+            />
+            <div className="bottomProfileDiv">
+              <p className="errorMessage">
+                {errorIntroductionEmpty ? '필수 입력사항입니다.' : null}
+              </p>
+              <p className="ProfileEditIntroductionCount">
+                {countCharacters}/50
+              </p>
+            </div>
+          </div>
+
+          <div className="ProfileEditThirdLine">
+            <div className="profileChangeDoneMessageDiv">
+              <p className="profileChangeDoneMessage">
+                {profileChangeDone
+                  ? '프로필 정보를 성공적으로 변경하였습니다.'
+                  : null}
+              </p>
+            </div>
+            <div className="ProfileEditThirdLineApplyButtonDiv">
+              <button
+                className="ProfileEditThirdLineApplyButton"
+                onClick={profileChangeConfirmButtonHandler}
+              >
+                변경하기
+              </button>
+            </div>
+          </div>
+        </MobileProfileEdit>
+      )}
+    </>
   );
 }
 
+const MobileProfileEdit = styled.div`
+  padding: 20px;
+
+  textarea {
+    border: none;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+    resize: none; /*remove the resize handle on the bottom right*/
+  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .ProfileEditHeadTitle {
+    /* Pretendard Bold 20 */
+
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 100% */
+
+    /* Gray 09 */
+
+    color: #17171c;
+    margin-bottom: 10px;
+  }
+
+  .ProfileEditFirstLine {
+    .inputNickname {
+      width: 87%;
+      height: 42px;
+
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 20px;
+      /* or 111% */
+
+      /* Gray 09 */
+
+      color: #17171c;
+      border-radius: 0.625rem;
+      border: 0.0625rem solid #adb5bd;
+      padding: 0 20px;
+    }
+    .inputNickname:focus-within {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 20px;
+      /* or 111% */
+
+      display: flex;
+      align-items: center;
+      /* Gray 09 */
+      padding: 0 20px;
+      color: #17171c;
+      border: 1px solid #17171c;
+      border-radius: 10px;
+    }
+    .errorDiv {
+      min-height: 25px;
+    }
+  }
+
+  .ProfileEditSecondLine {
+    .ProfileEditIntroductionInput {
+      width: 89%;
+      height: 50px;
+
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 16px;
+      /* or 125% */
+
+      /* Gray 09 */
+
+      color: #17171c;
+      border-radius: 0.625rem;
+      border: 0.0625rem solid #adb5bd;
+      padding: 20px;
+    }
+    .ProfileEditIntroductionInput:focus-within {
+      color: #17171c;
+      border: 1px solid #17171c;
+    }
+
+    .bottomProfileDiv {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      min-height: 25px;
+      width: 100%;
+    }
+    .ProfileEditIntroductionCount {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 12px;
+      /* identical to box height, or 120% */
+
+      text-align: right;
+      padding-right: 10px;
+      padding-top: 5px;
+      /* Primary 01 */
+
+      color: #206efb;
+    }
+  }
+  .ProfileEditThirdLine {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    min-height: 80px;
+
+    .profileChangeDoneMessageDiv {
+      .profileChangeDoneMessage {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 16px;
+        color: #206efb;
+        margin-right: 5px;
+        height: 12px;
+      }
+    }
+    .ProfileEditThirdLineApplyButtonDiv {
+      margin-bottom: 30px;
+
+      :hover {
+        opacity: 90%;
+      }
+      .ProfileEditThirdLineApplyButton {
+        width: 132px;
+        height: 48px;
+        background: #206efb;
+        border-radius: 10px;
+
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 20px;
+        text-align: center;
+        color: #ffffff;
+        margin-top: 5px;
+      }
+    }
+  }
+
+  .errorMessage {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+
+    display: flex;
+    align-items: center;
+
+    /* Point Red */
+
+    color: #f83e4b;
+    margin-left: 5px;
+    margin-top: 3px;
+  }
+
+  .inputNickname.error,
+  .ProfileEditIntroductionInput.error {
+    border-color: #f83e4b;
+  }
+`;
 const ProfileEdit = styled.div`
   textarea {
     border: none;
