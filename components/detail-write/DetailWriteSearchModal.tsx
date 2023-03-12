@@ -56,7 +56,7 @@ const ModalOverlays = styled.div`
   top: 15vh;
   left: 25%;
   width: 50rem;
-  height: 45rem;
+  height: 75vh;
   background-color: white;
   border-radius: 10px;
   z-index: 20;
