@@ -295,6 +295,9 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
       setAttachment([]);
     }
+    setShowModal(true);
+    setModalTitle('Complete');
+    setModalDescription('글이 저장되었습니다');
 
     queryClient.removeQueries('post-list');
     queryClient.removeQueries(['my-page', 'myPost']);
@@ -323,6 +326,9 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       products: updateProducts,
     });
 
+    setShowModal(true);
+    setModalTitle('Complete');
+    setModalDescription('글이 수정되었습니다');
     router.push('/post-list');
   };
 
