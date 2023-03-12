@@ -155,15 +155,18 @@ function DeleteAccount() {
           </div>
           <div className="cautionDiv">
             <ul>
-              <li>현재 사용중인 계정 정보는 회원 탈퇴후 복구가 불가합니다.</li>
-              <li>주의사항 내용 1</li>
-              <li>주의사항 내용 2</li>
-              <li>주의사항 내용 3</li>
-              <li>주의사항 내용 4</li>
-              <li>주의사항 내용 5</li>
-              <li>주의사항 내용 6</li>
-              <li>주의사항 내용 7</li>
-              <li>주의사항 내용 8</li>
+              <li>주의사항</li>
+              <li>
+                1. 현재 사용중인 계정 정보는 회원 탈퇴후 복구가 불가합니다.
+              </li>
+              <li>2. 계정에 저장된 정보를 미리 백업해 두는 것이 좋습니다.</li>
+              <li>3. 서비스 이용 내역을 미리 확인해 보세요.</li>
+              <li>4. 탈퇴 전에 문의사항을 해결해 두세요.</li>
+              <li>5. 계정 보안을 강화해 두는 것이 좋습니다.</li>
+              <li>
+                6. 탈퇴 후에도 연락이 필요한 서비스가 있는지 확인해 보세요.
+              </li>
+              <li>7. 재가입을 위한 절차나 방법을 미리 파악해 두세요.</li>
             </ul>
           </div>
           <div className="buttonDiv">
@@ -206,6 +209,10 @@ const MobileDeleteAccountContainer = styled.div`
       color: #17171c;
       margin-bottom: 10px;
     }
+    > input {
+      width: 100%;
+      box-sizing: border-box;
+    }
   }
 
   .cautionDiv {
@@ -218,6 +225,12 @@ const MobileDeleteAccountContainer = styled.div`
 
     background: #f1f3f5;
     border-radius: 10px;
+    ul li:first-child {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
     > ul {
       font-style: normal;
       font-weight: 500;

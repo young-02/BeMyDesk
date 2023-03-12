@@ -273,12 +273,12 @@ export function ProfileEditModal({
                 >
                   회원탈퇴
                 </button>
-                <button
+                {/* <button
                   className="modal-close"
                   onClick={() => setProfileEditModalOpen(false)}
                 >
                   <AiOutlineClose />
-                </button>
+                </button> */}
               </div>
             </div>
             <div className="buttonBottomDiv">
@@ -337,8 +337,17 @@ export function ProfileEditModal({
                   setProfileEditModalOpen={setProfileEditModalOpen}
                 />
               )}
-              {changePasswordToggle && <ChangePassword user={user} />}
-              {deleteAccountToggle && <DeleteAccount />}
+              {changePasswordToggle && (
+                <ChangePassword
+                  user={user}
+                  setProfileEditModalOpen={setProfileEditModalOpen}
+                />
+              )}
+              {deleteAccountToggle && (
+                <DeleteAccount
+                  setProfileEditModalOpen={setProfileEditModalOpen}
+                />
+              )}
             </div>
           </div>
         </MobileStyledEditProfileModalContainer>
