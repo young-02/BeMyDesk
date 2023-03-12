@@ -727,8 +727,10 @@ const DetailWriteBox = styled.div`
   .preview_image_scroll {
     display: flex;
     width: 100%;
-    /* overflow: hidden; */
-    overflow-x: scroll;
+    
+    @media (max-width:520px){
+      overflow-x:scroll;
+    }
   }
 
   .image-container {
@@ -771,19 +773,7 @@ const DetailWriteBox = styled.div`
   .preview_image_wrap {
     display: flex;
     flex-direction: row;
-    @media (min-width: 1px) and (max-width: 375px) {
-      width: 100%;
-    }
-
-    @media (min-width: 376px) and (max-width: 690px) {
-      width: 100%;
-    }
-    @media (min-width: 691px) and (max-width: 1200px) {
-      width: 100%;
-    }
-    @media (min-width: 1201px) {
-      width: 100%;
-    }
+    
   }
 
   .test_image {
