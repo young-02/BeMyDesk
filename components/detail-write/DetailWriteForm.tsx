@@ -448,7 +448,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
             <DeskPhotoBox>
               <div className="photo_wrap">
                 <label className="desk_label" htmlFor="deskImage">
-                  이미지를 업로드해주세요 {attachment.length}/2
+                  2장을 동시에 선택 후 업로드 해주세요 {attachment.length}/2
                   <input
                     type="file"
                     multiple
