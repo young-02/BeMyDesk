@@ -7,6 +7,7 @@ import activeScrap from '../../../public/images/userReaction/activeScrap.png';
 import inactiveScrap from '../../../public/images/userReaction/inactiveScrap.png';
 import { useQueryClient } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
+import useResponsive from '@/Hooks/useResponsive';
 
 const ScrapCard = ({ postId, userInfo, currentUserId }: any) => {
   const queryClient = useQueryClient();
@@ -18,23 +19,16 @@ const ScrapCard = ({ postId, userInfo, currentUserId }: any) => {
     queryClient.removeQueries(['post', postId]);
   };
 
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
-  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
-
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 1000,
+    minWidth: 1001,
+  });
 
   return (
     <>
       {isLoading && <div></div>}
       {isError && <div></div>}
-      {isDesktopSize && (
+      {isDesktop && (
         <StyledContainer>
           <StyledLeftDiv>
             <Image
@@ -72,7 +66,7 @@ const ScrapCard = ({ postId, userInfo, currentUserId }: any) => {
           </StyledRightDiv>
         </StyledContainer>
       )}
-      {isMobileSize && (
+      {isMobile && (
         <MobileStyledContainer>
           <div className="leftDiv">
             <Image

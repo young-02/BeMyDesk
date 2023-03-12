@@ -1,3 +1,4 @@
+import useResponsive from '@/Hooks/useResponsive';
 import { auth, dbService } from '@/shared/firebase';
 import {
   deleteUser,
@@ -68,17 +69,10 @@ function DeleteAccount() {
       }
     }
   };
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
-  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
-
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 1000,
+    minWidth: 1001,
+  });
 
   // 실시간 유효성 검사
   useEffect(() => {
@@ -91,7 +85,7 @@ function DeleteAccount() {
   return (
     <>
       {' '}
-      {isDesktopSize && (
+      {isDesktop && (
         <DeleteAccountContainer>
           <div className="emailDiv">
             <p className="subheadingText">이메일</p>
@@ -142,7 +136,7 @@ function DeleteAccount() {
           </div>
         </DeleteAccountContainer>
       )}
-      {isMobileSize && (
+      {isMobile && (
         <MobileDeleteAccountContainer>
           <div className="emailDiv">
             <p className="subheadingText">이메일</p>

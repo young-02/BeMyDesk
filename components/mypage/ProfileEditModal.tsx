@@ -12,6 +12,7 @@ import Image from 'next/image';
 import DeleteAccount from './editProfile/DeleteAccount';
 import { useQueryClient } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
+import useResponsive from '@/Hooks/useResponsive';
 
 export function ProfileEditModal({
   setProfileEditModalOpen,
@@ -77,21 +78,14 @@ export function ProfileEditModal({
     updateDoc(collectionRef, payload);
     queryClient.removeQueries('userInfo');
   };
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
-  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
-
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 1000,
+    minWidth: 1001,
+  });
 
   return (
     <>
-      {isDesktopSize && (
+      {isDesktop && (
         <StyledEditProfileModalContainer>
           <div
             className="modal-overlay"
@@ -221,11 +215,8 @@ export function ProfileEditModal({
         </StyledEditProfileModalContainer>
       )}
       {/* 여기부터 모바일 */}
-      {/* ㅇ
-      ㅇ
-      ㅇ
-      ㅇ */}
-      {isMobileSize && (
+
+      {isMobile && (
         <MobileStyledEditProfileModalContainer>
           <div
             className="modal-overlay"

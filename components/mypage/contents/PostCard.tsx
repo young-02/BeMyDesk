@@ -11,6 +11,7 @@ import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 import DeleteModal from './DeleteModal';
 import { useMediaQuery } from 'react-responsive';
+import useResponsive from '@/Hooks/useResponsive';
 
 type Props = {};
 
@@ -29,17 +30,10 @@ const PostCard = ({ post, currentUserId }: any) => {
     setIsDeleteModalOn(true);
   };
 
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
-  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
-
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 1000,
+    minWidth: 1001,
+  });
 
   useEffect(() => {
     return setIsDeleteModalOn(false);
@@ -47,7 +41,7 @@ const PostCard = ({ post, currentUserId }: any) => {
 
   return (
     <>
-      {isDesktopSize && (
+      {isDesktop && (
         <StyledContainer key={post.id}>
           {/* 글삭제모달 */}
           {isDeleteModalOn && (
@@ -106,7 +100,7 @@ const PostCard = ({ post, currentUserId }: any) => {
           </StyledRightDiv>
         </StyledContainer>
       )}{' '}
-      {isMobileSize && (
+      {isMobile && (
         <MobileStyledContainer key={post.id}>
           {/* 글삭제모달 */}
           {isDeleteModalOn && (

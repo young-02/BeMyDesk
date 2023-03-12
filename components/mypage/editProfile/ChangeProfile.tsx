@@ -14,6 +14,7 @@ import {
 import styled from 'styled-components';
 import { useQueryClient } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
+import useResponsive from '@/Hooks/useResponsive';
 
 function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
   // 프사 변경시 캐쉬 다시 불러오기 위한 쿼리 클라이언트
@@ -164,17 +165,10 @@ function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
     queryClient.invalidateQueries('userInfo');
     // setProfileEditModalOpen(false);
   };
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
-  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
-
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 1000,
+    minWidth: 1001,
+  });
 
   // input창 enable시 자동 focus
   useEffect(() => {
@@ -185,7 +179,7 @@ function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
 
   return (
     <>
-      {isDesktopSize && (
+      {isDesktop && (
         <ProfileEdit>
           <div className="ProfileEditFirstLine">
             <p className="ProfileEditHeadTitle">닉네임</p>
@@ -272,7 +266,7 @@ function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
           </div>
         </ProfileEdit>
       )}{' '}
-      {isMobileSize && (
+      {isMobile && (
         <MobileProfileEdit>
           <div className="ProfileEditFirstLine">
             <p className="ProfileEditHeadTitle">닉네임</p>

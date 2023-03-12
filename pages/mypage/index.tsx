@@ -19,6 +19,7 @@ import useCheckUser from '@/Hooks/useCheckUser';
 import HeadSeo from '@/components/ui/HeadSeo';
 
 import { useMediaQuery } from 'react-responsive';
+import useResponsive from '@/Hooks/useResponsive';
 
 type Props = {};
 
@@ -43,18 +44,10 @@ export default function MyPage({}: Props) {
   const scrapCount = userInfo?.scraps?.length;
   const followCount = userInfo?.following.length;
 
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
-  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
-
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
-
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 1000,
+    minWidth: 1001,
+  });
   if (loading) {
     return <StyledContainer></StyledContainer>;
   }
@@ -70,7 +63,7 @@ export default function MyPage({}: Props) {
   if (user) {
     return (
       <>
-        {isDesktopSize && (
+        {isDesktop && (
           <StyledContainer>
             <HeadSeo title={'마이페이지 | be-my-desk'} />
             {isLoading && <div></div>}
@@ -157,7 +150,7 @@ export default function MyPage({}: Props) {
         )}
 
         {/* //모바일 */}
-        {isMobileSize && (
+        {isMobile && (
           <MobileStyledContainer>
             <div className="profileDiv">
               <div className="profileLeft">

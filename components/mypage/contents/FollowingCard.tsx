@@ -6,6 +6,7 @@ import { useUpdateFollowing } from '@/Hooks/useUpdateFollowing';
 import { useQueryClient } from 'react-query';
 import CustomButton from '@/components/ui/CustomButton';
 import { useMediaQuery } from 'react-responsive';
+import useResponsive from '@/Hooks/useResponsive';
 
 type Props = {};
 
@@ -29,22 +30,15 @@ const FollowingCard = ({ postUserId, userInfo }: any) => {
     queryClient.removeQueries(['userInfo', postUserId]);
   };
 
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
-  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
-
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 1000,
+    minWidth: 1001,
+  });
   return (
     <>
       {isLoading && <div></div>}
       {isError && <div></div>}
-      {isDesktopSize && (
+      {isDesktop && (
         <StyledContainer
           key={postUserInfo?.id}
           style={{ border: '1px solid black' }}
@@ -89,7 +83,7 @@ const FollowingCard = ({ postUserId, userInfo }: any) => {
           </StyledDivRight>
         </StyledContainer>
       )}{' '}
-      {isMobileSize && (
+      {isMobile && (
         <MobileStyledContainer key={postUserInfo?.id}>
           <div className="leftDiv">
             {postUserInfo?.profileImage ? (

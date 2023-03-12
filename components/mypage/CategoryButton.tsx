@@ -1,3 +1,4 @@
+import useResponsive from '@/Hooks/useResponsive';
 import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
@@ -9,21 +10,14 @@ function CategoryButton({
   scrapCount,
   followCount,
 }: any) {
-  // 반응응형 사이즈
-  const [isMobile, setIsMobile] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<number>(0);
-  const isMobileSize = useMediaQuery({ maxWidth: 1000 });
-  const isDesktopSize = useMediaQuery({ minWidth: 1001 });
-
-  //서버사이드렌더링
-  useEffect(() => {
-    setIsMobile(isMobileSize);
-    setIsDesktop(isDesktopSize);
-  }, [isMobileSize, isDesktopSize]);
+  const { isMobile, isDesktop } = useResponsive({
+    maxWidth: 1000,
+    minWidth: 1001,
+  });
 
   return (
     <>
-      {isDesktopSize && (
+      {isDesktop && (
         <StyledButtonContainer>
           <button
             onClick={() => {
@@ -61,7 +55,7 @@ function CategoryButton({
           </button>
         </StyledButtonContainer>
       )}
-      {isMobileSize && (
+      {isMobile && (
         <MobileStyledButtonContainer>
           <button
             onClick={() => {
