@@ -82,6 +82,7 @@ const PostListLayout = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  min-height: 75vh;
   margin-top: 8rem;
   overflow-x: hidden;
 `;
