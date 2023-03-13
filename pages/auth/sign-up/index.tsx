@@ -422,9 +422,13 @@ export default function SignUp({}: Props) {
 
 const EmailDiv = styled.div`
   display: flex;
+
   .emailAt {
     align-self: center;
     padding-right: 10px;
+    @media (max-width: 420px) {
+      font-size: 10px;
+    }
   }
 `;
 const SelectBox = styled.div`
@@ -443,7 +447,8 @@ const SelectBox = styled.div`
     font-size: 14px;
     color: #5b5b5b;
     @media (max-width: 420px) {
-      font-size: 10px;
+      padding: 16.5px 13px;
+      font-size: 13px;
     }
     &.active {
       border: 0.0625rem solid #206efb;
@@ -483,8 +488,9 @@ const SelectBox = styled.div`
     box-shadow: 0px 4px 6px 0px #00000040;
     overflow: hidden;
     @media (max-width: 420px) {
+      top: 120%;
+      right: 0.01%;
       font-size: 13px;
-      width: 120%;
     }
     > li {
       padding: 20px;

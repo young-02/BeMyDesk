@@ -27,7 +27,7 @@ const DetailWriteProductCard = ({
 
   return (
     <DetailWriteCardLayout>
-      {selectList.length < 3 ? (
+      {/* {selectList.length < 3 ? (
         selectList.map((i: any) => (
           <DetailWriteCardBox key={i.productId}>
             <CardBox>
@@ -58,68 +58,68 @@ const DetailWriteProductCard = ({
             </CardBox>
           </DetailWriteCardBox>
         ))
-      ) : (
-        <Swiper
-          slidesPerView={1}
-          centeredSlides={true}
-          spaceBetween={20}
-          pagination={{
-            type: 'fraction',
-            clickable: true,
-          }}
-          navigation={true}
-          modules={[Pagination, Navigation]}
-          breakpoints={{
-            640: {
-              width: 640,
-              slidesPerView: 1,
-            },
-            768: {
-              width: 768,
-              slidesPerView: 2,
-            },
-            1200: {
-              width: 1200,
-              slidesPerView: 2,
-            },
-          }}
-          className="mySwiper"
-        >
-          {selectList?.map((i: any) => (
-            <SwiperSlide key={i.productId}>
-              {
-                <DetailWriteCardBox key={i.productId}>
-                  <CardBox>
-                    <div className="close_box">
-                      <Image
-                        className="close"
-                        src={'/images/close.png'}
-                        alt="closeBtn"
-                        width={24}
-                        height={24}
-                        onClick={() => deleteCard(i)}
-                        style={{ cursor: 'pointer' }}
-                      />
-                    </div>
-                    <div className="card">
-                      <Image
-                        src={i.image}
-                        width={150}
-                        height={150}
-                        alt="selectListImg"
-                      />
-                      <div className="card">
-                        <p className="product_title">{parse(i.title)}</p>
-                        <p className="product_hashTag">#{i.category2}</p>
-                      </div>
-                    </div>
-                  </CardBox>
-                </DetailWriteCardBox>
-              }
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      )}
+      ) : ( */}
+      <Swiper
+        slidesPerView={4}
+        // centeredSlides={true}
+        spaceBetween={20}
+        pagination={{
+          type: 'fraction',
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Pagination, Navigation]}
+        breakpoints={{
+          0: {
+            slidesPerView: 1,
+          },
+          520: {
+            slidesPerView: 2,
+          },
+          900: {
+            slidesPerView: 3,
+          },
+          1200: {
+            slidesPerView: 4,
+          },
+        }}
+        className="mySwiper"
+      >
+        {selectList?.map((i: any) => (
+          <SwiperSlide key={i.productId}>
+            {
+              <DetailWriteCardBox key={i.productId}>
+                <CardBox>
+                  <div className="close_box">
+                    <Image
+                      className="close"
+                      src={'/images/close.png'}
+                      alt="closeBtn"
+                      width={16}
+                      height={16}
+                      onClick={() => deleteCard(i)}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </div>
+                  <div className="card-image">
+                    <Image
+                      src={i.image}
+                      layout="fill"
+                      object-fit="cover"
+                      alt="selectListImg"
+                    />
+                  </div>
+                  <div className="card">
+                    <p className="product_title">{parse(i.title)}</p>
+                    <p className="product_hashTag">#{i.category2}</p>
+                  </div>
+                </CardBox>
+              </DetailWriteCardBox>
+            }
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      {/* )} */}
     </DetailWriteCardLayout>
   );
 };
@@ -127,11 +127,12 @@ const DetailWriteProductCard = ({
 const DetailWriteCardLayout = styled.div`
   display: flex;
   overflow-x: auto;
-  overflow-y: hidden;
+  width: 100%;
 
   .swiper {
     width: 100%;
     height: 100%;
+    padding-bottom: 2em;
   }
 
   .swiper-slide {
@@ -142,6 +143,9 @@ const DetailWriteCardLayout = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .swiper-pagination-fraction {
+    bottom: 16px;
   }
 `;
 
@@ -161,32 +165,14 @@ const DetailWriteCardBox = styled.div`
 `;
 
 const CardBox = styled.div`
-  width: 100%;
+  width: 17.625rem;
+  height: 170px;
   border: 0.0625rem solid #868e96;
   border-radius: 0.625rem;
-  margin: 1.5rem;
+
   padding: 1rem;
   overflow: hidden;
   /* margin: 0 auto; */
-  @media (min-width: 1px) and (max-width: 375px) {
-    width: 50%;
-    border: none;
-    margin: 0 auto;
-  }
-
-  @media (min-width: 376px) and (max-width: 690px) {
-    width: 50%;
-    margin: 0 auto;
-  }
-
-  @media (min-width: 691px) and (max-width: 1200px) {
-    width: 69.5%;
-    margin: 0 auto;
-  }
-  @media (min-width: 1201px) {
-    width: 75%;
-    margin: 0 auto;
-  }
 
   .close_box {
     display: flex;
@@ -194,11 +180,23 @@ const CardBox = styled.div`
   }
 
   .card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    position: absolute;
+    bottom: 1.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .card-image {
+    width: 100px;
+    height: 130px;
+    position: absolute;
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    > img {
+      object-fit: contain;
+    }
   }
 
   .selectListImg {
@@ -210,23 +208,11 @@ const CardBox = styled.div`
     font-size: 0.875rem;
     font-weight: 700;
     line-height: 1.25rem;
-    width: 30rem;
+    width: 10rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     box-sizing: border-box;
-
-    @media (min-width: 1px) and (max-width: 375px) {
-      width: 50%;
-    }
-
-    @media (min-width: 376px) and (max-width: 690px) {
-      width: 50%;
-    }
-
-    @media (min-width: 691px) and (max-width: 1200px) {
-      width: 55%;
-    }
   }
 
   .product_hashTag {
