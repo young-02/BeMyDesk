@@ -13,8 +13,8 @@ function MyScrap({ userInfo, scrapCount, currentUserId }: any) {
             className="errorIcon"
             src="/images/QuestionMark.png"
             alt="QuestionMark"
-            width={1000}
-            height={1000}
+            width={200}
+            height={200}
           />
           <p className="errorFirstLine">저장한 스크랩이 없어요</p>
           <p className="errorSecondLine">마음에 드시는 공간을 저장해 볼까요?</p>

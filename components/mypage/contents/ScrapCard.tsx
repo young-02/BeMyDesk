@@ -26,18 +26,17 @@ const ScrapCard = ({ postId, userInfo, currentUserId }: any) => {
 
   return (
     <>
-      {isLoading && <div></div>}
-      {isError && <div></div>}
+      {isLoading && <div>Loading...</div>}
+      {isError && <div>Error: {error.message}</div>}
       {isDesktop && (
         <StyledContainer>
           <StyledLeftDiv>
             <Image
               src={post?.postImage1}
               alt="postImage1"
+              className="cover-image"
               width={282}
               height={197}
-              style={{ cursor: 'pointer' }}
-              className="img"
             />
           </StyledLeftDiv>
           <StyledRightDiv>
@@ -212,26 +211,29 @@ const MobileStyledContainer = styled.div`
 
 const StyledContainer = styled.div`
   display: flex;
-  width: 894px;
-  height: 197px;
-  /* White */
-
+  width: 55.875rem;
+  height: 12.3125rem;
   background: #ffffff;
-  /* Primary 01 */
-
   border: 1px solid #868e96;
   border-radius: 10px;
   margin-bottom: 28px;
+  overflow: hidden;
 `;
 
 const StyledLeftDiv = styled.div`
-  .img {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+  width: 17.625rem;
+  height: 12.3125rem;
+  cursor: pointer;
+
+  .cover-image {
+    object-fit: cover;
   }
 `;
+
 const StyledRightDiv = styled.div`
   padding: 20px;
+  height: 12.3125rem;
+
   div {
   }
   .firstLine {
