@@ -5,6 +5,9 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
   GoogleAuthProvider,
+  FacebookAuthProvider,
+  reauthenticateWithPopup,
+  OAuthProvider,
 } from 'firebase/auth';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
@@ -15,17 +18,19 @@ import styled from 'styled-components';
 function DeleteAccount() {
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [check, setCheck] = useState(false);
-
   const [emailCheck, setEmailCheck] = useState(false);
-
+  const [passwordCheck, setPasswordCheck] = useState(false);
+  const [errorPasswordValid, setErrorPasswordValid] = useState(false);
   const [allDone, setAllDone] = useState(false);
-
   const [errorEmailValid, setErrorEmailValid] = useState(false);
   // 이메일Regex
   const FullEmailRegex =
     /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-
+  //비번 regex
+  const passwordRegex =
+    /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
   // 동의합니다 버튼
   const btnEvent = () => {
     if (check === false) {
@@ -43,32 +48,80 @@ function DeleteAccount() {
     }
   };
 
+  // 비밀번호 유효성검사
+  const handlePassword = (event: any) => {
+    setPassword(event.target.value);
+    if (passwordRegex.test(event.target.value)) {
+      setPasswordCheck(true);
+    }
+  };
+
   // 탈퇴 버튼클릭
   const DeleteButton = async () => {
     const user = auth.currentUser;
     if (user?.email !== email) {
       setErrorEmailValid(true);
     } else {
-      // 아이디 비번으로 재인증 하게 해야함
-      // const credential = EmailAuthProvider.credential(
-      //   user.email,
-      //   email,
-      // );
-      // await reauthenticateWithCredential(user, credential);
+      let credential;
+      let provider;
+      if (user.providerData[0].providerId === 'google.com') {
+        provider = new OAuthProvider('google.com');
+        await reauthenticateWithPopup(user, provider)
+          .then(() => {
+            try {
+              Promise.all([
+                deleteDoc(doc(dbService, 'userInfo', user.uid)),
+                deleteUser(user),
+              ]);
+              alert('계정 삭제가 완료되었습니다. 이용해주셔서 감사합니다.');
+              router.push('/main');
+            } catch (error) {
+              console.log('error', error);
+              alert('구글 계정이 일치하지 않습니다 다시한번 확인해주세요');
+            }
+          })
+          .catch(() => {
+            alert('구글 계정이 일치하지 않습니다 다시한번 확인해주세요');
+          });
+      } else if (user.providerData[0].providerId === 'facebook.com') {
+        provider = new OAuthProvider('facebook.com');
+        await reauthenticateWithPopup(user, provider)
+          .then(() => {
+            try {
+              Promise.all([
+                deleteDoc(doc(dbService, 'userInfo', user.uid)),
+                deleteUser(user),
+              ]);
+              alert('계정 삭제가 완료되었습니다. 이용해주셔서 감사합니다.');
 
-      try {
-        await deleteUser(user).then(() => {
-          deleteDoc(doc(dbService, 'userInfo', user.uid));
-        });
-        alert('계정 삭제가 완료되었습니다. 이용해주셔서 감사합니다.');
-        router.push('/main');
-      } catch (error) {
-        console.log('error', error);
-        alert('세션이 만료되었습니다. 다시 로그인 한 후 진행해주세요');
-        router.push('/auth/sign-in');
+              router.push('/main');
+            } catch (error) {
+              console.log('error', error);
+              alert('페이스북 계정이 일치하지 않습니다 다시한번 확인해주세요');
+            }
+          })
+          .catch(() => {
+            alert('페이스북 계정이 일치하지 않습니다 다시한번 확인해주세요');
+          });
+      } else {
+        credential = EmailAuthProvider.credential(user.email, password);
+        await reauthenticateWithCredential(user, credential)
+          .then(() => {
+            Promise.all([
+              deleteDoc(doc(dbService, 'userInfo', user.uid)),
+              deleteUser(user),
+            ]);
+            alert('계정 삭제가 완료되었습니다. 이용해주셔서 감사합니다.');
+            router.push('/main');
+          })
+          .catch((error: any) => {
+            console.log('error', error);
+            setErrorPasswordValid(true);
+          });
       }
     }
   };
+
   const { isMobile, isDesktop } = useResponsive({
     maxWidth: 1000,
     minWidth: 1001,
@@ -76,22 +129,21 @@ function DeleteAccount() {
 
   // 실시간 유효성 검사
   useEffect(() => {
-    if (emailCheck && check) {
+    if (emailCheck && check && passwordCheck) {
       setAllDone(true);
     } else {
       setAllDone(false);
     }
-  }, [emailCheck, check]);
+  }, [emailCheck, check, passwordCheck]);
   return (
     <>
-      {' '}
       {isDesktop && (
         <DeleteAccountContainer>
           <div className="emailDiv">
             <p className="subheadingText">이메일</p>
             <input
               type="text"
-              placeholder="가입하신 이메일을 적어주세요."
+              placeholder="이메일을 입력해주세요."
               onChange={handleEmail}
               onFocus={() => setErrorEmailValid(false)}
               className={errorEmailValid ? 'error' : null}
@@ -102,6 +154,25 @@ function DeleteAccount() {
               ) : null}
             </div>
           </div>
+          {auth.currentUser?.providerData[0].providerId === 'password' ? (
+            <div className="passwordDiv">
+              <p className="subheadingText">비밀번호</p>
+              <input
+                type="password"
+                placeholder="비밀번호를 입력해주세요."
+                onChange={handlePassword}
+                onFocus={() => setErrorPasswordValid(false)}
+                className={errorPasswordValid ? 'error' : null}
+              />
+              <div className="errorMessageDiv">
+                {errorPasswordValid ? (
+                  <p className="errorMessageText">비밀번호를 확인해 주세요.</p>
+                ) : null}
+              </div>
+            </div>
+          ) : (
+            <div style={{ height: '102.87px' }}></div>
+          )}
           <div className="cautionDiv">
             <ul>
               <li>주의사항</li>
@@ -118,7 +189,7 @@ function DeleteAccount() {
               <li>7. 재가입을 위한 절차나 방법을 미리 파악해 두세요.</li>
             </ul>
           </div>
-          <div className="buttonDiv">
+          <div className="buttonDiv pwExist">
             <div className="agree-input-wrap">
               <label htmlFor="check1">
                 <input
@@ -156,6 +227,24 @@ function DeleteAccount() {
               ) : null}
             </div>
           </div>
+          {auth.currentUser?.providerData[0].providerId === 'password' && (
+            <div className="passwordDiv">
+              <p className="subheadingText">비밀번호</p>
+              <input
+                type="password"
+                placeholder="비밀번호를 입력해주세요."
+                onChange={handlePassword}
+                onFocus={() => setErrorPasswordValid(false)}
+                className={errorPasswordValid ? 'error' : null}
+              />
+              <div className="errorMessageDiv">
+                {errorPasswordValid ? (
+                  <p className="errorMessageText">비밀번호를 확인해 주세요.</p>
+                ) : null}
+              </div>
+            </div>
+          )}
+
           <div className="cautionDiv">
             <ul>
               <li>주의사항</li>
@@ -217,7 +306,24 @@ const MobileDeleteAccountContainer = styled.div`
       box-sizing: border-box;
     }
   }
+  .passwordDiv {
+    .subheadingText {
+      font-style: normal;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 20px;
+      /* identical to box height, or 100% */
 
+      /* Gray 09 */
+
+      color: #17171c;
+      margin-bottom: 10px;
+    }
+    > input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
   .cautionDiv {
     margin-top: 30px;
     display: flex;
@@ -247,7 +353,7 @@ const MobileDeleteAccountContainer = styled.div`
     }
   }
   .buttonDiv {
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -366,6 +472,8 @@ const MobileDeleteAccountContainer = styled.div`
 const DeleteAccountContainer = styled.div`
   .emailDiv {
   }
+  .passwordDiv {
+  }
 
   .cautionDiv {
     display: flex;
@@ -393,13 +501,12 @@ const DeleteAccountContainer = styled.div`
     }
   }
   .buttonDiv {
-    margin-top: 100px;
+    margin-top: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     margin-bottom: 0.625rem;
-
     label {
       display: flex;
       align-items: center;
