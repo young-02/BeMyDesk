@@ -215,7 +215,7 @@ const DetailWriteSearchProductBox = styled.div`
     border: 1px solid #868e96;
     padding: 1rem;
     margin: 0.625rem;
-
+    gap: 1rem;
     border-radius: 0.625rem;
     overflow: hidden;
     cursor: pointer;
@@ -248,7 +248,7 @@ const DetailWriteSearchProductBox = styled.div`
   }
 
   .searchProductWrap {
-    width: 37.5rem;
+    /* width: 37.5rem; */
     @media (min-width: 1px) and (max-width: 375px) {
       width: 18.75rem;
       white-space: nowrap;
@@ -265,7 +265,7 @@ const DetailWriteSearchProductBox = styled.div`
   }
 
   .search_category {
-    width: 3.125rem;
+    /* width: 3.125rem; */
     align-items: center;
     justify-content: center;
   }
@@ -465,7 +465,7 @@ const PickProductsBox = styled.div`
   align-items: center;
   color: #fff;
   background-color: #206efb;
-  width: 16.75rem;
+  width: 12rem;
   border-radius: 1.875rem;
   padding: 0.5rem 1.25rem;
   font-size: 1rem;

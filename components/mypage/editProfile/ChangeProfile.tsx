@@ -328,12 +328,22 @@ function ChangeProfile({ user, profileData, setProfileEditModalOpen }: any) {
               </p>
             </div>
             <div className="ProfileEditThirdLineApplyButtonDiv">
-              <button
-                className="ProfileEditThirdLineApplyButton"
-                onClick={profileChangeConfirmButtonHandler}
-              >
-                변경하기
-              </button>
+              <div>
+                <button
+                  className="ProfileEditThirdLineCancelButton"
+                  onClick={() => setProfileEditModalOpen(false)}
+                >
+                  취소
+                </button>
+              </div>
+              <div>
+                <button
+                  className="ProfileEditThirdLineApplyButton"
+                  onClick={profileChangeConfirmButtonHandler}
+                >
+                  변경하기
+                </button>
+              </div>
             </div>
           </div>
         </MobileProfileEdit>
@@ -371,9 +381,9 @@ const MobileProfileEdit = styled.div`
 
   .ProfileEditFirstLine {
     .inputNickname {
-      width: 87%;
+      width: 100%;
       height: 42px;
-
+      box-sizing: border-box;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -403,8 +413,9 @@ const MobileProfileEdit = styled.div`
 
   .ProfileEditSecondLine {
     .ProfileEditIntroductionInput {
-      width: 89%;
-      height: 50px;
+      width: 100%;
+      height: 100px;
+      box-sizing: border-box;
 
       font-style: normal;
       font-weight: 500;
@@ -446,7 +457,6 @@ const MobileProfileEdit = styled.div`
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-end;
-    min-height: 80px;
 
     .profileChangeDoneMessageDiv {
       .profileChangeDoneMessage {
@@ -460,24 +470,41 @@ const MobileProfileEdit = styled.div`
       }
     }
     .ProfileEditThirdLineApplyButtonDiv {
-      margin-bottom: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
 
-      :hover {
-        opacity: 90%;
+      .ProfileEditThirdLineCancelButton {
+        height: 48px;
+
+        margin-left: 25px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 20px;
+        text-align: center;
+        color: #206efb;
+        margin-top: 5px;
+        :hover {
+          opacity: 90%;
+        }
       }
       .ProfileEditThirdLineApplyButton {
-        width: 132px;
+        width: 200px;
         height: 48px;
         background: #206efb;
         border-radius: 10px;
 
         font-style: normal;
         font-weight: 700;
-        font-size: 20px;
+        font-size: 16px;
         line-height: 20px;
         text-align: center;
         color: #ffffff;
         margin-top: 5px;
+        :hover {
+          opacity: 90%;
+        }
       }
     }
   }

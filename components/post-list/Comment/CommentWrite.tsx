@@ -89,6 +89,10 @@ const UserInformationDiv = styled.div`
     margin-left: 0.625rem;
     font-size: 0.875rem;
     font-weight: 700;
+
+    @media (max-width:520px) {
+      display:none;
+    }
   }
 `;
 

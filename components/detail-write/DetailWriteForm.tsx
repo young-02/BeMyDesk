@@ -95,7 +95,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
    */
   const getNaverData = async () => {
     const response = await axios
-      .get('https://https://be-my-desk.vercel.app/api/naverData', {
+      .get('https://be-my-desk.vercel.app/api/naverData', {
         params: {
           query: searchWord,
         },
@@ -527,11 +527,10 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
             {isMobile ? (
               <CustomButton
                 fontColor="#000"
-                borderRadius="1.25"
+                borderRadius="1"
                 width="10"
-                margin="0 1.5"
                 fontWeight="700"
-                fontSize="1.25"
+                fontSize="1"
                 onClick={
                   mode === 'update'
                     ? () => {
@@ -556,10 +555,10 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
               <CustomButton
                 backgroundColor="#206efb"
                 fontColor="#fff"
-                borderRadius="1.25"
+                borderRadius="1"
                 width="10"
                 fontWeight="700"
-                fontSize="1.25"
+                fontSize="1"
                 onClick={
                   mode === 'update'
                     ? () => {
@@ -582,11 +581,11 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
               <CustomButton
                 backgroundColor="#206efb"
                 fontColor="#fff"
-                borderRadius="1.25"
+                borderRadius=".6"
                 width="35"
                 height="4"
                 fontWeight="700"
-                fontSize="1.25"
+                fontSize="1"
                 onClick={
                   mode === 'update'
                     ? () => {
@@ -626,25 +625,15 @@ const DetailWriteLayout = styled.div`
 const DetailWriteWrap = styled.div`
   display: flex;
   flex-direction: column;
-  /* justify-content: center;
-  align-items: center; */
-  /* margin: 0 auto; */
-  margin-top: 5.5rem;
-  margin-bottom: 4rem;
-  width: 75%;
-  /* padding: 2.5rem; */
+  margin: 5.5rem 0;
+  /* margin-top: 5.5rem;
+  margin-bottom: 4rem; */
+  max-width: 1200px;
+  width: 100%;
   box-sizing: border-box;
 
-  @media (min-width: 1px) and (max-width: 375px) {
-    width: 90%;
-  }
-
-  @media (min-width: 376px) and (max-width: 690px) {
-    width: 80%;
-  }
-
-  @media (min-width: 691px) and (max-width: 1200px) {
-    width: 85%;
+  @media (max-width: 1200px) {
+    padding: 1.25rem;
   }
 `;
 
@@ -744,39 +733,29 @@ const DetailWriteBox = styled.div`
   .preview_image_scroll {
     display: flex;
     width: 100%;
-    /* overflow: hidden; */
-    overflow-x: scroll;
+    
+    @media (max-width:520px){
+      overflow-x:scroll;
+    }
   }
 
   .image-container {
     position: relative;
-    width: 45%;
-    height: 15rem;
+    width: 17.625rem;
+    height: 9.875rem;
     border: 1px solid #868e96;
     border-radius: 1.25rem;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     margin-right: 1rem;
-
-    @media (min-width: 1px) and (max-width: 375px) {
-      width: 100%;
-      margin-right: 0.3rem;
-    }
-
-    @media (min-width: 376px) and (max-width: 690px) {
-      width: 100%;
-    }
-
-    @media (min-width: 691px) and (max-width: 1200px) {
-      width: 50%;
-    }
   }
 
   .no-preview-box {
-    position: relative;
-    left: 42%;
-    top: 36%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 
     > img {
       width: 4rem;
@@ -800,19 +779,7 @@ const DetailWriteBox = styled.div`
   .preview_image_wrap {
     display: flex;
     flex-direction: row;
-    @media (min-width: 1px) and (max-width: 375px) {
-      width: 100%;
-    }
-
-    @media (min-width: 376px) and (max-width: 690px) {
-      width: 100%;
-    }
-    @media (min-width: 691px) and (max-width: 1200px) {
-      width: 100%;
-    }
-    @media (min-width: 1201px) {
-      width: 100%;
-    }
+    
   }
 
   .test_image {
@@ -826,7 +793,7 @@ const DetailWriteBox = styled.div`
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    margin-top: 3rem;
+    margin-top: 1.25rem;
     margin-bottom: 0.5rem;
 
     @media (min-width: 1px) and (max-width: 375px) {
@@ -852,11 +819,11 @@ const DetailWriteBox = styled.div`
   .title_span_a {
     margin-bottom: 1rem;
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: #17171c;
     line-height: 2rem;
     margin-right: 1rem;
-    margin-top: 3rem;
+    margin-top: 1.25rem;
     align-content: center;
 
     @media (min-width: 1px) and (max-width: 375px) {
@@ -881,7 +848,7 @@ const DetailWriteBox = styled.div`
 
   .title_span_b {
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: #17171c;
     line-height: 2rem;
     align-content: center;
@@ -900,9 +867,6 @@ const DetailWriteBox = styled.div`
       line-height: 1.25rem;
       /* word-break: keep-all; */
       /* margin-top: 1rem; */
-    }
-
-    @media (max-width: 1200px) {
     }
   }
 `;
@@ -959,7 +923,7 @@ const DeskPhotoBox = styled.div`
 `;
 const DetailWriteProductCardBox = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 `;
 
 const NoPreviewImageBox = styled.div`
@@ -969,8 +933,8 @@ const NoPreviewImageBox = styled.div`
 
   .laptop_box {
     position: relative;
-    width: 35%;
-    height: 15rem;
+    width: 282px;
+    height: 170px;
     border: 1px solid #868e96;
     border-radius: 1.25rem;
 
@@ -978,19 +942,8 @@ const NoPreviewImageBox = styled.div`
       border: 1px solid #206efb;
     }
 
-    @media (min-width: 1px) and (max-width: 375px) {
+    @media (max-width: ) {
       width: 100%;
-    }
-
-    @media (min-width: 376px) and (max-width: 690px) {
-      width: 100%;
-    }
-
-    @media (min-width: 691px) and (max-width: 1200px) {
-      width: 49%;
-    }
-    @media (min-width: 1201px) {
-      width: 45%;
     }
   }
 

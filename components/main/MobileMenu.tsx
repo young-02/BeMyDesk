@@ -10,7 +10,8 @@ type Props = {};
 
 export default function MobileMenu({ isOpen, setIsOpen }) {
   const profileImg = auth.currentUser?.photoURL ?? '/images/defaultProfile.png';
-  const { isLogin } = useCheckLogin();
+  const { isLogin, logOut } = useCheckLogin();
+  
   const [active, setActive] = useState('');
   const router = useRouter();
 
@@ -23,6 +24,7 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
             layout="fill"
             object-fit="cover"
             alt="logo"
+            onClick={() => setIsOpen(!isOpen)}
           />
         </Link>
 
@@ -44,12 +46,15 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
                     width={20}
                     height={20}
                     alt="setting-icon"
-                    onClick={() => router.push('/mypage')}
+                    onClick={() => {
+                      router.push('/mypage')
+                      setIsOpen(!isOpen)
+                    }}
                   />
                 </div>
               </>
             ) : (
-              <Link href="/auth/sign-in">로그인</Link>
+              <Link href="/auth/sign-in" onClick={() => setIsOpen(!isOpen)} >로그인</Link>
             )}
           </div>
         </div>
@@ -57,7 +62,9 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           <li>
             <Link
               href="/post-list?order=category&select=designer"
-              onClick={() => setActive('직업별')}
+              onClick={() => {
+                setActive('직업별')
+                setIsOpen(!isOpen)}}
               className={active === '직업별' ? 'active' : ''}
             >
               직업별 리스트
@@ -66,7 +73,9 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           <li>
             <Link
               href="/post-list"
-              onClick={() => setActive('포스트')}
+              onClick={() =>{ 
+                setActive('포스트')
+                setIsOpen(!isOpen)}}
               className={active === '포스트' ? 'active' : ''}
             >
               포스트 리스트
@@ -75,7 +84,9 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           <li>
             <Link
               href="/detail/write"
-              onClick={() => setActive('글쓰기')}
+              onClick={() => {
+                setActive('글쓰기') 
+                setIsOpen(!isOpen)}}
               className={active === '글쓰기' ? 'active' : ''}
             >
               글쓰기
@@ -83,7 +94,7 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           </li>
         </ul>
 
-        {isLogin && <p className="log-out">로그아웃</p>}
+        {isLogin && <p className="log-out" onClick={logOut}>로그아웃</p>}
       </MobileMenuWrap>
 
       <ModalBackground onClick={() => setIsOpen(!isOpen)} />
@@ -106,7 +117,7 @@ const ModalBackground = styled.div`
 const MobileMenuWrap = styled.div`
   position: fixed;
   top: 0;
-  left: 0;
+  left: -1px;
   width: 80vw;
   height: 100vh;
   padding: 2.5rem 1.25rem;
