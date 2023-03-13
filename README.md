@@ -30,7 +30,7 @@
 
 - [깃허브](https://github.com/young-02/BeMyDesk.git)
 
-- [시연영상]()
+- [시연영상](https://youtu.be/SKVnq4IwvTU)
 
 
 <br>
