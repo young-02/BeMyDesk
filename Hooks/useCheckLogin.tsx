@@ -11,6 +11,7 @@ export default function useCheckLogin() {
   const logOut = async () => {
     resetAmplitude();
     await signOut(auth);
+    sessionStorage.clear();
   };
 
   useEffect(() => {

@@ -17,9 +17,11 @@ import { useUpdateScrap } from '@/Hooks/useUpdateScrap';
 import { useUpdateFollowing } from '../../Hooks/useUpdateFollowing';
 import CustomModal from '../ui/CustomModal';
 import { useQueryClient } from 'react-query';
+import useCheckUser from '@/Hooks/useCheckUser';
 
 export default function DetailViewUserInfor({ post }) {
   const router = useRouter();
+  const { userExist } = useCheckUser();
   const { userProfile, userId, jobCategory, likesCount, id, userNickname } =
     post;
 
@@ -52,8 +54,11 @@ export default function DetailViewUserInfor({ post }) {
   const handleUpdateScrap = async () => {
     if (currentUserId === undefined) {
       router.push('/auth/sign-in');
+    } else if (userExist == false) {
+      alert('유저 정보를 설정하세요');
+      router.push('/auth/sns-nickname');
     } else {
-      updateScrap(id);
+      userExist && updateScrap(id);
     }
   };
 
@@ -66,6 +71,9 @@ export default function DetailViewUserInfor({ post }) {
   const handleUpdateLikes = async () => {
     if (currentUserId === undefined) {
       router.push('/auth/sign-in');
+    } else if (userExist == false) {
+      alert('유저 정보를 설정하세요');
+      router.push('/auth/sns-nickname');
     } else {
       updateLikes(id);
     }
@@ -78,6 +86,9 @@ export default function DetailViewUserInfor({ post }) {
   const handleUpdateFollowing = async () => {
     if (currentUserId === undefined) {
       router.push('/auth/sign-in');
+    } else if (userExist == false) {
+      alert('유저 정보를 설정하세요');
+      router.push('/auth/sns-nickname');
     } else {
       updateFollowing(id);
     }
@@ -255,8 +266,8 @@ const DetailViewUserInforLayout = styled.div`
       gap: 0.125rem;
       margin: 0px 4px;
 
-      > p{
-        font-size:.875rem;
+      > p {
+        font-size: 0.875rem;
       }
     }
   }
