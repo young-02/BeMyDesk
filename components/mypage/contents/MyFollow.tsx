@@ -15,8 +15,8 @@ function MyFollow({ userInfo, followCount }: any) {
             className="errorIcon"
             src="/images/QuestionMark.png"
             alt="QuestionMark"
-            width={1000}
-            height={1000}
+            width={200}
+            height={200}
           />
           <p className="errorFirstLine">팔로우 리스트가 없어요</p>
           <p className="errorSecondLine">
