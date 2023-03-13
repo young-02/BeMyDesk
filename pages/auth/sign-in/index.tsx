@@ -18,6 +18,7 @@ import useGetReaction from '../../../Hooks/useGetReaction';
 import useCheckUser from '@/Hooks/useCheckUser';
 import { setAmplitudeUserId } from '@/amplitude/amplitude';
 import HeadSeo from '@/components/ui/HeadSeo';
+import CustomButton from '@/components/ui/CustomButton';
 type Props = {};
 
 export default function SignIn({}: Props) {
@@ -39,6 +40,7 @@ export default function SignIn({}: Props) {
   const [emailEmptyError, setEmailEmptyError] = useState(false);
   const [pwEmptyError, setPwEmptyError] = useState(false);
   const [stayLoginisChecked, setStayLoginIsChecked] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
   // 로그인유지 버튼
   const handleRadioChange = (e: any) => {
@@ -84,9 +86,11 @@ export default function SignIn({}: Props) {
       await signInWithEmailAndPassword(auth, email, pw)
         .then((UserCredential) => {
           setAmplitudeUserId(UserCredential.user.uid);
+
           // 로컬스토리지에 userExist == true 로 저장
           sessionStorage.setItem('userExist', 'true');
           router.push('/post-list');
+
         })
         .catch((error) => {
           console.log('error message: ', error.message);
@@ -188,6 +192,17 @@ export default function SignIn({}: Props) {
   return (
     <StyledBackground>
       <HeadSeo title="로그인 | be-my-desk" />
+      {isLogin && (
+        <CustomButton
+          border=".0625rem solid #206EFB"
+          fontColor="#206EFB"
+          paddingColumns="0.5"
+          paddingRow="1"
+          // onClick={() => history.back()}
+        >
+          확인
+        </CustomButton>
+      )}
       <StyledDiv>
         <div className="titleWrap">로그인</div>
 

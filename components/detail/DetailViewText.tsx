@@ -42,6 +42,7 @@ export default function DetailViewText({ post }) {
         link: {
           mobileWebUrl: currentUrl,
           androidExecParams: currentUrl,
+          webUrl: currentUrl,
         },
       },
       buttons: [
@@ -49,6 +50,7 @@ export default function DetailViewText({ post }) {
           title: '웹으로 이동',
           link: {
             mobileWebUrl: currentUrl,
+            webUrl: currentUrl,
           },
         },
       ],
