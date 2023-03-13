@@ -87,7 +87,10 @@ export default function SignIn({}: Props) {
         .then((UserCredential) => {
           setAmplitudeUserId(UserCredential.user.uid);
 
-          history.back();
+          // 로컬스토리지에 userExist == true 로 저장
+          sessionStorage.setItem('userExist', 'true');
+          router.push('/post-list');
+
         })
         .catch((error) => {
           console.log('error message: ', error.message);
@@ -148,8 +151,12 @@ export default function SignIn({}: Props) {
           photoURL: '/images/defaultProfile.png',
         });
         router.push('/auth/sns-nickname');
+        // 세션스토리지에 userExist == false 로 저장
+        sessionStorage.setItem('userExist', 'false');
       } else {
         router.push('/post-list');
+        // 세션스토리지에 userExist == true 로 저장
+        sessionStorage.setItem('userExist', 'true');
       }
     } catch (error) {
       console.error(error);
@@ -170,8 +177,12 @@ export default function SignIn({}: Props) {
           photoURL: '/images/defaultProfile.png',
         });
         router.push('/auth/sns-nickname');
+        // 세션스토리지에 userExist == false 로 저장
+        sessionStorage.setItem('userExist', 'false');
       } else {
         router.push('/post-list');
+        // 세션스토리지에 userExist == true 로 저장
+        sessionStorage.setItem('userExist', 'true');
       }
     } catch (error) {
       console.error(error);

@@ -163,6 +163,8 @@ function SnsNickname() {
             isSocial: true,
           };
           await setDoc(collectionRef, payload);
+          // 세션스토리지에 userExist == true 로 저장
+          sessionStorage.setItem('userExist', 'true');
           localStorage.setItem('isSignUpRoute', 'true');
           router.push({
             pathname: '/post-list',
@@ -185,7 +187,6 @@ function SnsNickname() {
             placeholder={user?.email}
             disabled={true}
           />
-
           <CustomInput
             type="text"
             placeholder="닉네임을 입력해주세요."
