@@ -41,7 +41,7 @@ const StyledDiv = styled.div<AuthUITypeProps>`
   border-radius: 20px;
   padding: 20px 40px;
   @media (max-width: 466px) {
-    margin-top: 20px;
+    margin-top: 130px;
     height: 100%;
     box-shadow: none;
     border-radius: 0;
