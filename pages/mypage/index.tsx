@@ -24,7 +24,7 @@ import useResponsive from '@/Hooks/useResponsive';
 type Props = {};
 
 export default function MyPage({}: Props) {
-  useCheckUser();
+  const { userExist } = useCheckUser();
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
   const [category, setCategory] = useState('myPost');
@@ -48,6 +48,14 @@ export default function MyPage({}: Props) {
     maxWidth: 1000,
     minWidth: 1001,
   });
+
+  useEffect(()=>{
+    if (userExist == false) {
+      alert('유저 정보를 설정하세요');
+      router.push('/auth/sns-nickname');
+    }
+  },[userExist])
+
   if (loading) {
     return <StyledContainer></StyledContainer>;
   }

@@ -1,27 +1,27 @@
 import { auth, dbService } from '@/shared/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function useCheckUser() {
-  const router = useRouter();
+  const [userExist, setUserExist] = useState(false);
   useEffect(() => {
     const checkUser = async () => {
       if (auth.currentUser?.uid) {
         const uid = auth.currentUser.uid;
+        console.log('uid', uid);
         const docRef = doc(dbService, 'userInfo', uid);
         const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) {
-          alert('유저 정보를 설정하세요');
-          router.push('/auth/sns-nickname');
+        if (docSnap.exists()) {
+          setUserExist(true);
         }
       } else {
-        // alert('잘못된 접근입니다.');
-        // router.push('/main');
+        setUserExist(false);
       }
     };
     checkUser();
   }, []);
+  return { userExist };
 }
 
 export default useCheckUser;
