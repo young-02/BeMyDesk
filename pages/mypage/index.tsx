@@ -24,9 +24,8 @@ import useResponsive from '@/Hooks/useResponsive';
 type Props = {};
 
 export default function MyPage({}: Props) {
-  const { userExist } = useCheckUser();
-  const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
+  const [user, loading, error] = useAuthState(auth);
   const [category, setCategory] = useState('myPost');
   const [profileEditModalOpen, setProfileEditModalOpen] = useState(false);
   const currentUserId = auth.currentUser?.uid;
@@ -49,12 +48,13 @@ export default function MyPage({}: Props) {
     minWidth: 1001,
   });
 
-  useEffect(()=>{
-    if (userExist == false) {
+  useEffect(() => {
+    const userExist = sessionStorage.getItem('userExist');
+    if (userExist == 'false') {
       alert('유저 정보를 설정하세요');
       router.push('/auth/sns-nickname');
     }
-  },[userExist])
+  }, []);
 
   if (loading) {
     return <StyledContainer></StyledContainer>;

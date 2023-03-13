@@ -10,9 +10,13 @@ import { useRouter } from 'next/router';
 import { transDate } from '../../utils/transDate';
 import { auth } from '@/shared/firebase';
 import { useUpdateLikes } from '../../Hooks/useUpdateLikes';
+import useCheckUser from '@/Hooks/useCheckUser';
+
 
 const PostListCard = ({ post }: { post: PostType }) => {
   const router = useRouter();
+  const { userExist } = useCheckUser();
+
   const {
     id,
     userNickname,
@@ -36,6 +40,9 @@ const PostListCard = ({ post }: { post: PostType }) => {
   const handleUpdateLikes = async () => {
     if (currentUserId === undefined) {
       router.push('auth/sign-in');
+    } else if (userExist == false) {
+      alert('유저 정보를 설정하세요');
+      router.push('/auth/sns-nickname');
     } else {
       updateLikes(id);
     }

@@ -9,7 +9,6 @@ function useCheckUser() {
     const checkUser = async () => {
       if (auth.currentUser?.uid) {
         const uid = auth.currentUser.uid;
-        console.log('uid', uid);
         const docRef = doc(dbService, 'userInfo', uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {

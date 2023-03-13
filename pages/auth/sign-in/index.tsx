@@ -84,8 +84,8 @@ export default function SignIn({}: Props) {
       await signInWithEmailAndPassword(auth, email, pw)
         .then((UserCredential) => {
           setAmplitudeUserId(UserCredential.user.uid);
-          alert('로그인 성공');
-
+          // 로컬스토리지에 userExist == true 로 저장
+          sessionStorage.setItem('userExist', 'true');
           router.push('/post-list');
         })
         .catch((error) => {
@@ -147,8 +147,12 @@ export default function SignIn({}: Props) {
           photoURL: '/images/defaultProfile.png',
         });
         router.push('/auth/sns-nickname');
+        // 세션스토리지에 userExist == false 로 저장
+        sessionStorage.setItem('userExist', 'false');
       } else {
         router.push('/post-list');
+        // 세션스토리지에 userExist == true 로 저장
+        sessionStorage.setItem('userExist', 'true');
       }
     } catch (error) {
       console.error(error);
@@ -169,8 +173,12 @@ export default function SignIn({}: Props) {
           photoURL: '/images/defaultProfile.png',
         });
         router.push('/auth/sns-nickname');
+        // 세션스토리지에 userExist == false 로 저장
+        sessionStorage.setItem('userExist', 'false');
       } else {
         router.push('/post-list');
+        // 세션스토리지에 userExist == true 로 저장
+        sessionStorage.setItem('userExist', 'true');
       }
     } catch (error) {
       console.error(error);
