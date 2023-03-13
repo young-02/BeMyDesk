@@ -19,6 +19,7 @@ import Image from 'next/image';
 import Skeleton from '../ui/skeleton/Skeleton';
 import SkeletonPostCard from '../ui/skeleton/SkeletonPostCard';
 import SkeletonDetail from '../ui/skeleton/SkeletonDetail';
+import PostListFilterBar from '../PostListFilterBar';
 
 export default function DetailView({}) {
   const router = useRouter();
@@ -42,6 +43,11 @@ export default function DetailView({}) {
       {isError && <DetailViewLayout>Error: {error.message}</DetailViewLayout>}
       {post && (
         <DetailViewLayout>
+          {isMobile && (
+            <Header>
+              <PostListFilterBar />
+            </Header>
+          )}
           <div className="detail-header">
             <DetailViewUserInfor post={post} />
           </div>
@@ -71,7 +77,7 @@ export default function DetailView({}) {
 const DetailViewLayout = styled.div`
   max-width: 75rem;
   width: 100%;
-  margin: 7rem auto;
+  margin: 8rem auto;
 
   .detail-header {
     width: 70%;
@@ -126,4 +132,13 @@ const DetailViewDiv = styled.div`
       padding: 0;
     }
   }
+`;
+const Header = styled.div`
+  position: fixed;
+  top: 0rem;
+  left: 50%;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  transform: translateX(-50%);
 `;

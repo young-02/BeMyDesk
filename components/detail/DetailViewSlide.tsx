@@ -64,6 +64,7 @@ const DetailViewSlideLayout = styled.div`
       height: 8px !important;
       opacity: 1;
       background: #d9d9d9 !important;
+      transition: all.3s ease-in;
 
       &.swiper-pagination-bullet-active {
         width: 22px !important;
