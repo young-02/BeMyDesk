@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { useMediaQuery } from 'react-responsive';
 import useResponsive from '@/Hooks/useResponsive';
 
-const ChangePassword = ({ user }: any) => {
+const ChangePassword = ({ user, setProfileEditModalOpen }: any) => {
   // 비밀번호 인풋
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -263,9 +263,17 @@ const ChangePassword = ({ user }: any) => {
                 : null}
             </p>
           </div>
-          <div className="passwordChangeButtonDiv">
-            <p>{allDone ? '비밀번호를 성공적으로 변경하였습니다.' : null}</p>
-            <button onClick={handlePasswordChange}>변경하기</button>
+          <div className="MobileProfileCancelDiv">
+            <button
+              className="ProfileEditThirdLineCancelButton"
+              onClick={() => setProfileEditModalOpen(false)}
+            >
+              취소
+            </button>
+            <div className="passwordChangeButtonDiv">
+              <p>{allDone ? '비밀번호를 성공적으로 변경하였습니다.' : null}</p>
+              <button onClick={handlePasswordChange}>변경하기</button>
+            </div>
           </div>
         </MobilePasswordChange>
       )}
@@ -289,7 +297,8 @@ const MobilePasswordChange = styled.div`
     margin-bottom: 10px;
   }
   > input {
-    width: 87%;
+    width: 100%;
+    box-sizing: border-box;
     height: 42px;
 
     font-style: normal;
@@ -322,6 +331,25 @@ const MobilePasswordChange = styled.div`
     }
   }
 
+  .MobileProfileCancelDiv {
+    display: flex;
+    justify-content: space-between;
+    .ProfileEditThirdLineCancelButton {
+      height: 48px;
+      align-self: flex-end;
+      margin-left: 25px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 20px;
+      text-align: center;
+      color: #206efb;
+      margin-top: 5px;
+      :hover {
+        opacity: 90%;
+      }
+    }
+  }
   .passwordChangeButtonDiv {
     display: flex;
     flex-direction: column;
@@ -334,20 +362,20 @@ const MobilePasswordChange = styled.div`
     > p {
       font-style: normal;
       font-weight: 500;
-      font-size: 14px;
+      font-size: 12px;
       line-height: 16px;
       color: #206efb;
       margin-right: 5px;
     }
     > button {
-      width: 132px;
+      width: 200px;
       height: 48px;
       background: #206efb;
       border-radius: 10px;
 
       font-style: normal;
       font-weight: 700;
-      font-size: 20px;
+      font-size: 16px;
       line-height: 20px;
       text-align: center;
       color: #ffffff;

@@ -460,6 +460,9 @@ const StyledDiv = styled.div`
     border-radius: 10px;
     color: white;
     margin-bottom: 16px;
+    @media (max-width: 466px) {
+      width: 80%;
+    }
     cursor: pointer;
     :hover {
       opacity: 90%;
