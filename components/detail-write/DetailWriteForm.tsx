@@ -295,6 +295,9 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
 
       setAttachment([]);
     }
+    setShowModal(true);
+    setModalTitle('Complete');
+    setModalDescription('글이 저장되었습니다');
 
     queryClient.removeQueries('post-list');
     queryClient.removeQueries(['my-page', 'myPost']);
@@ -323,6 +326,9 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
       products: updateProducts,
     });
 
+    setShowModal(true);
+    setModalTitle('Complete');
+    setModalDescription('글이 수정되었습니다');
     router.push('/post-list');
   };
 
@@ -448,7 +454,7 @@ const DetailWriteForm = ({ initialValues, mode }: any) => {
             <DeskPhotoBox>
               <div className="photo_wrap">
                 <label className="desk_label" htmlFor="deskImage">
-                  이미지 2장을 동시에 선택 후 업로드 해주세요{' '}
+                  2장을 동시에 선택 후 업로드 해주세요
                   {attachment.length}/2
                   <input
                     type="file"
