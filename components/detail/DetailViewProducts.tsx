@@ -6,6 +6,7 @@ type Props = {};
 
 export default function DetailViewProducts({ post }) {
   const { products } = post;
+
   return (
     <DetailViewProductsLayout>
       <h3 className="title">사용한 제품</h3>
@@ -61,7 +62,7 @@ const DetailViewProductsLayout = styled.div`
 
       ::-webkit-scrollbar {
         background-color: #fff;
-        height: .5rem;
+        height: 0.5rem;
       }
       ::-webkit-scrollbar-thumb {
         background-color: #ced4da;

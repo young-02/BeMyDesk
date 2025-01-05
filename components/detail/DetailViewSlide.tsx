@@ -10,6 +10,24 @@ import Image from 'next/image';
 type Props = {};
 
 export default function DetailViewSlide({ post }) {
+  if (!post.postImage1 || !post.postImage2)
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '25rem',
+          backgroundColor: '#f1f3f5',
+          borderRadius: 24,
+          textAlign: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          fontWeight: 700,
+        }}
+      >
+        이미지가 없습니다.
+      </div>
+    );
   return (
     <DetailViewSlideLayout>
       <Swiper

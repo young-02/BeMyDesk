@@ -41,6 +41,7 @@ export default function DetailView({}) {
         </Skeleton>
       )}
       {isError && <DetailViewLayout>Error: {error.message}</DetailViewLayout>}
+
       {post && (
         <DetailViewLayout>
           {isMobile && (
