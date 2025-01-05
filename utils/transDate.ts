@@ -1,6 +1,6 @@
 // time 숫자를 ~분전 형식으로 변환
 export const transDate = (time: any) => {
-  const milliSeconds = new Date() - time;
+  const milliSeconds = new Date().getTime() - time;
   const seconds = milliSeconds / 1000;
   if (seconds < 60) return `방금 전`;
   const minutes = seconds / 60;
