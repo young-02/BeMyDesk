@@ -6,6 +6,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper';
 import Image from 'next/image';
+import useCheckLogin from '@/Hooks/useCheckLogin';
 
 type Props = {};
 

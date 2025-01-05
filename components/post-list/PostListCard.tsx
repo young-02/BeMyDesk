@@ -12,7 +12,6 @@ import { auth } from '@/shared/firebase';
 import { useUpdateLikes } from '../../Hooks/useUpdateLikes';
 import useCheckUser from '@/Hooks/useCheckUser';
 
-
 const PostListCard = ({ post }: { post: PostType }) => {
   const router = useRouter();
   const { userExist } = useCheckUser();
@@ -139,7 +138,7 @@ const PostListCardLayout = styled.div`
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
-      transition: all 0.2s;
+      background-color: #f3f3f3;
     }
 
     :hover {
